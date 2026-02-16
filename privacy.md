@@ -33,5 +33,10 @@ No personally identifiable information is ever collected by the app. All data re
 
 We may update this policy from time to time. Any changes will be posted on this page.
 
-### Queries 
-Please send your queries regarding Your Privacy while using InTransit to [Privacy@InTransit](mailto:privacy@intransit.app)
+### Grievance Officer
+In accordance with the Information Technology Act, 2000 and rules made there under, if you have any grievances or queries regarding your privacy while using InTransit, please contact our Grievance Officer at:
+
+**Email:** [privacy@intransit.app](mailto:privacy@intransit.app)
+
+### Governing Law
+This Privacy Policy is governed by the laws of India. Any disputes arising under or in connection with this policy shall be subject to the exclusive jurisdiction of the courts in India.
