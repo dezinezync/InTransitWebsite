@@ -1,5 +1,5 @@
 ---
-layout: layout.njk
+layout: static.njk
 title: Privacy Policy
 permalink: /privacy/
 ---

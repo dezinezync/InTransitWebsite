@@ -1,0 +1,158 @@
+:root {
+  color-scheme: light dark;
+
+  /* System-first sans stack (Apple-like feel without shipping proprietary fonts) */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+
+  /* Fluid type scale */
+  --fs-body: clamp(1rem, 0.96rem + 0.25vw, 1.125rem);
+  --fs-small: clamp(0.8125rem, 0.78rem + 0.15vw, 0.9rem);
+  --fs-dek: clamp(1.125rem, 1.04rem + 0.55vw, 1.5rem);
+  --fs-h1: clamp(2rem, 1.45rem + 2.8vw, 3.5rem);
+  --fs-h2: clamp(1.375rem, 1.18rem + 1.2vw, 2rem);
+  --fs-h3: clamp(1.125rem, 1.02rem + 0.6vw, 1.375rem);
+
+  /* Measure & rhythm */
+  --measure: 70ch;
+  --leading-body: 1.65;
+  --leading-head: 1.12;
+
+  /* Subtle, Apple-ish neutrals */
+  --text-1: color-mix(in oklab, CanvasText 92%, Canvas 8%);
+  --text-2: color-mix(in oklab, CanvasText 70%, Canvas 30%);
+  --text-3: color-mix(in oklab, CanvasText 50%, Canvas 50%);
+  --text-4: color-mix(in oklab, CanvasText 30%, Canvas 70%);
+  --rule: color-mix(in oklab, CanvasText 18%, Canvas 82%);
+  --link: color-mix(in oklab, #0a66ff 80%, CanvasText 20%);
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+  font-synthesis: none;
+  font-optical-sizing: auto;
+}
+
+body {
+  margin: 0;
+  color: var(--text-1);
+  background: Canvas;
+  font-size: var(--fs-body);
+  line-height: var(--leading-body);
+}
+
+:where(article, main, .article, .newsroom-article) :where(p, li) {
+  text-wrap: pretty;
+  hanging-punctuation: first last;
+  hyphens: auto;
+}
+
+/* Headings */
+:where(h1, h2, h3) {
+  margin: 0;
+  color: var(--text-1);
+  line-height: var(--leading-head);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--fs-h1); font-weight: 650; }
+h2 { font-size: var(--fs-h2); font-weight: 650; margin-top: 2.25rem; }
+h3 { font-size: var(--fs-h3); font-weight: 650; margin-top: 1.75rem; }
+
+/* Paragraph rhythm */
+p {
+  margin: 0;
+}
+
+:where(p + p, h2 + p, h3 + p, p + ul, p + ol, ul + p, ol + p) {
+  margin-top: 0.9rem;
+}
+
+/* Meta/kicker (e.g., UPDATE + date) */
+:where(.kicker, .meta, .eyebrow, .article-meta, time, .update) {
+  font-size: var(--fs-small);
+  color: var(--text-2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Deck/lede (the one-sentence subhead under H1) */
+:where(.dek, .lede, .subhead, header p:first-of-type) {
+  font-size: var(--fs-dek);
+  line-height: 1.45;
+  color: color-mix(in oklab, var(--text-1) 92%, Canvas 8%);
+  margin-top: 0.75rem;
+  font-weight: 520;
+}
+
+/* Lists (schedule/pricing blocks) */
+:where(ul, ol) {
+  margin: 0.9rem 0 0;
+  padding-inline-start: 1.25em;
+}
+
+li { margin-top: 0.35rem; }
+
+/* Emphasis */
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Links */
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 0.14em;
+}
+
+/* Inline code (if any) */
+code, pre, kbd, samp {
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 2rem 0;
+}
+
+/* Figures/captions (if present) */
+figure { margin: 1.5rem 0 0; }
+figcaption {
+  margin-top: 0.6rem;
+  font-size: var(--fs-small);
+  line-height: 1.4;
+  color: var(--text-2);
+}
+
+/* Better selection color without hardcoding brand colors */
+::selection {
+  background: color-mix(in oklab, var(--link) 22%, Canvas 78%);
+}
+
+/* Dark mode tuning (optional; relies on color-scheme + Canvas/CanvasText) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --link: color-mix(in oklab, #6aa7ff 82%, CanvasText 18%);
+  }
+}
+
+hgroup {
+  h1 + h2 {
+    margin-top: 0;
+    color: var(--text-3);
+  }
+}
