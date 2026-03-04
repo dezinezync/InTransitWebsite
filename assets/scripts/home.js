@@ -1,29 +1,30 @@
 function startCountdown(elem) {
-  let timeLeft = Number(elem.dataset.remaining ?? elem.dataset.interval);
   // Won't change till refreshed
   const locale = getLocale();
 
   var downloadTimer = setInterval(function() {
-    if(timeLeft <= 0) {
-      clearInterval(downloadTimer);
-      elem.dataset.remaining = null;
-      elem.dataset.start = null;
-      elem.innerHTML = "00:00";
-    } 
-    else {
-      if (!elem.dataset.start) {
-        elem.dataset.start = +new Date();
-      }
+    let timeLeft = Number(elem.dataset.remaining ?? elem.dataset.interval);
 
-      let deadline = new Date(Number(elem.dataset.start) + (timeLeft * 1000));
-      let formatted = formatCountdown(deadline, locale);
-      // console.log({start: new Date(Number(elem.dataset.start)), deadline});
-      elem.innerHTML = `${formatted}`;
+    if(timeLeft <= 0) {
+      // clearInterval(downloadTimer);
+      delete elem.dataset.remaining;
+      delete elem.dataset.start;
+      elem.innerHTML = "00:00";
+      timeLeft = Number(elem.dataset.interval);
+      return;
     }
-    timeLeft -= 1;
-    timeLeft = Math.max(0, timeLeft);
+    
+    if (!elem.dataset.start) {
+      elem.dataset.start = +new Date();
+    }
+
+    let deadline = new Date(Number(elem.dataset.start) + (timeLeft * 1000));
+    let formatted = formatCountdown(deadline, locale);
+    elem.innerHTML = `${formatted}`;
+
+    timeLeft = Math.max(0, timeLeft - 1);
     elem.dataset.remaining = timeLeft;
-  }, 1 * 1000); // Update every 1000ms (1 second)
+  }, 1000); // Update every 1000ms (1 second)
 }
 
 function getTimeRemaining(endTime) {
@@ -48,7 +49,7 @@ function formatCountdown(targetDate, locale = 'en-US') {
   const time = getTimeRemaining(targetDate);
 
   if (time.total <= 0) {
-    return new Intl.DateTimeFormat(locale).format(new Date(targetDate)) + ' - Expired';
+    return "00:00"// new Intl.DateTimeFormat(locale).format(new Date(targetDate)) + ' - Expired';
   }
 
   const numberFormatter = new Intl.NumberFormat(locale, { minimumIntegerDigits: 2, useGrouping: false });
