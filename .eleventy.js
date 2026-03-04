@@ -43,7 +43,7 @@ module.exports = function(eleventyConfig) {
 
   eleventyConfig.addFilter("absolute_url", function(url) {
     const isServe = process.argv && (process.argv.includes("--serve") || process.argv.includes("-s"));
-    const siteUrl = isServe ? "http://localhost:8080" : "https://elytra.app";
+    const siteUrl = isServe ? "http://localhost:8080" : "https://intransit.app";
     
     if (!url) return siteUrl;
     if (url.startsWith("http")) return url;
