@@ -102,9 +102,12 @@ module.exports = function(eleventyConfig) {
   // Passthrough Copy
   eleventyConfig.addPassthroughCopy("assets/images");
   eleventyConfig.addPassthroughCopy("assets/icons");
+  eleventyConfig.addPassthroughCopy("assets/scripts");
   eleventyConfig.addPassthroughCopy("assets/css");
   eleventyConfig.addPassthroughCopy("favicon.ico");
   eleventyConfig.addPassthroughCopy("sitemap.xml");
+
+  eleventyConfig.addWatchTarget("assets/scripts/");
 
   return {
     dir: {

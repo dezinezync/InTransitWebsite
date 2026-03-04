@@ -12,7 +12,7 @@ permalink: /
       <p>No more fusses, just easy commutes. Get real-time updates, accessibility guidance, and beautiful maps for every major metro in India.</p>
       <div class="cta-badge">
         <a href="https://apps.apple.com/us/app/intransit/id6756531079" target="_blank">
-          <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" style="height: 56px;">
+          <img src="/assets/images/appstore.svg" alt="Download on the App Store" style="height: 56px;">
         </a>
       </div>
       <div id="hero">
@@ -35,7 +35,7 @@ permalink: /
           <img src="/assets/images/home/hero_{{ i }}.png" 
             srcset="/assets/images/home/hero_{{ i }}@2x.png 2x, /assets/images/home/hero_{{ i }}@3x.png 3x"
             alt="InTransit App Screenshot {{ i }}" 
-            loading="{% if i == 1 %}eager{% else %}lazy{% endif %}"
+            loading="eager"
             width="{% if i == 1 %}320{% elseif i == 2 or i == 3 %}294{% else %}272{% endif %}" 
             height="{% if i == 1 %}655{% elseif i == 2 or i == 3 %}600{% else %}560{% endif %}">
         </picture>
@@ -51,10 +51,59 @@ permalink: /
     </div>
 
     <!-- Features Grid -->
-    <div class="grid" id="features">
-      <article class="feature-card">
+    <div class="flex columns" id="features">
+      <article class="feature-card" id="live-activities">
         <h2>Live Activities</h2>
         <p>Visually stunning updates bring next stop, interchange, and ETA information right to your Home Screen and Dynamic Island. Never miss your stop again.</p>
+        <div id="lva-grid" class="grid">
+          <picture>
+            <source type="image/webp" 
+            srcset="/assets/images/home/lv-1.webp 1x, /assets/images/home/lv-1@2x.webp 2x, /assets/images/home/lv-1@3x.webp 3x">
+            <img src="/assets/images/home/lv-1.png" 
+            srcset="/assets/images/home/lv-1@2x.png 2x, /assets/images/home/lv-1@3x.png 3x"
+            alt="Live Activity for the Kalyani Nagar to PCMC route in Pune region" 
+            loading="lazy"
+            width="395" 
+            height="184">
+            <p class="timer" data-interval="1958">32:38</p>
+          </picture>
+
+          <picture>
+            <source type="image/webp" 
+            srcset="/assets/images/home/lv-2.webp 1x, /assets/images/home/lv-2@2x.webp 2x, /assets/images/home/lv-2@3x.webp 3x">
+            <img src="/assets/images/home/lv-2.png" 
+            srcset="/assets/images/home/lv-2@2x.png 2x, /assets/images/home/lv-2@3x.png 3x"
+            alt="Live Activity for the Jangpura to Paratap Nagar route in New Delhi region" 
+            loading="lazy"
+            width="395" 
+            height="184">
+            <p class="timer" data-interval="1452">24:12</p>
+          </picture>
+
+          <picture>
+            <source type="image/webp" 
+            srcset="/assets/images/home/lv-3.webp 1x, /assets/images/home/lv-3@2x.webp 2x, /assets/images/home/lv-3@3x.webp 3x">
+            <img src="/assets/images/home/lv-3.png" 
+            srcset="/assets/images/home/lv-3@2x.png 2x, /assets/images/home/lv-3@3x.png 3x"
+            alt="Live Activity for the Cubbon Park to Silk Institute route in Bengaluru region" 
+            loading="lazy"
+            width="395" 
+            height="184">
+            <p class="timer" data-interval="2525">42:05</p>
+          </picture>
+
+          <picture>
+            <source type="image/webp" 
+            srcset="/assets/images/home/lv-4.webp 1x, /assets/images/home/lv-4@2x.webp 2x, /assets/images/home/lv-4@3x.webp 3x">
+            <img src="/assets/images/home/lv-4.png" 
+            srcset="/assets/images/home/lv-4@2x.png 2x, /assets/images/home/lv-4@3x.png 3x"
+            alt="Live Activity for the Thirumangalam to Wimco Naagr route in Chennai region" 
+            loading="lazy"
+            width="395" 
+            height="184">
+            <p class="timer" data-interval="442">7:22</p>
+          </picture>
+        </div>
       </article>
 
       <article class="feature-card">
@@ -81,7 +130,7 @@ permalink: /
     </section>
 
     <!-- Privacy & Made In India Grid -->
-    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; margin-bottom: 6rem;">
+    <div class="flex columns">
       <article class="feature-card">
         <h2>Private by Design</h2>
         <p>Your data is not our business. We never collect information that can identify you. No tracking, just transit.</p>
@@ -95,15 +144,27 @@ permalink: /
     </div>
 
     <!-- Final CTA -->
-    <section id="download" style="text-align: center; padding: 6rem 0; background: color-mix(in oklab, var(--text-1) 5%, Canvas); border-radius: 40px; margin-bottom: 4rem;">
-      <h2>Ready to go?</h2>
-      <p style="margin-bottom: 2rem; font-size: 1.25rem;">Join thousands of commuters enjoying a smarter way to travel.</p>
-      <div class="cta-badge">
-        <a href="https://apps.apple.com/us/app/intransit/id6756531079" target="_blank">
-          <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" style="height: 64px;">
-        </a>
+    <section id="download">
+      <picture id="cta-bg">
+        <source type="image/webp" 
+        srcset="/assets/images/home/cta-bg.webp 1x, /assets/images/home/cta-bg@2x.webp 2x, /assets/images/home/cta-bg@3x.webp 3x">
+        <img src="/assets/images/home/cta-bg.png" 
+        srcset="/assets/images/home/cta-bg@2x.png 2x, /assets/images/home/cta-bg@3x.png 3x"
+        alt="InTransit track and location graphics" 
+        loading="lazy"
+        width="402" 
+        height="424">
+      </picture>
+      <div id="cta-content">
+        <h2>Ready to go?</h2>
+        <p style="margin-bottom: 2rem; font-size: 1.25rem;">Join thousands of commuters enjoying a smarter way to travel.</p>
+        <div class="cta-badge">
+          <a href="https://apps.apple.com/us/app/intransit/id6756531079" target="_blank">
+            <img src="/assets/images/appstore.svg" alt="Download on the App Store" style="height: 56px;">
+          </a>
+        </div>
+        <p class="questions">Questions? <a href="mailto:support@intransit.app">I'm here to help.</a></p>
       </div>
-      <p style="margin-top: 2rem;">Questions? <a href="mailto:support@intransit.app">I'm here to help.</a></p>
     </section>
   </div>
 </div>

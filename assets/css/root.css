@@ -54,6 +54,11 @@ body {
   hyphens: auto;
 }
 
+picture {
+  width: fit-content;
+  height: fit-content;
+}
+
 /* Headings */
 :where(h1, h2, h3) {
   margin: 0;

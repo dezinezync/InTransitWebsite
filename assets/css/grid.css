@@ -67,3 +67,11 @@
 .container.center {
   text-align:center
 }
+
+.flex {
+  display: flex;
+
+  &.columns {
+    flex-direction: column;
+  }
+}

@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-@import 'type.css';
+@import 'root.css';
 @import 'grid.css';
 @import 'layouts/home.css';
 
@@ -78,6 +78,16 @@ body {
 
 .header-nav a:hover {
   color: var(--dz-brand-color, #000);
+}
+
+footer {
+  max-width: var(--measure);
+  margin: 2rem auto;
+  font-size: 0.9rem;
+
+  .flex {
+    gap: 1rem;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
