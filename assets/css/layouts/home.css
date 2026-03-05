@@ -302,13 +302,21 @@ body.home {
       max-height: calc(var(--attr-height) * 0.5);
     }
 
+    .feature-card.ltr {
+      text-align: center;
+
+      picture {
+        margin-bottom: 1rem;
+      }
+    }
+
     #lva-grid {
       grid-template-columns: repeat(auto-fit, minmax(214px, 1fr));
       padding-bottom: 0;
 
       picture {
         p {
-          top: 3rem;
+          top: 1rem;
         }
       }
     }
