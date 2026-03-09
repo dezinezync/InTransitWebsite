@@ -1,8 +1,8 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-{% if page.title %}
-  <title>{{ page.title }} - {{ site.title }}</title>
+{% if title %}
+  <title>{{ title }} - {{ site.title }}</title>
 {% else %}
   <title>{{ site.title }}</title>
   <meta property="og:title" content="{{ site.title }}" />
@@ -14,7 +14,9 @@
   <link rel="alternate" title="{{ site.title }}" type="application/rss+xml" href="{{ "/feed.xml"  | absolute_url}}"/>
   <link rel="alternate" title="{{ site.title }}" type="application/json" href="{{ "/feed.json" | absolute_url }}" />
   <meta name="apple-itunes-app" content="app-id=1433266971, app-argument=https://apps.apple.com/in/app/elytra/id1433266971"/>
-  <meta property="og:title" content="{{ page.title }} - {{ site.title }}" />
+{% if title %}
+  <meta property="og:title" content="{{ title }} - {{ site.title }}" />
+{% endif %}
 {% if excerpt %}
   <meta name="description" content="{{ excerpt | markdown | strip_html | strip }}">
   <meta property="og:description" content="{{ excerpt | markdown | strip_html | strip }}" />

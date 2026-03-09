@@ -1,4 +1,5 @@
 const markdownIt = require("markdown-it");
+const { DateTime } = require("luxon");
 
 module.exports = function(eleventyConfig) {
   // Filters
@@ -89,6 +90,16 @@ module.exports = function(eleventyConfig) {
     const words = str.split(/\s+/);
     if (words.length <= count) return str;
     return words.slice(0, count).join(" ") + "...";
+  });
+
+  eleventyConfig.addFilter("strip_html", (str) => {
+    if (!str) return "";
+    return str.replace(/<[^>]*>?/gm, "");
+  });
+
+  eleventyConfig.addFilter("strip", (str) => {
+    if (!str) return "";
+    return str.trim();
   });
 
   // Collections

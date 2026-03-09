@@ -2,6 +2,58 @@
 <html lang="en-IN">
 {%- include "head.njk" -%}
 <body class="blog">
-  
+  {%- include "header.njk" -%}
+  <main>
+    {%- if pagination.pages.length > 0 -%}
+    <ul class="post-list" style="list-style: none; padding: 0;">
+      {%- for post in posts -%}
+      <hr />
+      <li class="container readable" style="margin-bottom: 3rem;">
+        {%- if post.data.bannerImage -%}
+          <picture id="post-banner">
+            <source media="(max-width: 600px)" srcset="{{ (post.data.bannerImage + '-400w.png') | absolute_url }} 1x, {{ (post.data.bannerImage + '-800w.png') | absolute_url }} 2x, {{ (post.data.bannerImage + '-1600w.png') | absolute_url }} 3x">
+            <source media="(min-width: 601px) and (max-width: 800px)" srcset="{{ (post.data.bannerImage + '-800w.png') | absolute_url }} 1x, {{ (post.data.bannerImage + '-1600w.png') | absolute_url }} 2x, {{ (post.data.bannerImage + '@3x.png') | absolute_url }} 3x">
+            <img src="{{ (post.data.bannerImage + '.png') | absolute_url }}" srcset="{{ (post.data.bannerImage + '@2x.png') | absolute_url }} 2x, {{ (post.data.bannerImage + '@3x.png') | absolute_url }} 3x"/>
+          </picture>
+        {%- endif -%}
+        {%- if post.data.bannerImageWebP -%}
+          <picture id="post-banner">
+            <source media="(max-width: 600px)" srcset="{{ (post.data.bannerImageWebP + '-400w.webp') | absolute_url }} 1x, {{ (post.data.bannerImageWebP + '-800w.webp') | absolute_url }} 2x, {{ (post.data.bannerImageWebP + '-1600w.webp') | absolute_url }} 3x">
+            <source media="(min-width: 601px) and (max-width: 800px)" srcset="{{ (post.data.bannerImageWebP + '-800w.webp') | absolute_url }} 1x, {{ (post.data.bannerImageWebP + '-1600w.webp') | absolute_url }} 2x, {{ (post.data.bannerImageWebP + '@3x.webp') | absolute_url }} 3x">
+            <img src="{{ (post.data.bannerImageWebP + '.webp') | absolute_url }}" srcset="{{ (post.data.bannerImageWebP + '@2x.webp') | absolute_url }} 2x, {{ (post.data.bannerImageWebP + '@3x.webp') | absolute_url }} 3x"/>
+          </picture>
+        {%- endif -%}
+        <h3>
+          <a class="post-link" href="{{ post.url | absolute_url }}">
+            {{ post.data.title | escape }}
+          </a>
+        </h3>
+        <small class="post-meta">{{ post.date | date }}</small>
+        <div class="post-excerpt">
+          {{ post.content | truncatewords(50) | safe }}
+        </div>
+      </li>
+      {%- endfor -%}
+    </ul>
+    {% if pagination.pages.length > 1 %}
+    <!-- Pagination links -->
+    <div class="container readable pagination">
+      {% if pagination.href.previous %}
+        <a href="{{ pagination.href.previous | absolute_url }}" class="previous">Previous</a>
+      {% endif %}
+      <span class="page_number ">Page {{ pagination.pageNumber + 1 }} of {{ pagination.pages.length }}</span>
+      {% if pagination.href.next %}
+        <a href="{{ pagination.href.next | absolute_url }}" class="next">Next</a>
+      {% endif %}
+    </div>
+    {% endif %}
+    {%- endif -%}
+  </main>
+  <div class="container readable" id="blog-footer-rss">
+    <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | absolute_url }}">via RSS</a></p>
+  </div>
+  <div class="container readable">
+    {%- include "footer.njk" -%}
+  </div>
 </body>
 </html>
