@@ -47,7 +47,7 @@ module.exports = function(eleventyConfig) {
   });
 
   eleventyConfig.addFilter("absolute_url", (url) => {
-    const isProduction = process.env.ELEVENTY_ENV === "production";
+    const isProduction = process.env.ELEVENTY_ENV === "production" || process.argv && (process.argv.includes("--serve") || process.argv.includes("-s"));
     const baseUrl = isProduction ? "https://intransit.app" : "http://localhost:8080";
     return new URL(url, baseUrl).href;
   });
