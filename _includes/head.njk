@@ -15,9 +15,9 @@
   <link rel="alternate" title="{{ site.title }}" type="application/json" href="{{ "/feed.json" | absolute_url }}" />
   <meta name="apple-itunes-app" content="app-id=1433266971, app-argument=https://apps.apple.com/in/app/elytra/id1433266971"/>
   <meta property="og:title" content="{{ page.title }} - {{ site.title }}" />
-{% if page.excerpt %}
-  <meta name="description" content="{{ page.excerpt | strip_html | strip }}">
-  <meta property="og:description" content="{{ page.excerpt | strip_html | strip }}" />
+{% if excerpt %}
+  <meta name="description" content="{{ excerpt | markdown | strip_html | strip }}">
+  <meta property="og:description" content="{{ excerpt | markdown | strip_html | strip }}" />
 {% elseif page.description %}
   <meta name="description" content="{{ page.description }}">
   <meta property="og:description" content="{{ page.description }}" />

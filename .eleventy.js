@@ -1,3 +1,5 @@
+const markdownIt = require("markdown-it");
+
 module.exports = function(eleventyConfig) {
   // Filters
   eleventyConfig.addFilter("date", (dateObj, format) => {
@@ -41,13 +43,10 @@ module.exports = function(eleventyConfig) {
     return DateTime.fromJSDate(date).toFormat("MMM d, yyyy");
   });
 
-  eleventyConfig.addFilter("absolute_url", function(url) {
-    const isServe = process.argv && (process.argv.includes("--serve") || process.argv.includes("-s"));
-    const siteUrl = isServe ? "http://localhost:8080" : "https://intransit.app";
-    
-    if (!url) return siteUrl;
-    if (url.startsWith("http")) return url;
-    return siteUrl + (url.startsWith("/") ? "" : "/") + url;
+  eleventyConfig.addFilter("absolute_url", (url) => {
+    const isProduction = process.env.ELEVENTY_ENV === "production";
+    const baseUrl = isProduction ? "https://intransit.app" : "http://localhost:8080";
+    return new URL(url, baseUrl).href;
   });
 
   eleventyConfig.addFilter("relative_url", function(url) {
@@ -108,6 +107,28 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("sitemap.xml");
 
   eleventyConfig.addWatchTarget("assets/scripts/");
+
+  eleventyConfig.setFrontMatterParsingOptions({
+    excerpt: true,
+    excerpt_alias: 'excerpt',
+  });
+
+  // Layout aliases
+  eleventyConfig.addLayoutAlias("post", "post.njk");
+  // eleventyConfig.addLayoutAlias("page", "page.njk");
+  eleventyConfig.addLayoutAlias("blog", "blog.njk");
+
+  // Initialize the Markdown parser
+  const md = new markdownIt({
+    html: true, // Enable HTML tags in source
+    breaks: true, // Convert '\n' in source into <br>
+    linkify: true // Autoconvert URL-like text to links
+  });
+
+  // Add the custom filter
+  eleventyConfig.addFilter("markdown", (content) => {
+    return md.render(content);
+  });
 
   return {
     dir: {
