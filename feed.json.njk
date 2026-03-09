@@ -1,0 +1,36 @@
+---
+permalink: /feed.json
+eleventyExcludeFromCollections: true
+metadata:
+  title: InTransit Blog
+  subtitle: Smarter Metro Mobility for India
+  language: en
+  url: https://intransit.app/
+  author:
+    name: Nikhil Nigade
+    email: support@intransit.app
+---
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "{{ metadata.title }}",
+  "home_page_url": "{{ metadata.url }}",
+  "feed_url": "{{ permalink | absolute_url }}",
+  "description": "{{ metadata.subtitle }}",
+  "authors": [
+    {
+      "name": "{{ metadata.author.name }}"
+    }
+  ],
+  "items": [
+    {%- for post in collections.posts %}
+    {%- set absolutePostUrl = post.url | absolute_url %}
+    {
+      "id": "{{ absolutePostUrl }}",
+      "url": "{{ absolutePostUrl }}",
+      "title": "{{ post.data.title }}",
+      "content_html": {% if post.templateContent %}{{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) | jsonify }}{% else %}""{% endif %},
+      "date_published": "{{ post.date | dateToRfc3339 }}"
+    }{% if not loop.last %},{% endif %}
+    {%- endfor %}
+  ]
+}
