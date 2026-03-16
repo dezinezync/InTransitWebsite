@@ -2,10 +2,13 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 {% if title %}
-  <title>{{ title }} - {{ site.title }}</title>
+  <title>{{ title }} — {{ site.title }}</title>
+  <meta property="og:title" content="{{ title }} — {{ site.title }}" />
+  <meta name="twitter:title" content="{{ title }} — {{ site.title }}" />
 {% else %}
-  <title>{{ site.title }}</title>
-  <meta property="og:title" content="{{ site.title }}" />
+  <title>{{ site.title }} — {{ site.description }}</title>
+  <meta property="og:title" content="{{ site.title }} — {{ site.description }}" />
+  <meta name="twitter:title" content="{{ site.title }} — {{ site.description }}" />
 {% endif %}
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="supported-color-schemes" content="light dark">
@@ -14,28 +17,34 @@
   <link rel="alternate" title="{{ site.title }}" type="application/rss+xml" href="{{ "/feed.xml"  | absolute_url}}"/>
   <link rel="alternate" title="{{ site.title }}" type="application/json" href="{{ "/feed.json" | absolute_url }}" />
   <meta name="apple-itunes-app" content="app-id=6756531079, app-argument=https://apps.apple.com/us/app/intransit/id6756531079"/>
-{% if title %}
-  <meta property="og:title" content="{{ title }} - {{ site.title }}" />
-{% endif %}
 {% if excerpt %}
   <meta name="description" content="{{ excerpt | markdown | strip_html | strip }}">
   <meta property="og:description" content="{{ excerpt | markdown | strip_html | strip }}" />
+  <meta name="twitter:description" content="{{ excerpt | markdown | strip_html | strip }}" />
   <meta property="og:type" content="article" />
 {% elseif page.description %}
   <meta name="description" content="{{ page.description }}">
   <meta property="og:description" content="{{ page.description }}" />
+  <meta name="twitter:description" content="{{ page.description }}" />
   <meta property="og:type" content="website" />
 {% else %}
   <meta name="description" content="{{ site.description }}">
   <meta property="og:description" content="{{ site.description }}" />
+  <meta name="twitter:description" content="{{ site.description }}" />
   <meta property="og:type" content="website" />
 {% endif %}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@dezinezync" />
+  <meta name="twitter:creator" content="@dezinezync" />
 {% if page.bannerImage %}
   <meta property="og:image" content="{{ [page.bannerImage, '@2x.png'] | join | absolute_url  }}" />
+  <meta name="twitter:image" content="{{ [page.bannerImage, '@2x.png'] | join | absolute_url  }}" />
 {% elseif post.bannerImage %}
   <meta property="og:image" content="{{ [post.bannerImage, '@2x.png'] | join | absolute_url }}" />
+  <meta name="twitter:image" content="{{ [post.bannerImage, '@2x.png'] | join | absolute_url }}" />
 {% else %}
   <meta property="og:image" content="{{ "/assets/images/hero-1600w.webp" | absolute_url }}" />
+  <meta name="twitter:image" content="{{ "/assets/images/hero-1600w.webp" | absolute_url }}" />
 {% endif %}
   <meta property="og:locale" content="en-IN" />
   <meta property="og:site_name" content="InTransit" />
