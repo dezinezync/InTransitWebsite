@@ -15,7 +15,7 @@ metadata:
   "title": "{{ metadata.title }}",
   "home_page_url": "{{ metadata.url }}",
   "feed_url": "{{ site.url }}/feed.json",
-  "description": {{ metadata.subtitle | jsonify }},
+  "description": "{{ metadata.subtitle | jsonify }}",
   "icon": "{{ "/assets/images/appicon/appicon@2x.png" | absolute_url }}",
   "author": {
     "name": "Nikhil Nigade",
