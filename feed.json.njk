@@ -40,7 +40,7 @@ metadata:
       {%- if post.data.bannerImage -%}
       ,"banner_image": "{{ (post.data.bannerImage + '-1600w.png') | absolute_url }}"
       {%- elseif post.data.bannerImageWebP -%}
-      ,"banner_image": "{{ (post.data.bannerImageWebP + '-1600w.png') | absolute_url }}"
+      ,"banner_image": "{{ (post.data.bannerImageWebP + '-1600w.webp') | absolute_url }}"
       {%- endif -%}
     }{% if not loop.last %},{% endif %}
     {%- endfor %}
