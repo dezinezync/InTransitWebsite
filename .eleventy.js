@@ -5,6 +5,10 @@ const pluginRss = require("@11ty/eleventy-plugin-rss");
 module.exports = function(eleventyConfig) {
   eleventyConfig.addPlugin(pluginRss);
   // Filters
+  eleventyConfig.addFilter("rssLastUpdatedDate", (collection) => {
+    return rssPlugin.dateToRfc3339(rssPlugin.getNewestCollectionItemDate(collection));
+  });
+  
   eleventyConfig.addFilter("date", (dateObj, format) => {
     if (!dateObj) return "";
     const date = typeof dateObj === "string" ? new Date(dateObj) : dateObj;

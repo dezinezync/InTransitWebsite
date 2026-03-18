@@ -7,29 +7,53 @@ metadata:
   language: en
   url: https://intransit.app/
   author:
-    name: Nikhil Nigade
+    name: Nikhil
     email: support@intransit.app
 ---
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xml:base="{{ metadata.url }}">
-  <title>{{ metadata.title }}</title>
-  <subtitle>{{ metadata.subtitle }}</subtitle>
-  <link href="{{ permalink | absolute_url }}" rel="self"/>
-  <link href="{{ metadata.url }}"/>
-  <updated>{{ collections.posts | getNewestCollectionItemDate | dateToRfc3339 }}</updated>
-  <id>{{ metadata.url }}</id>
-  <author>
-    <name>{{ metadata.author.name }}</name>
-    <email>{{ metadata.author.email }}</email>
-  </author>
-  {%- for post in collections.posts %}
-  {%- set absolutePostUrl = post.url | absolute_url %}
-  <entry>
-    <title>{{ post.data.title }}</title>
-    <link href="{{ absolutePostUrl }}"/>
-    <updated>{{ post.date | dateToRfc3339 }}</updated>
-    <id>{{ absolutePostUrl }}</id>
-    <content xml:lang="{{ metadata.language }}" type="html">{{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) }}</content>
-  </entry>
-  {%- endfor %}
-</feed>
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/"
+  xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+  xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+  xmlns:media="http://search.yahoo.com/mrss/"
+  >
+  <channel>
+    <title>{{ metadata.title }}</title>
+    <link>{{ metadata.url }}{{ metadata.baseurl }}/</link>
+    <description><![CDATA[
+      {{ metdata.subtitle }}
+    ]]></description>
+    <pubDate>{{ collections.posts | getNewestCollectionItemDate | dateToRfc822 }}</pubDate>
+    <language>en</language>
+    <image>
+      <url>{{ "/assets/images/appicon/appicon@2x.png" | absolute_url }}</url>
+      <title>{{ metadata.title }}</title>
+      <link>{{ metadata.url }}</link>
+      <width>128</width>
+      <height>128</height>
+    </image>
+    <link rel="self" href="{{ permalink | absolute_url }}" xmlns="http://www.w3.org/2005/Atom"/>
+    <link rel="hub" href="https://websubhub.com/hub" xmlns="http://www.w3.org/2005/Atom"/>
+    {%- for post in collections.posts %}
+    {%- set absolutePostUrl = post.url | absolute_url %}
+    <item>
+      <title>{{ post.data.title }}</title>
+      <link>{{ absolutePostUrl }}</link>
+      <guid isPermaLink="true">{{ absolutePostUrl }}</guid>
+      <description><![CDATA[
+      {{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) }}
+      ]]></description>
+      <pubDate>{{  post.date | dateToRfc822 }}</pubDate>
+      <author>{{ metadata.author.email }} ({{ (metadata.author.name) }})</author>
+      {%- if post.data.bannerImage -%}
+      <media:content url="{{ (post.data.bannerImage + '-1600w.png') | absolute_url }}" medium="image" lang="en"/>
+      {%- elseif post.data.bannerImageWebP -%}
+      <media:content url="{{ (post.data.bannerImageWebP + '-1600w.webp') | absolute_url }}" medium="image" lang="en"/>
+      {%- endif -%}
+    </item>
+    {%- endfor %}
+  </channel>
+</rss>
