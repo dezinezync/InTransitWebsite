@@ -4,34 +4,33 @@
 <body class="blog">
   {%- include "header.njk" -%}
   <main>
-    <hr />
-    <div class="container readable">
-      <article class="page-content no-style"> 
+    <article class="page-content no-style"> 
+      <div class="container readable">
         <h2>{{ title | escape }}</h2>
-        <p><small>{{ date | date }}</small></p>
-        {%- if bannerImage -%}
-          <picture id="post-banner">
-            <source media="(max-width: 600px)" srcset="{{ (bannerImage + '-400w.png') | absolute_url }} 1x, {{ (bannerImage + '-800w.png') | absolute_url }} 2x, {{ (bannerImage + '-1600w.png') | absolute_url }} 3x">
-            <source media="(min-width: 601px) and (max-width: 800px)" srcset="{{ (bannerImage + '-800w.png') | absolute_url }} 1x, {{ (bannerImage + '-1600w.png') | absolute_url }} 2x, {{ (bannerImage + '@3x.png') | absolute_url }} 3x">
-            <img src="{{ (bannerImage + '.png') | absolute_url }}" srcset="{{ (bannerImage + '@2x.png') | absolute_url }} 2x, {{ (bannerImage + '@3x.png') | absolute_url }} 3x"/>
-          </picture>
-        {%- endif -%}
-        {%- if bannerImageWebP -%}
-          <picture id="post-banner">
-            <source media="(max-width: 600px)" srcset="{{ (bannerImageWebP + '-400w.webp') | absolute_url }} 1x, {{ (bannerImageWebP + '-800w.webp') | absolute_url }} 2x, {{ (bannerImageWebP + '-1600w.webp') | absolute_url }} 3x">
-            <source media="(min-width: 601px) and (max-width: 800px)" srcset="{{ (bannerImageWebP + '-800w.webp') | absolute_url }} 1x, {{ (bannerImageWebP + '-1600w.webp') | absolute_url }} 2x, {{ (bannerImageWebP + '@3x.webp') | absolute_url }} 3x">
-            <img src="{{ (bannerImageWebP + '.webp') | absolute_url }}" srcset="{{ (bannerImageWebP + '@2x.webp') | absolute_url }} 2x, {{ (bannerImageWebP + '@3x.webp') | absolute_url }} 3x"/>
-          </picture>
-        {%- endif -%}
-        <div class="article-content">
-          {{ content | safe }}
-        </div>
-      </article>
+        <dt><small>{{ date | date }}</small></dt>
+      </div>
+      {%- if bannerImage -%}
+      <picture id="post-banner">
+        <source media="(max-width: 600px)" srcset="{{ (bannerImage + '-400w.png') | absolute_url }} 1x, {{ (bannerImage + '-800w.png') | absolute_url }} 2x, {{ (bannerImage + '-1600w.png') | absolute_url }} 3x"/>
+        <source media="(min-width: 601px) and (max-width: 800px)" srcset="{{ (bannerImage + '-800w.png') | absolute_url }} 1x, {{ (bannerImage + '-1600w.png') | absolute_url }} 2x, {{ (bannerImage + '@3x.png') | absolute_url }} 3x"/>
+        <img src="{{ (bannerImage + '.png') | absolute_url }}" srcset="{{ (bannerImage + '@2x.png') | absolute_url }} 2x, {{ (bannerImage + '@3x.png') | absolute_url }} 3x"/>
+      </picture>
+      {%- endif -%}
+      {%- if bannerImageWebP -%}
+      <picture id="post-banner">
+        <source media="(max-width: 600px)" srcset="{{ (bannerImageWebP + '-400w.webp') | absolute_url }} 1x, {{ (bannerImageWebP + '-800w.webp') | absolute_url }} 2x, {{ (bannerImageWebP + '-1600w.webp') | absolute_url }} 3x"/>
+        <source media="(min-width: 601px) and (max-width: 800px)" srcset="{{ (bannerImageWebP + '-800w.webp') | absolute_url }} 1x, {{ (bannerImageWebP + '-1600w.webp') | absolute_url }} 2x, {{ (bannerImageWebP + '@3x.webp') | absolute_url }} 3x"/>
+        <img src="{{ (bannerImageWebP + '.webp') | absolute_url }}" srcset="{{ (bannerImageWebP + '@2x.webp') | absolute_url }} 2x, {{ (bannerImageWebP + '@3x.webp') | absolute_url }} 3x"/>
+      </picture>
+      {%- endif -%}
+      <div class="article-content container readable">
+        {{ content | safe }}
+      </div>
+    </article>
 
-      <section class="page-post-content">
-        <a href="#" onclick="window.history.back();">Back</a>
-      </section>
-    </div>
+    <section class="page-post-content container readable">
+      <a href="#" onclick="window.history.back();">Back</a>
+    </section>
   </main>
 
   <div class="container readable">

@@ -3,6 +3,7 @@
 @import 'root.css';
 @import 'grid.css';
 @import 'layouts/home.css';
+@import 'layouts/blog.css';
 
 html {
   font-size: 100%;
