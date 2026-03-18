@@ -34,7 +34,8 @@ metadata:
       "id": "{{ absolutePostUrl }}",
       "url": "{{ absolutePostUrl }}",
       "title": "{{ post.data.title }}",
-      "content_html": "{% if post.templateContent %}{{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) | jsonify }}{% else %}""{% endif %}",
+      "content_html": {% if post.templateContent %}{{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) | jsonify | safe }}{% else %}""{% endif %},
+      "content_md": {% if post.page.rawInput %}{{ post.page.rawInput | trim | jsonify | safe }}{% else %}""{% endif %},
       "date_published": "{{ post.date | dateToRfc3339 }}"
       {%- if post.data.bannerImage -%}
       ,"banner_image": "{{ (post.data.bannerImage + '-1600w.png') | absolute_url }}"

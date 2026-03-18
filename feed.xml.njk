@@ -44,7 +44,7 @@ metadata:
       <link>{{ absolutePostUrl }}</link>
       <guid isPermaLink="true">{{ absolutePostUrl }}</guid>
       <description><![CDATA[
-      {{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) }}
+      {{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) | safe }}
       ]]></description>
       <pubDate>{{  post.date | dateToRfc822 }}</pubDate>
       <author>{{ metadata.author.email }} ({{ (metadata.author.name) }})</author>
