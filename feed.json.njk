@@ -14,13 +14,19 @@ metadata:
   "version": "https://jsonfeed.org/version/1.1",
   "title": "{{ metadata.title }}",
   "home_page_url": "{{ metadata.url }}",
-  "feed_url": "{{ permalink | absolute_url }}",
-  "description": "{{ metadata.subtitle }}",
-  "authors": [
-    {
-      "name": "{{ metadata.author.name }}"
-    }
-  ],
+  "feed_url": "{{ site.url }}/feed.json",
+  "description": {{ metadata.subtitle | jsonify }},
+  "icon": "{{ "/assets/images/appicon/appicon@2x.png" | absolute_url }}",
+  "author": {
+    "name": "Nikhil Nigade",
+    "url": "https://social.dezinezync.com/@nikhil",
+    "avatar": "https://www.gravatar.com/avatar/884e476f05a20d0af1d8de59b946dbcf"
+  },
+  "language": "en-IN",
+  "hubs": [{
+    "type": "WebSub",
+    "url": "https://websubhub.com/hub"
+  }],
   "items": [
     {%- for post in collections.posts %}
     {%- set absolutePostUrl = post.url | absolute_url %}
