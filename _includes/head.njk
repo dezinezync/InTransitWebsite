@@ -36,12 +36,12 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@dezinezync" />
   <meta name="twitter:creator" content="@dezinezync" />
-{% if page.bannerImage %}
-  <meta property="og:image" content="{{ [page.bannerImage, '@2x.png'] | join | absolute_url  }}" />
-  <meta name="twitter:image" content="{{ [page.bannerImage, '@2x.png'] | join | absolute_url  }}" />
-{% elseif post.bannerImage %}
-  <meta property="og:image" content="{{ [post.bannerImage, '@2x.png'] | join | absolute_url }}" />
-  <meta name="twitter:image" content="{{ [post.bannerImage, '@2x.png'] | join | absolute_url }}" />
+{% if bannerImage %}
+  <meta property="og:image" content="{{ (bannerImage + '-1600w.png') | absolute_url }}" />
+  <meta name="twitter:image" content="{{ (bannerImage + '-1600w.png') | absolute_url }}" />
+{% elseif bannerImageWebP %}
+  <meta property="og:image" content="{{ (bannerImageWebP + '-1600w.webp') | absolute_url }}" />
+  <meta name="twitter:image" content="{{ (bannerImageWebP + '-1600w.webp') | absolute_url }}" />
 {% else %}
   <meta property="og:image" content="{{ "/assets/images/hero-1600w.webp" | absolute_url }}" />
   <meta name="twitter:image" content="{{ "/assets/images/hero-1600w.webp" | absolute_url }}" />

@@ -22,9 +22,9 @@ metadata:
   >
   <channel>
     <title>{{ metadata.title }}</title>
-    <link>{{ metadata.url }}{{ metadata.baseurl }}/</link>
+    <link>{{ metadata.url }}</link>
     <description><![CDATA[
-      {{ metdata.subtitle }}
+      {{ metadata.subtitle }}
     ]]></description>
     <pubDate>{{ collections.posts | getNewestCollectionItemDate | dateToRfc822 }}</pubDate>
     <language>en</language>
@@ -49,9 +49,9 @@ metadata:
       <pubDate>{{  post.date | dateToRfc822 }}</pubDate>
       <author>{{ metadata.author.email }} ({{ (metadata.author.name) }})</author>
       {%- if post.data.bannerImage -%}
-      <media:content url="{{ (post.data.bannerImage + '-1600w.png') | absolute_url }}" medium="image" lang="en"/>
+      <media:content url="{{ (post.data.bannerImage + '-1600w.png') | absolute_url }}" type="image/png" medium="image" lang="en"/>
       {%- elseif post.data.bannerImageWebP -%}
-      <media:content url="{{ (post.data.bannerImageWebP + '-1600w.webp') | absolute_url }}" medium="image" lang="en"/>
+      <media:content url="{{ (post.data.bannerImageWebP + '-1600w.webp') | absolute_url }}" type="image/webp" medium="image" lang="en"/>
       {%- endif -%}
     </item>
     {%- endfor %}
