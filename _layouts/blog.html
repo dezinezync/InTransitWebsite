@@ -1,0 +1,41 @@
+---
+layout: base
+bodyClass: mt-reading-page
+---
+{%- comment -%}
+  The layout of the blog index (blog/index.liquid). It shows 10 posts on each page.
+  _layouts/base.html adds the nav at the top, and the closing band and the footer at
+  the end. This layout adds the reading column of 680px with the list of posts, the
+  pagination, and the RSS pill. The page has no visible title. Its h1 is for screen
+  readers only.
+
+  Each item of the list is _includes/post-summary.html. The excerpt of a post is plain
+  text, so the platform tags (the `platformTags` filter) do not apply here.
+  The styles are in _sass/site/_blog.scss.
+{%- endcomment -%}
+<section class="mt-section mt-section--page mt-section--reading">
+  <div class="mt-section__inner">
+    <div class="mt-prose mt-prose--reading">
+      <h1 class="mt-u-visually-hidden">{{ site.title }} Blog</h1>
+      {%- if pagination.pages.length > 0 %}
+      <ul class="mt-post-list">
+        {%- for post in posts %}
+        {% render "post-summary.html", post: post, banner: true, first: forloop.first %}
+        {%- endfor %}
+      </ul>
+      {%- if pagination.pages.length > 1 %}
+      <nav class="mt-pagination" aria-label="Pages of the blog">
+        {%- if pagination.href.previous %}
+        <a class="previous" rel="prev" href="{{ pagination.href.previous | absolute_url }}">Previous</a>
+        {%- endif %}
+        <span>Page {{ pagination.pageNumber | plus: 1 }} of {{ pagination.pages.length }}</span>
+        {%- if pagination.href.next %}
+        <a class="next" rel="next" href="{{ pagination.href.next | absolute_url }}">Next</a>
+        {%- endif %}
+      </nav>
+      {%- endif %}
+      {%- endif %}
+      <p class="mt-rss">subscribe <a href="{{ "/feed.xml" | absolute_url }}">via RSS</a></p>
+    </div>
+  </div>
+</section>

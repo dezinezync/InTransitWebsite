@@ -1,0 +1,135 @@
+{%- comment -%}
+  The shell of each HTML page of the site, except the login page and the store
+  redirect (_layouts/login.html and _layouts/store.html): the head, the nav, the
+  content in `main`, the closing band with the footer, and the scripts. The head links
+  the stylesheet, /assets/css/site.css (see _includes/head.html and assets/css/site.scss).
+  A layout for one kind of page (for example _layouts/press.html) sets `layout: base`
+  and wraps its content.
+
+  A page or a layout can set these keys in its front matter:
+    bodyClass      The class of the body, for example `mt-press-page`.
+    sectionChrome  true: the toolbar and the status bar of the browser take the
+                   colour of the section at the top edge of the viewport. Use it for
+                   a page with a dark hero. See the script at the end of this file.
+    ogImage        The share image of the page. See _includes/head.html.
+    platformNav    true: shows the platform bar under the nav. The bar has links to the
+                   four landing pages: Home, iPhone & iPad, Mac, and iPhone Duo. Set it
+                   on those pages and on no other page. See _includes/platform-nav.html.
+    closingBlurb   The text under the title of the closing band, in place of the default
+                   text. See _includes/closing.html.
+
+  Cloudflare Web Analytics counts the visits with the beacon at the end of this file.
+{%- endcomment -%}
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en-IN" }}">
+{%- include "head.html" -%}
+<body{% if bodyClass %} class="{{ bodyClass | strip }}"{% endif %}>
+  {%- include "nav.html" %}
+  {%- if platformNav %}
+  {%- include "platform-nav.html" %}
+  {%- endif %}
+  <main>
+    {{ content }}
+  </main>
+  {%- comment -%} `.mt-closing` puts the band and the footer on one surface.
+  See _sass/site/_closing.scss. {%- endcomment %}
+  {%- include "closing.html" %}
+  {%- if sectionChrome %}
+  <script>
+    // Keep the browser chrome the same colour as the section below it.
+    //
+    // This script finds the section at the top edge of the viewport. It reads the
+    // `--mt-chrome` value of that section. Then it applies the colour in two places:
+    //   1. `--mt-chrome-active` on the root. The root background reads this value
+    //      (see _base.scss). Safari uses the root background at scroll 0 and in the
+    //      overscroll area.
+    //   2. A `.mt-chrome-strip` element (see _layout.scss), on wide viewports only.
+    //      Safari fills its top bar with the colour of a fixed element at the top
+    //      edge. The fill is solid. Without the strip, Safari applies the root colour
+    //      as a tint over the page content below its toolbar. Then the toolbar is
+    //      grey when a dark section and a light section meet below it.
+    //
+    // Narrow viewports (iPhone) get no strip. There, Safari has no toolbar at the
+    // top, and the status bar is transparent while the page scrolls. A strip makes
+    // the status bar a solid band, which cuts across the hero glow.
+    //
+    // Safari reads the colour of the strip only when the strip is added to the page.
+    // Safari ignores a later change to the colour of the same element. Thus the
+    // script adds a new strip for each colour change and removes the old strip.
+    //
+    // The top edge of the viewport is the bottom edge of the Safari bar. Thus the
+    // colour changes at the moment a new section touches the bar.
+    //
+    // Without the script, the page has no strip, and the root has the background
+    // colour of the page.
+    (function () {
+      var root = document.documentElement;
+      var bands = document.querySelectorAll('.mt-section, .mt-get-started, .mt-footer');
+      if (!bands.length) return;
+
+      // Keep this width the same as $bp-hero-up in _sass/site/_breakpoints.scss (735px,
+      // which is $bp-hero plus 1px).
+      var wide = window.matchMedia('(min-width: 735px)');
+      var current = null;
+      var wasWide = null;
+      var strip = null;
+      var queued = false;
+
+      function paint(color) {
+        root.style.setProperty('--mt-chrome-active', color);
+        var next = null;
+        if (wide.matches) {
+          next = document.createElement('div');
+          next.className = 'mt-chrome-strip';
+          next.setAttribute('aria-hidden', 'true');
+          next.style.backgroundColor = color;
+          // Add the new strip before the old strip is removed. Then the page always
+          // has one strip, and Safari does not go back to the tint.
+          document.body.appendChild(next);
+        }
+        if (strip) strip.remove();
+        strip = next;
+      }
+
+      function update() {
+        queued = false;
+        // Default to the first band (overscroll at the top), then find the band
+        // that crosses the top edge. The last band stays active below the page end.
+        var active = bands[0];
+        for (var i = 0; i < bands.length; i++) {
+          if (bands[i].getBoundingClientRect().top <= 1) active = bands[i];
+          else break;
+        }
+        // Paint again when the section changes, or when the viewport changes
+        // between narrow and wide.
+        if (active === current && wide.matches === wasWide) return;
+        current = active;
+        wasWide = wide.matches;
+        var color = getComputedStyle(active).getPropertyValue('--mt-chrome').trim();
+        if (color) paint(color);
+      }
+
+      function queue() {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(update);
+      }
+
+      window.addEventListener('scroll', queue, { passive: true });
+      window.addEventListener('resize', queue);
+      // The sections follow the system appearance, so their colours change when the
+      // appearance changes. Paint again, even if the section at the top stays the same.
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+        current = null;
+        queue();
+      });
+      update();
+    })();
+  </script>
+  {%- endif %}
+
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "158210a03dc44b6f9ecdd0036b2ca578"}'></script>
+  <!-- End Cloudflare Web Analytics -->
+</body>
+</html>

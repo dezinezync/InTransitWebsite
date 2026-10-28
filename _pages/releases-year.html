@@ -1,0 +1,19 @@
+---
+layout: releases
+pagination:
+  data: collections.releaseYears
+  size: 1
+  alias: yearData
+  addAllPagesToCollections: true
+permalink: "{{ yearData.permalink }}"
+eleventyComputed:
+  title: "Release Notes · {{ yearData.year }}"
+  description: "Every InTransit release from {{ yearData.year }} — what's new, improved, and fixed."
+  # The newest year has the same content as /releases/. Point search engines to
+  # /releases/ for that year. The value is empty for the other years, and then
+  # the head uses the address of the page.
+  canonical: "{% if yearData.latest %}/releases/{% endif %}"
+---
+{%- comment -%} One page for each year that has a release, at /releases/<year>/.
+The newest year is also at /releases/ (see _pages/releases.html). {%- endcomment -%}
+{%- include "releases.html" -%}

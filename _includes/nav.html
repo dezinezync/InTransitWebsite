@@ -1,0 +1,54 @@
+{%- comment -%}
+  Site navigation. A copy of _includes/nav.html on the Elytra site (from the Pockity
+  site), with the `mt-` prefix and the links of InTransit.
+  A page that uses _layouts/base.html has it at the top.
+
+  Wide viewports show the links in a row. Below 600px the row does not fit, so
+  the links are in a menu instead. The menu is a `details` element, so it opens
+  and closes without JavaScript. The script below closes it when the reader
+  clicks outside it or presses Escape.
+
+  The links are written one time, in `navLinks`, and used in the two places.
+  The styles are in _sass/site/_nav.scss.
+{%- endcomment -%}
+{%- capture navLinks -%}
+      <a href="{{ "/" | absolute_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Home</a>
+      <a href="{{ "/releases" | absolute_url }}"{% if page.url contains '/releases' %} aria-current="page"{% endif %}>Release Notes</a>
+      <a href="{{ "/blog" | absolute_url }}"{% if page.url contains '/blog' or page.url contains '/posts' %} aria-current="page"{% endif %}>Blog</a>
+      <a href="mailto:{{ site.email }}">Support</a>
+{%- endcapture -%}
+<nav class="mt-nav" aria-label="Site">
+  <div class="mt-nav__inner">
+    <div class="mt-nav__links">
+{{ navLinks }}
+    </div>
+    <details class="mt-nav__menu">
+      <summary class="mt-nav__menu-button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line></svg>
+        Menu
+      </summary>
+      <div class="mt-nav__menu-panel">
+{{ navLinks }}
+      </div>
+    </details>
+    <a class="mt-btn mt-btn--invert" href="{{ "/store" | absolute_url }}">Download</a>
+  </div>
+</nav>
+<script>
+  // Close the menu when the reader clicks outside it or presses Escape.
+  (function () {
+    var menu = document.querySelector('.mt-nav__menu');
+    if (!menu) return;
+
+    document.addEventListener('click', function (event) {
+      if (menu.open && !menu.contains(event.target)) menu.open = false;
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && menu.open) {
+        menu.open = false;
+        menu.querySelector('summary').focus();
+      }
+    });
+  })();
+</script>

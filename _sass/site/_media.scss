@@ -1,0 +1,262 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Media and feature components — wide media, device frame, video, card,
+// carousel, split block, collage. They read the tokens and do not know the theme,
+// so they restyle by themselves inside a dark section.
+// A copy of _sass/ios-2026/_media.scss on the Pockity site, with the `mt-` prefix.
+//
+// Not in this copy: `.pk-phone`, the CSS frame of an iPhone. It uses the bezel
+// images of the Pockity site. Elytra uses screenshots in Apple device frames.
+// ─────────────────────────────────────────────────────────────────────────
+
+@use "breakpoints" as *;
+
+// ── Wide media ─────────────────────────────────────────────────────────────
+// A large rounded image or video that goes past the text column.
+.mt-media {
+  margin-block-start: var(--mt-space-12);
+  border-radius: var(--mt-radius-card);
+  overflow: hidden;
+  background: var(--mt-bg-subtle);
+
+  // `display: contents` removes the <picture> box from the layout, so its <img>
+  // becomes the direct child of `.mt-media`. Else `height: 100%` resolves against
+  // the inline picture (auto height), and the box with the aspect ratio collapses.
+  picture { display: contents; }
+
+  img,
+  video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &--hero { aspect-ratio: 16 / 9; }
+  &--wide { aspect-ratio: 16 / 10; }
+  &--portrait {
+    aspect-ratio: 4 / 5;
+    max-width: 460px;
+    margin-inline: auto;
+  }
+}
+
+// ── Device frame ───────────────────────────────────────────────────────────
+.mt-device {
+  margin-inline: auto;
+
+  img,
+  video {
+    margin-inline: auto;
+    border-radius: var(--mt-radius-media);
+  }
+
+  // The look of a frame while the real image is not there yet.
+  &:empty,
+  &--placeholder {
+    display: grid;
+    place-items: center;
+    min-height: clamp(220px, 38vw, 460px);
+    background: var(--mt-bg-subtle);
+    border: 1px dashed var(--mt-border);
+    border-radius: var(--mt-radius-media);
+    color: var(--mt-text-3);
+    font-size: var(--mt-fs-caption);
+  }
+
+  &--lineup { max-width: var(--mt-wide-max); }
+  &--phone-v { max-width: 360px; }
+  &--pad-h { max-width: 820px; }
+}
+
+// ── Video ──────────────────────────────────────────────────────────────────
+.mt-video {
+  position: relative;
+
+  video {
+    width: 100%;
+    height: auto;
+  }
+
+  &__controls {
+    display: flex;
+    justify-content: center;
+    gap: var(--mt-space-4);
+    margin-block-start: var(--mt-space-4);
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--mt-space-2);
+      padding: var(--mt-space-2) var(--mt-space-4);
+      background: transparent;
+      border: 1px solid var(--mt-border);
+      border-radius: var(--mt-radius-pill);
+      color: var(--mt-text-2);
+      cursor: pointer;
+      transition: border-color var(--mt-dur-fast) var(--mt-ease),
+                  color var(--mt-dur-fast) var(--mt-ease);
+
+      &:hover { color: var(--mt-text); border-color: var(--mt-text-3); }
+      &[aria-hidden="true"] { display: none; }
+    }
+  }
+}
+
+// ── Feature card ───────────────────────────────────────────────────────────
+.mt-card {
+  background: var(--mt-surface);
+  border: 1px solid var(--mt-border);
+  border-radius: var(--mt-radius-card);
+  box-shadow: var(--mt-elev-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &__media {
+    padding: var(--mt-space-8) var(--mt-space-8) 0;
+
+    img,
+    video { border-radius: var(--mt-radius-media); }
+  }
+
+  &__caption {
+    padding: var(--mt-space-6) var(--mt-space-8) var(--mt-space-8);
+    font-size: var(--mt-fs-body);
+    line-height: 1.5;
+    color: var(--mt-text-2);
+  }
+
+  // The title of a card: weight 700, as an h4 on dezinezync.com.
+  &__lead {
+    font-size: var(--mt-fs-card);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--mt-text);
+  }
+
+  &--wide { /* the carousel track sets the size */ }
+
+  // A photo card. The image fills the card, and the caption is on a dark scrim.
+  // The screenshots are dense (busy from edge to edge), so the caption is at the
+  // bottom. Then the main content of each screenshot (the summary at the top) stays
+  // visible, and the text reads against a strong scrim in the lower 40% of the card.
+  // The scrim is clear by 68% of the height, so the top stays sharp. A text shadow
+  // helps where bright UI shows through.
+  &--immersive {
+    position: relative;
+    border: none;
+    box-shadow: none;
+    aspect-ratio: 4 / 5;
+    min-height: 380px;
+
+    > img,
+    > picture {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    > img,
+    > picture img { width: 100%; height: 100%; object-fit: cover; }
+
+    .mt-card__overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: var(--mt-space-2);
+      padding: var(--mt-space-8);
+      background: linear-gradient(to top,
+        oklch(0 0 0 / 0.92) 0%,
+        oklch(0 0 0 / 0.72) 18%,
+        oklch(0 0 0 / 0.28) 42%,
+        oklch(0 0 0 / 0) 68%);
+      color: oklch(1 0 0);
+    }
+
+    .mt-card__lead {
+      color: oklch(1 0 0);
+      text-shadow: 0 1px 3px oklch(0 0 0 / 0.55);
+    }
+    .mt-card__overlay p {
+      margin: 0;
+      max-width: 28ch;
+      color: oklch(1 0 0 / 0.92);
+      font-size: var(--mt-fs-body);
+      line-height: 1.4;
+      text-shadow: 0 1px 2px oklch(0 0 0 / 0.5);
+    }
+  }
+}
+
+// ── Card carousel ──────────────────────────────────────────────────────────
+.mt-carousel {
+  margin-block-start: var(--mt-space-12);
+
+  &__track {
+    display: flex;
+    gap: var(--mt-space-8);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-block-end: var(--mt-space-4);
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar { display: none; }
+
+    > li {
+      scroll-snap-align: center;
+      flex: 0 0 min(540px, 86vw);
+
+      .mt-card { height: 100%; }
+    }
+
+    > li:has(.mt-card--wide) { flex-basis: min(900px, 92vw); }
+  }
+}
+
+// ── Split block ────────────────────────────────────────────────────────────
+.mt-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--mt-space-16);
+  align-items: center;
+
+  &--media-left .mt-split__media { order: -1; }
+
+  @media (max-width: $bp-split) {
+    grid-template-columns: 1fr;
+    gap: var(--mt-space-12);
+
+    &--media-left .mt-split__media { order: 0; }
+
+    .mt-header { text-align: center; align-items: center; margin-inline: auto; }
+  }
+}
+
+// ── Photo collage ──────────────────────────────────────────────────────────
+.mt-collage {
+  margin-block-start: var(--mt-space-12);
+
+  img { border-radius: var(--mt-radius-media); }
+
+  &--scatter {
+    display: grid;
+    gap: var(--mt-space-6);
+    grid-template-columns: repeat(3, 1fr);
+
+    @media (max-width: $bp-grid) { grid-template-columns: 1fr; }
+  }
+
+  // The look of a collage while the real images are not there yet.
+  &:empty {
+    display: grid;
+    place-items: center;
+    min-height: clamp(220px, 30vw, 360px);
+    background: var(--mt-bg-subtle);
+    border: 1px dashed var(--mt-border);
+    border-radius: var(--mt-radius-media);
+    color: var(--mt-text-3);
+    font-size: var(--mt-fs-caption);
+  }
+}

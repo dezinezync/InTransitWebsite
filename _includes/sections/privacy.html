@@ -1,0 +1,46 @@
+{%- comment -%}
+  The "Private by Design" section: three promise cards, on a band that follows the system
+  appearance (light grey in the light appearance, near black in the dark one, with a soft glow
+  at the top). Each card has an icon and one statement, and the key words of the statement have
+  the colour of the icon. The home page, the iPhone & iPad page, and the Mac page show it, with
+  the same words.
+  The styles are in _sass/site/_sections.scss (`.mt-promise`). They are the promise cards of
+  the Pockity site.
+
+  Use it with `render`:
+    {% render "sections/privacy.html" %}
+    {% render "sections/privacy.html", tone: "plain" %}
+
+  Parameters:
+    tone       Optional. The background of the band: "tint" (the default) or "plain". Choose
+               the one that differs from the sections above and below it. Both have the glow.
+  The copy is in this file, so that each page says the same.
+{%- endcomment -%}
+{%- if tone == "plain" -%}
+  {%- assign privacyClass = "mt-section mt-section--glow" -%}
+{%- else -%}
+  {%- assign privacyClass = "mt-section mt-section--tint mt-section--glow" -%}
+{%- endif -%}
+<section class="{{ privacyClass }}" id="privacy" aria-labelledby="privacy-title">
+  <div class="mt-section__inner">
+    <header class="mt-header mt-header--center">
+      <p class="mt-eyebrow">Private by Design</p>
+      <h2 class="mt-header__title" id="privacy-title">Where You Go Is Your Business</h2>
+      <p class="mt-header__sub">InTransit uses your location on your iPhone to follow your ride. It never sends where you are to InTransit or anyone else.</p>
+    </header>
+    <ul class="mt-promises" role="list">
+      <li class="mt-promise mt-promise--green">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 28s-8.5-8.2-8.5-14.5a8.5 8.5 0 0 1 17 0C24.5 19.8 16 28 16 28z"/><circle cx="16" cy="13.5" r="3"/></svg>
+        <p><span class="mt-promise__key">Location stays on your iPhone.</span> Your next station and arrival are worked out on the device.</p>
+      </li>
+      <li class="mt-promise mt-promise--blue">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4.5 6.5 8v7.2c0 5.6 3.8 9.6 9.5 12.3 5.7-2.7 9.5-6.7 9.5-12.3V8z"/><path d="m11.7 15.9 3.1 3.1 5.6-5.9"/></svg>
+        <p><span class="mt-promise__key">Nothing that names you.</span> No account needed to plan and ride. No tracking, no ads.</p>
+      </li>
+      <li class="mt-promise mt-promise--purple">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M26.5 5.5 4.5 14.8l9.4 3.3 3.3 9.4z"/></svg>
+        <p><span class="mt-promise__key">Asks only when it needs to.</span> “Always Allow” comes up only when you start a ride.</p>
+      </li>
+    </ul>
+  </div>
+</section>

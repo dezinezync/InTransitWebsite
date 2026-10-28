@@ -1,0 +1,60 @@
+{%- comment -%}
+  A picture of an artboard of the Website page in MTApp.sketch. Sketch exports each
+  artboard as seven WebP files in assets/images/home/:
+    <name>.webp (1x), <name>@2x.webp, <name>@3x.webp, and
+    <name>-400w.webp, -800w.webp, -1200w.webp, -1600w.webp (by width).
+  This include lists them in a `srcset` with their widths, smallest first, and passes it
+  to _includes/picture.html. A file that is wider than the @3x file is a copy that Sketch
+  scaled up, so the list leaves it out.
+
+  Use it with `render`:
+    {% render "shot.html", name: "journey-phone", width: 256, height: 523,
+       sizes: "16rem", alt: "…" %}
+
+  Parameters:
+    name      The name of the artboard, which is the name of the files.
+    width     The size of the artboard, at 1x.
+    height
+    sizes     The `sizes` attribute of the image. Keep it the same as the CSS that sizes
+              the picture.
+    alt       The alternative text.
+    dark      Optional. true: the image has a dark artboard, <name>-dark, for the dark
+              appearance of the system. The picture shows those files in dark mode, but only
+              when <name>-dark.webp exists. Until then, dark mode shows the light files.
+    class     Optional. The class of the picture element.
+    loading   Optional. "lazy" (the default) or "eager".
+    priority  Optional. The `fetchpriority` of the image, for example "high".
+{%- endcomment -%}
+{%- assign base = "/assets/images/home/" | append: name -%}
+{%- assign w2 = width | times: 2 -%}
+{%- assign w3 = width | times: 3 -%}
+{%- comment -%} Each entry is "<width, 5 digits>|<file>", so that a sort of the text sorts by width. {%- endcomment -%}
+{%- capture entries -%}
+{{ width | prepend: "0000" | slice: -5, 5 }}|{{ base }}.webp,
+{{ w2 | prepend: "0000" | slice: -5, 5 }}|{{ base }}@2x.webp,
+{{ w3 | prepend: "0000" | slice: -5, 5 }}|{{ base }}@3x.webp
+{%- for w in (1..4) -%}
+{%- assign byWidth = w | times: 400 -%}
+{%- if byWidth <= w3 and byWidth != width and byWidth != w2 and byWidth != w3 -%},
+{{ byWidth | prepend: "0000" | slice: -5, 5 }}|{{ base }}-{{ byWidth }}w.webp
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+{%- assign sorted = entries | strip_newlines | split: "," | sort -%}
+{%- capture srcset -%}
+{%- for entry in sorted -%}
+{%- assign parts = entry | strip | split: "|" -%}
+{{ parts[1] }} {{ parts[0] | plus: 0 }}w{% unless forloop.last %}, {% endunless %}
+{%- endfor -%}
+{%- endcapture -%}
+{%- assign src = base | append: ".webp" -%}
+{%- assign darkSrcset = nil -%}
+{%- if dark -%}
+  {%- assign darkFile = base | append: "-dark.webp" -%}
+  {%- assign hasDarkFile = darkFile | fileExists -%}
+  {%- if hasDarkFile -%}
+    {%- assign darkBase = base | append: "-dark" -%}
+    {%- assign darkSrcset = srcset | replace: base, darkBase -%}
+  {%- endif -%}
+{%- endif -%}
+{% render "picture.html", srcset: srcset, src: src, darkSrcset: darkSrcset, sizes: sizes, width: width, height: height, alt: alt, class: class, loading: loading, priority: priority %}

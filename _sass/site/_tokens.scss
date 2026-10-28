@@ -1,0 +1,32 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Design tokens — the single source of truth for the system.
+// A copy of _sass/ios-2026/_tokens.scss on the Pockity site, with the `mt-`
+// prefix. Everything downstream reads var(--mt-*). No component hard-codes a value.
+// The values are in _token-defs.scss.
+//
+// One theme mechanism:
+//   1. `:root` has the light tokens.
+//   2. In a dark system appearance, `:root` has the dark tokens.
+//   3. A section with `.mt-section--dark`, or any element with [data-theme="dark"],
+//      always has the dark tokens, in the light appearance and in the dark one.
+// The custom properties inherit, so every component inside restyles by itself.
+// There is no script, and there is no light-only mode.
+// ─────────────────────────────────────────────────────────────────────────
+
+@use "token-defs" as *;
+
+:root {
+  @include mt-light-tokens;
+
+  @media (prefers-color-scheme: dark) {
+    @include mt-dark-tokens;
+  }
+}
+
+// A band that is always dark, such as a hero. `color-scheme` makes the form
+// controls and the scrollbars inside it dark too.
+[data-theme="dark"],
+.mt-section--dark {
+  @include mt-dark-tokens;
+  color-scheme: dark;
+}

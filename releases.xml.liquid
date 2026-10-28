@@ -1,0 +1,46 @@
+---
+permalink: /releases.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  >
+  <channel>
+    <title>{{ site.title }} Releases</title>
+    <link>{{ "/releases/" | absolute_url }}</link>
+    <description><![CDATA[Every InTransit release — a running changelog.]]></description>
+    <pubDate>{{ site.time | date_to_rfc822 }}</pubDate>
+    <language>en</language>
+    <image>
+      <url>{{ "/assets/images/appicon/apple-touch-icon.png" | absolute_url }}</url>
+      <title>{{ site.title }} Releases</title>
+      <link>{{ "/releases/" | absolute_url }}</link>
+      <width>128</width>
+      <height>128</height>
+    </image>
+    <link rel="self" href="{{ "/releases.xml" | absolute_url }}" xmlns="http://www.w3.org/2005/Atom"/>
+    {% assign releases = collections.releases | reverse %}
+    {% for release in releases limit: 20 %}
+      {%- assign releaseTitle = site.title -%}
+      {%- if release.data.version -%}
+        {%- assign releaseTitle = site.title | append: ' ' | append: release.data.version -%}
+      {%- else -%}
+        {%- assign releaseTitle = site.title | append: ' — ' | append: release.date | date: '%B %Y' -%}
+      {%- endif -%}
+      <item>
+        <title>{{ releaseTitle }}</title>
+        <link>{{ "/releases/" | absolute_url }}#{{ release.page.fileSlug }}</link>
+        <guid isPermaLink="false">{{ "/releases/" | absolute_url }}#{{ release.page.fileSlug }}</guid>
+        <description><![CDATA[
+        {%- if release.data.summary %}<p>{{ release.data.summary }}</p>{% endif -%}
+        {{ release.templateContent }}
+        ]]></description>
+        <pubDate>{{ release.date | date_to_rfc822 }}</pubDate>
+        <author>support@intransit.app (Nikhil)</author>
+      </item>
+    {% endfor %}
+  </channel>
+</rss>

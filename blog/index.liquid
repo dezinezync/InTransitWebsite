@@ -1,0 +1,16 @@
+---
+layout: blog
+pagination:
+  data: collections.posts
+  size: 10
+  alias: posts
+# The sitemap uses the newest post date as the <lastmod> of this page.
+listsCollection: posts
+permalink: "/blog/{% if pagination.pageNumber > 0 %}page{{ pagination.pageNumber | plus: 1 }}/{% endif %}index.html"
+eleventyComputed:
+  # Give each page of the blog its own title. The head adds " - InTransit" to it:
+  # "Blog - InTransit" for the first page, then "Blog, Page 2 - Elytra", and so on.
+  title: "Blog{% if pagination.pageNumber > 0 %}, Page {{ pagination.pageNumber | plus: 1 }}{% endif %}"
+  # Give each page its own description too. Pages 2 and up end with their number.
+  description: "Notes from Nikhil on building InTransit, and the stories behind each update.{% if pagination.pageNumber > 0 %} Page {{ pagination.pageNumber | plus: 1 }}.{% endif %}"
+---

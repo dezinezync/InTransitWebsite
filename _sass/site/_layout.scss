@@ -1,0 +1,142 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Layout primitives — section shell, content column, responsive grid.
+// A copy of _sass/ios-2026/_layout.scss on the Pockity site, with the `mt-` prefix.
+// ─────────────────────────────────────────────────────────────────────────
+
+@use "breakpoints" as *;
+@use "token-defs" as *;
+
+// A full-width band. The theme and the vertical rhythm are here.
+.mt-section {
+  background: var(--mt-bg);
+  color: var(--mt-text);
+  padding-block: var(--mt-section-y);
+
+  // The colour that the browser toolbar and status bar use while this section
+  // is at the top edge of the viewport. The script in _layouts/base.html reads this
+  // value and copies it to `--mt-chrome-active` on the root (see _base.scss).
+  // Keep this value the same as the background of the section.
+  --mt-chrome: var(--mt-bg);
+
+  // `--dark` has its own tokens (see _tokens.scss), so its contents flip.
+  &--tint  { background: var(--mt-bg-subtle); --mt-chrome: var(--mt-bg-subtle); }
+  &--flush { padding-block: 0; }
+
+  // The first section of a page that has no hero. The nav is in the flow of the
+  // page above it, so the section needs less space at its top.
+  &--page { padding-block-start: clamp(var(--mt-space-6), 4vw, var(--mt-space-12)); }
+
+  // The section of a reading page (the blog, a post, a legal page). The closing band
+  // below it has a large space at its own top, so the section needs less space at
+  // its bottom.
+  &--reading { padding-block-end: var(--mt-space-16); }
+
+  // The last section of a landing page. It has the colour of the closing band (see
+  // _closing.scss), so the page runs into the band with no seam. The band follows the
+  // system appearance, and so does this colour.
+  &--closing {
+    background: var(--mt-closing-bg);
+    --mt-chrome: var(--mt-closing-bg);
+  }
+
+  // A band with a soft glow of the app hue at its top edge (the Privacy section). In the
+  // dark appearance, the plain sections have the same black as a dark band, and without
+  // the glow the band would not show. Use it together with
+  // `.mt-section--dark`, or with `.mt-section--tint` for a band that follows the system
+  // appearance (the Privacy section of the Mac page). On a light tint the glow is softer.
+  // The colours are the properties `--mt-glow-core` and `--mt-glow-mid`.
+  &--glow {
+    --mt-glow-core: oklch(0.55 0.22 #{$mt-hue} / 0.2);
+    --mt-glow-mid:  oklch(0.58 0.18 #{$mt-hue} / 0.08);
+
+    @media (prefers-color-scheme: light) {
+      &:not(.mt-section--dark) {
+        --mt-glow-core: oklch(0.86 0.08 #{$mt-hue} / 0.5);
+        --mt-glow-mid:  oklch(0.93 0.04 #{$mt-hue} / 0.24);
+      }
+    }
+
+    position: relative;
+    isolation: isolate;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(ellipse 80% 45% at 50% 0%,
+        var(--mt-glow-core) 0%,
+        var(--mt-glow-mid) 42%,
+        transparent 70%);
+      pointer-events: none;
+    }
+  }
+}
+
+// A fixed strip at the top edge of the viewport. The script in _layouts/base.html
+// adds it on a page with `sectionChrome: true`, on wide viewports only, and sets its
+// colour inline. Safari fills its top bar with the background colour of this strip.
+// Safari ignores a strip that is less than about 6px high, so keep the height at 8px
+// or more. The strip has the colour of the section below it, so it does not show as a
+// separate element. It ignores pointer events.
+.mt-chrome-strip {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 200;
+  height: 8px;
+  background-color: var(--mt-chrome-active);
+  pointer-events: none;
+
+  @media print { display: none; }
+}
+
+// The inner box of a section. Media can grow to --mt-wide-max. Text stays narrower.
+.mt-section__inner {
+  max-width: var(--mt-wide-max);
+  margin-inline: auto;
+  padding-inline: var(--mt-space-6);
+}
+
+// A column of text. It is centred or left-aligned.
+.mt-prose {
+  max-width: var(--mt-content-max);
+
+  &--center {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  // The reading column of dezinezync.com (`.container.readable`): 680px, centred.
+  &--reading {
+    max-width: 680px;
+    margin-inline: auto;
+  }
+}
+
+// A responsive grid.
+.mt-grid {
+  display: grid;
+  gap: var(--mt-space-8);
+
+  &--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  &--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  @media (max-width: $bp-grid) {
+    &--2,
+    &--3 { grid-template-columns: 1fr; }
+  }
+}
+
+// Utility: the vertical space between a header and the media that follows it.
+.mt-u-stack-12 > * + * { margin-block-start: var(--mt-space-12); }
+
+// Utility: text for screen readers only. It takes no space on the screen.
+.mt-u-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

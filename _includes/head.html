@@ -1,0 +1,158 @@
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  {%- comment -%}
+    Front matter is exposed as top-level variables in Eleventy, not on `page`
+    (`page` only carries url/date/fileSlug/inputPath/outputPath). Referencing
+    `page.title` or `post.bannerImage` — the Jekyll idiom — silently yields
+    nothing, so keep these unprefixed.
+  {%- endcomment -%}
+  {%- comment %}
+    A post is a file in _posts/. Only a post is an article: the `og:type` tag, the
+    `article:*` tags, and the JSON-LD (_includes/structured-data.html) read `isPost`.
+  {%- endcomment %}
+  {%- if page.inputPath contains "/_posts/" %}
+    {%- assign isPost = true %}
+  {%- endif %}
+  {%- comment -%}
+    `metaTitle` in the front matter is the whole title of the page, for the <title>
+    element and for the link previews. The home page uses it. Without it, the title
+    is the `title` of the page, then " - ", then the name of the site. A page with
+    neither key gets the name of the site. The variable `fullTitle` below holds the
+    result. It is not `metaTitle`, because that name is the key of the front matter.
+  {%- endcomment -%}
+  {%- if metaTitle -%}
+    {%- assign fullTitle = metaTitle -%}
+  {%- elsif title -%}
+    {%- assign fullTitle = title | append: ' - ' | append: site.title -%}
+  {%- else -%}
+    {%- assign fullTitle = site.title -%}
+  {%- endif -%}
+  <title>{{ fullTitle | escape }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="supported-color-schemes" content="light dark">
+  <link rel="icon" type="image/png" href="{{ "/assets/images/favicon.png" | absolute_url }}">
+  {%- comment -%} The site has one stylesheet: /assets/css/site.css, which
+  assets/css/site.scss compiles. `stylesheet` in the front matter of a layout or a
+  page selects a different file. No page sets it. {%- endcomment %}
+  <link rel="stylesheet" href="{{ stylesheet | default: "/assets/css/site.css" | absolute_url }}">
+  <link rel="alternate" title="{{ site.title }}" type="application/rss+xml" href="{{ "/feed.xml"  | absolute_url}}"/>
+  <link rel="alternate" title="{{ site.title }}" type="application/json" href="{{ "/feed.json" | absolute_url }}" />
+  <meta name="apple-itunes-app" content="app-id={{ site.appId }}, app-argument={{ site.appStoreUrl }}"/>
+  {%- comment %}
+    The description of the page, for search results and link previews. `description` in
+    the front matter is plain text. A post has one that comes from the start of its text
+    (see _posts/_posts.11tydata.js). `excerpt` is the older key, and it can have HTML. A
+    page with neither key gets the line about the app. The `descriptionText` filter makes
+    each description one line of at most 160 characters. It cuts a longer text at the end
+    of a word. The `escape` filter in the tags below makes the text safe for an attribute.
+  {%- endcomment %}
+  {%- if description != blank %}
+    {%- assign metaDescription = description | descriptionText %}
+  {%- elsif excerpt != blank %}
+    {%- assign metaDescription = excerpt | strip_html | descriptionText %}
+  {%- else %}
+    {%- assign metaDescription = site.description | descriptionText %}
+  {%- endif %}
+  {%- comment %}
+    The share image, for `og:image` and `twitter:image`. A link preview needs a JPEG or a PNG
+    file that is smaller than 5 MB. Some services do not show a WebP file, and Twitter refuses
+    a file over 5 MB. Each banner has a copy that is 1200 pixels wide, and that is the right
+    size for a preview.
+      • `ogImage` in the front matter is the full path of the image on the site, with its
+        extension. A page that has its own share image sets it, for example /ios. The file
+        must be a JPEG or a PNG file.
+      • A post with `bannerImage` (PNG files) uses <path>-1200w.png.
+      • A post with `bannerImageWebP` (WebP files) uses <path>-1200w.jpg. Make this JPEG file
+        from <path>-1200w.webp (see "Share images" in CLAUDE.md). A post carries one of the
+        two keys, never both.
+      • A page with none of these keys gets the social card.
+    The `imageSize` filter reads the size and the media type of the file for the
+    `og:image:*` tags. The build stops with an error if the file does not exist.
+  {%- endcomment %}
+  {%- if ogImage %}
+    {%- assign metaImagePath = ogImage %}
+  {%- elsif bannerImage %}
+    {%- assign metaImagePath = bannerImage | append: '-1200w.png' %}
+  {%- elsif bannerImageWebP %}
+    {%- assign metaImagePath = bannerImageWebP | append: '-1200w.jpg' %}
+  {%- else %}
+    {%- comment %} The social card, 1200 x 630: the `social-card` artboard of MTApp.sketch, as a
+    JPEG file in sRGB. After a new export of the artboard, make the JPEG file again:
+      magick assets/images/home/social-card.webp -background white -alpha remove -alpha off \
+        -profile "/System/Library/ColorSync/Profiles/sRGB Profile.icc" -strip -quality 88 \
+        assets/images/home/social-card.jpg
+    {%- endcomment %}
+    {%- assign metaImagePath = "/assets/images/home/social-card.jpg" %}
+    {%- assign metaImageIsCard = true %}
+  {%- endif %}
+  {%- assign metaImage = metaImagePath | absolute_url %}
+  {%- assign metaImageSize = metaImagePath | imageSize %}
+  {%- comment %}
+    The alt text of the share image, for `og:image:alt` and `twitter:image:alt`.
+    `ogImageAlt` in the front matter sets it for a page. The social card has one text for
+    all pages: it says what the card shows. If the card
+    changes, change this text too. The share image of a post, its banner, gets the title
+    of the post.
+  {%- endcomment %}
+  {%- if ogImageAlt %}
+    {%- assign metaImageAlt = ogImageAlt %}
+  {%- elsif metaImageIsCard %}
+    {%- assign metaImageAlt = "InTransit, the metro app for India, on iPhone." %}
+  {%- elsif title %}
+    {%- assign metaImageAlt = title %}
+  {%- else %}
+    {%- assign metaImageAlt = site.title %}
+  {%- endif %}
+  {%- comment %} `canonical` in the front matter replaces the address of the page.
+  The releases page for the newest year uses it (see _pages/releases-year.html). {%- endcomment %}
+  {%- assign metaPath = canonical | default: page.url %}
+  {%- assign metaUrl = metaPath | absolute_url %}
+  <meta name="description" content="{{ metaDescription | escape }}">
+  <link rel="canonical" href="{{ metaUrl }}">
+  {%- comment -%} `noindex: true` in the front matter keeps a page out of search results
+  and out of the sitemap (see sitemap.xml.liquid). {%- endcomment -%}
+  {%- if noindex %}
+  <meta name="robots" content="noindex">
+  {%- endif %}
+  <meta property="og:title" content="{{ fullTitle | escape }}" />
+  <meta property="og:description" content="{{ metaDescription | escape }}" />
+  <meta property="og:image" content="{{ metaImage }}" />
+  <meta property="og:image:type" content="{{ metaImageSize.type }}" />
+  <meta property="og:image:width" content="{{ metaImageSize.width }}" />
+  <meta property="og:image:height" content="{{ metaImageSize.height }}" />
+  <meta property="og:image:alt" content="{{ metaImageAlt | escape }}" />
+  <meta property="og:url" content="{{ metaUrl }}" />
+  <meta property="og:site_name" content="{{ site.title }}" />
+  <meta property="og:locale" content="en_IN" />
+  {%- if isPost %}
+  <meta property="og:type" content="article" />
+  <meta property="article:published_time" content="{{ page.date | date_to_iso8601 }}" />
+  {%- if updated %}
+  <meta property="article:modified_time" content="{{ updated | date_to_iso8601 }}" />
+  {%- endif %}
+  {%- else %}
+  <meta property="og:type" content="website" />
+  {%- endif %}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ fullTitle | escape }}" />
+  <meta name="twitter:description" content="{{ metaDescription | escape }}" />
+  <meta name="twitter:image" content="{{ metaImage }}" />
+  <meta name="twitter:image:alt" content="{{ metaImageAlt | escape }}" />
+  <link rel="me" href="{{ site.mastodon }}"/>
+  <link rel="icon" sizes="180x180" href="{{ "/assets/images/appicon/apple-touch-icon-180x180.png" | absolute_url }}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/images/appicon/apple-touch-icon-180x180.png" | absolute_url }}" />
+  <link rel="apple-touch-icon" sizes="152x152" href="{{ "/assets/images/appicon/apple-touch-icon-152x152.png" | absolute_url }}" />
+  <link rel="apple-touch-icon" sizes="76x76" href="{{ "/assets/images/appicon/apple-touch-icon-76x76.png" | absolute_url }}" />
+  <link rel="apple-touch-icon" sizes="60x60" href="{{ "/assets/images/appicon/apple-touch-icon-60x60.png" | absolute_url }}" />
+  <link rel="apple-touch-icon" href="{{ "/assets/images/appicon/apple-touch-icon.png" | absolute_url }}" />
+  {%- if keywords -%}
+  <meta name="keywords" content="{{ keywords }}">
+  {%- elsif categories -%}
+  <meta name="keywords" content="{{ categories }}">
+  {%- else -%}
+  <meta name="keywords" content="{{ site.keywords }}">
+  {%- endif -%}
+  {%- comment %} The structured data (JSON-LD). It reads the variables above. {%- endcomment %}
+  {%- include "structured-data.html" %}
+</head>

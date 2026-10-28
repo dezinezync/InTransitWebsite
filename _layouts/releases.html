@@ -1,0 +1,15 @@
+---
+layout: base
+bodyClass: mt-releases-page
+---
+{%- comment -%}
+  The layout of the releases pages (_pages/releases.html and _pages/releases-year.html).
+  _layouts/base.html adds the nav at the top, and the closing band and the footer at the
+  end. This layout adds the section. The body of the page is _includes/releases.html.
+  The styles are in _sass/site/_releases.scss.
+{%- endcomment -%}
+<section class="mt-section mt-section--page" id="releases">
+  <div class="mt-section__inner">
+    {{ content }}
+  </div>
+</section>

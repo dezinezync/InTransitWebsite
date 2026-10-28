@@ -1,0 +1,19 @@
+---
+permalink: /sitemap.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {% for page in collections.all %}
+    {%- comment -%} Skip a page that has a different canonical address. The releases
+    page for the newest year is an example (see _pages/releases-year.html). Also skip a
+    page that has `noindex: true`, for example the 404 page. The `lastModified` filter
+    is in .eleventy.js. {%- endcomment -%}
+    {% if page.url and page.data.canonical == blank and page.data.noindex != true %}
+    <url>
+        <loc>{{ page.url | absolute_url }}</loc>
+        <lastmod>{{ page | lastModified: collections | date: '%Y-%m-%d' }}</lastmod>
+    </url>
+    {% endif %}
+    {% endfor %}
+</urlset>

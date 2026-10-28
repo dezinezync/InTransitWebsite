@@ -1,0 +1,247 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Hero — the dark band at the top of a landing page (Home, iPhone & iPad, Mac, and
+// iPhone Duo): the app icon, an eyebrow, the title, an intro, the App Store badge with
+// a short line under it, and a slot for the devices.
+// The hero part of _sass/ios-2026/_page-ios.scss on the Pockity site, made general. It
+// uses classes, not an id, so that each landing page can use it. The glow has the
+// hue 278 of the Elytra indigo, where the glow of the Pockity site has its purple.
+//
+// Markup: _includes/hero.html. It writes this structure:
+//
+//   <section class="mt-section mt-section--dark mt-hero">
+//     <header class="mt-header mt-header--center mt-hero__content">
+//       the icon, the eyebrow, the h1, the intro, and the store row with its line
+//     </header>
+//     <div class="mt-hero__media"> the picture of the devices </div>
+//   </section>
+//
+// The hero is dark in both appearances of the system. `.mt-section--dark` has the
+// dark tokens, so the text and the badge need no colour of their own.
+//
+// The page
+//   The body of a page with a hero has the class `mt-hero-page`. The nav and the
+//   platform bar are above the hero, in the flow of the page. On such a page they have
+//   the dark tokens and a black background, so they are on one surface with the hero.
+//   Else the text of the nav would be dark on black in the light appearance.
+//   The page must set `sectionChrome: true`, so that the browser bars take the colour
+//   of the section at the top (see _layouts/base.html). At the top of the page that is
+//   the black of the hero.
+//
+// The glow
+//   The glow is the `::before` of the hero. It has its centre behind the icon. The top
+//   edge of the hero is pure black, the same colour as the nav above it and the browser
+//   bars: a mask removes the glow there. Do not let the glow reach the top edge.
+//   A page can set these properties on `.mt-hero` to change the colours:
+//     --mt-hero-glow-core   The centre of the glow.
+//     --mt-hero-glow-mid    The edge of the glow.
+//     --mt-hero-sky         The colour at the top of the hero, under the mask.
+//     --mt-hero-eyebrow     The colour of the eyebrow.
+//     --mt-hero-icon-shadow The shadow under the app icon.
+//     --mt-hero-media-core  The centre of the glow behind the devices.
+//     --mt-hero-media-mid   The middle of that glow.
+//
+// The devices
+//   The slot `.mt-hero__media` is as wide as the content, 80rem at most. It keeps each
+//   image whole: the image has `width: 100%` and `height: auto`. Do not crop a device
+//   with `object-fit: cover`. The image in the slot is the LCP image of the page, so it
+//   has `loading: "eager"` and `priority: "high"` (see _includes/picture.html).
+//   On a phone (up to $bp-hero) the slot has no space at its sides, so the devices are as
+//   large as they can be. Keep the `sizes` of the image the same as the width of the slot:
+//   `(max-width: 734px) 100vw, min(calc(100vw - 3rem), 77rem)`.
+// ─────────────────────────────────────────────────────────────────────────
+
+@use "breakpoints" as *;
+@use "token-defs" as *;
+
+// ── The nav of a page with a hero ──────────────────────────────────────────
+.mt-hero-page {
+  .mt-nav,
+  .mt-platform-nav {
+    @include mt-dark-tokens;
+    color-scheme: dark;
+    // The black is the background of the hero and of the browser bars at the top of
+    // the page. It shows before the script of the page runs, too.
+    background: var(--mt-bg);
+  }
+}
+
+// The script of the page sets `--mt-chrome-active` after the page loads (see
+// _base.scss). Before that, and without the script, the root and the body have the black
+// of the hero. Else the area of an overscroll at the top is white in the light
+// appearance until the script runs.
+body.mt-hero-page { background-color: var(--mt-chrome-active, oklch(0 0 0)); }
+
+// A browser that has no `:has()` ignores this rule, and the rule above still works.
+html:has(body.mt-hero-page) { background-color: var(--mt-chrome-active, oklch(0 0 0)); }
+
+// ── Hero ───────────────────────────────────────────────────────────────────
+.mt-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  text-align: center;
+
+  // The hue of the Elytra indigo. It is the hue of --mt-accent.
+  --mt-hero-h: #{$mt-hue};
+
+  // The space between the nav and the icon. The nav is in the flow of the page, so
+  // this space is less than on the Pockity site, where the nav floats over the hero.
+  --mt-hero-pad: clamp(2rem, 5vw, 4rem);
+
+  // The glow has its centre behind the app icon. `--mt-glow-y` is the distance from the
+  // top of the hero to the centre of the icon (the icon is 156px high).
+  --mt-glow-y: calc(var(--mt-hero-pad) + 78px);
+  --mt-glow-size: 66% 40%;
+
+  --mt-hero-glow-core:  oklch(0.7 0.16 var(--mt-hero-h) / 0.36);
+  --mt-hero-glow-mid:   oklch(0.53 0.2 var(--mt-hero-h) / 0.12);
+  --mt-hero-sky:        oklch(0.152 0.021 var(--mt-hero-h));
+  --mt-hero-eyebrow:    oklch(0.83 0.1 var(--mt-hero-h));
+  --mt-hero-icon-shadow: oklch(0.45 0.17 var(--mt-hero-h) / 0.5);
+  --mt-hero-media-core: oklch(0.55 0.2 var(--mt-hero-h) / 0.3);
+  --mt-hero-media-mid:  oklch(0.55 0.2 var(--mt-hero-h) / 0.16);
+
+  padding-block: var(--mt-hero-pad) clamp(2.5rem, 5vw, 4.5rem);
+
+  // On a phone the hero is tall and narrow, so the ellipse of the desktop reads as a
+  // small glow. The same ellipse, larger, reaches further down the hero before it
+  // fades into the black of the devices.
+  @media (max-width: $bp-hero) {
+    --mt-glow-size: 100% 60%;
+    --mt-hero-glow-core: oklch(0.7 0.16 var(--mt-hero-h) / 0.4);
+    --mt-hero-glow-mid:  oklch(0.53 0.2 var(--mt-hero-h) / 0.14);
+  }
+
+  // The glow behind the icon and the title. It fades to the black of the page, so it
+  // blends into the black around the devices below. The mask removes the glow at the
+  // top edge (see the comment at the top of this file).
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(var(--mt-glow-size) at 50% var(--mt-glow-y),
+        var(--mt-hero-glow-core) 0%,
+        var(--mt-hero-glow-mid) 36%,
+        transparent 60%),
+      linear-gradient(180deg, var(--mt-hero-sky) 0%, var(--mt-bg) 46%);
+    -webkit-mask-image: linear-gradient(to bottom,
+      transparent 0,
+      oklch(0 0 0 / 0.12) calc(var(--mt-glow-y) * 0.3),
+      oklch(0 0 0 / 0.5)  calc(var(--mt-glow-y) * 0.6),
+      oklch(0 0 0)        var(--mt-glow-y));
+    mask-image: linear-gradient(to bottom,
+      transparent 0,
+      oklch(0 0 0 / 0.12) calc(var(--mt-glow-y) * 0.3),
+      oklch(0 0 0 / 0.5)  calc(var(--mt-glow-y) * 0.6),
+      oklch(0 0 0)        var(--mt-glow-y));
+  }
+
+  // The eyebrow lists product names (iPhone · iPad · Mac), so it keeps its natural case.
+  .mt-eyebrow { color: var(--mt-hero-eyebrow); }
+
+  // The intro is longer than a line, so it has a measure of its own. It is much wider than
+  // the intro of a split header (34ch): on a wide screen it has two lines, not three, and
+  // `balance` (_typography.scss) keeps the two lines even. On a phone the text column is
+  // narrower than this width, so nothing changes there.
+  .mt-header__sub { max-width: 48rem; }
+
+  // The line under the badge. It carries information, so it has the second text colour.
+  .mt-store__caption {
+    color: var(--mt-text-2);
+    font-size: var(--mt-fs-small);
+  }
+
+  &__content { padding-inline: var(--mt-space-6); }
+
+  // The app icon above the eyebrow. The icon has round corners in its alpha channel,
+  // and the shadow follows them. The `picture` has the class (see _includes/hero.html).
+  // Keep the `sizes` of the icon in that file (156px) the same as this width.
+  &__icon {
+    width: 156px;
+    height: 156px;
+    margin-block-end: var(--mt-space-2);
+    filter: drop-shadow(0 14px 28px var(--mt-hero-icon-shadow));
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  // A title that has two sentences. Each sentence is a line of its own. A line breaks
+  // only inside a sentence, and the second sentence never joins the first one.
+  &__line { display: block; }
+
+  // The slot of the devices. It is outside the text column and below the copy, and it
+  // never overlaps the copy.
+  &__media {
+    position: relative;
+    width: min(100%, var(--mt-wide-max));
+    margin-inline: auto;
+    margin-block-start: clamp(2.5rem, 5vw, 4.5rem);
+    padding-inline: var(--mt-space-6);
+
+    // On a phone the devices run from edge to edge.
+    @media (max-width: $bp-hero) { padding-inline: 0; }
+
+    // The image fills the slot. Its height follows its shape, so the devices stay whole.
+    img { width: 100%; }
+
+    // A soft glow of the app hue behind the devices, so that dark devices stand out
+    // from the black. It goes past the box above and below, and it fades out before
+    // the bottom edge of the hero.
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -12% 0;
+      z-index: -1;
+      background: radial-gradient(closest-side,
+        var(--mt-hero-media-core) 0%,
+        var(--mt-hero-media-mid) 45%,
+        transparent 100%);
+      pointer-events: none;
+    }
+  }
+}
+
+// ── A hero that follows the system appearance ─────────────────────────────
+// `_includes/hero.html` with `tone: "system"` writes `.mt-hero--system` and no
+// `.mt-section--dark`. The hero then has the tokens of the page: dark in the dark
+// appearance, with the glow and the colours above, and light in the light appearance.
+// In the light appearance it is white, with a soft indigo glow behind the icon and
+// behind the devices, as the light hero of the iPhone Duo page on the Pockity site.
+// The top edge stays white, the same colour as the nav and the browser bars above it.
+// Use it only when the picture of the devices has a light and a dark version.
+@media (prefers-color-scheme: light) {
+  .mt-hero--system {
+    --mt-hero-glow-core:  oklch(0.86 0.08 var(--mt-hero-h) / 0.55);
+    --mt-hero-glow-mid:   oklch(0.93 0.04 var(--mt-hero-h) / 0.3);
+    --mt-hero-sky:        var(--mt-bg);
+    --mt-hero-eyebrow:    var(--mt-accent);
+    --mt-hero-icon-shadow: oklch(0.45 0.17 var(--mt-hero-h) / 0.28);
+    --mt-hero-media-core: oklch(0.88 0.06 var(--mt-hero-h) / 0.5);
+    --mt-hero-media-mid:  oklch(0.91 0.04 var(--mt-hero-h) / 0.28);
+
+    @media (max-width: $bp-hero) {
+      --mt-hero-glow-core: oklch(0.86 0.08 var(--mt-hero-h) / 0.6);
+      --mt-hero-glow-mid:  oklch(0.93 0.04 var(--mt-hero-h) / 0.34);
+    }
+  }
+
+  // The page sets `mt-hero-system` in its `bodyClass`. The nav and the platform bar then
+  // have the light tokens, on the white of the hero, in place of the black above.
+  .mt-hero-page.mt-hero-system {
+    .mt-nav,
+    .mt-platform-nav {
+      @include mt-light-tokens;
+      color-scheme: light;
+    }
+  }
+
+  // Before the script of the page runs, the root and the body have the white of the
+  // hero, not the black of a dark hero (see the rules for `mt-hero-page` above).
+  body.mt-hero-page.mt-hero-system { background-color: var(--mt-chrome-active, oklch(1 0 0)); }
+  html:has(body.mt-hero-system) { background-color: var(--mt-chrome-active, oklch(1 0 0)); }
+}

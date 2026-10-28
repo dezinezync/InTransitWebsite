@@ -1,0 +1,278 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Shared sections — the styles of _includes/sections/*.html (privacy, pricing, reviews,
+// and help), and the parts that the pages share: a row of
+// links, a card that has only text, and the footnotes.
+// The sections come from the home page of the Pockity site (the Privacy and Pricing
+// cards of pages/ios-2026.md and the review cards), with the `mt-` prefix. Pockity
+// styles them in _page-ios.scss. Here they are shared, because the Home, iPhone &
+// iPad, Mac, and iPhone Duo pages use them.
+//
+// Page-only rules, for example the picture in one split, are in _page-home.scss and in
+// the files of the other pages.
+// ─────────────────────────────────────────────────────────────────────────
+
+@use "breakpoints" as *;
+
+// ── The space under a section header ───────────────────────────────────────
+// The content that follows the header of a section: a grid of cards, the reviews, the
+// line-up, or the switcher.
+.mt-header + .mt-grid,
+.mt-header + .mt-promises,
+.mt-header + .mt-reviews {
+  margin-block-start: clamp(2.5rem, 5vw, 4rem);
+}
+
+// ── A row of links ─────────────────────────────────────────────────────────
+// Links with an arrow, for example "Elytra for iPhone & iPad →" and "Elytra for Mac →".
+// A dot (`.mt-links__sep`) is between two links. On a phone the links are in a column,
+// and the dot does not show.
+.mt-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--mt-space-2) var(--mt-space-6);
+  margin-block-start: var(--mt-space-8);
+  font-size: var(--mt-fs-lead);
+  font-weight: 600;
+  line-height: 1.5;
+
+  a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  &__sep { color: var(--mt-text-3); }
+
+  @media (max-width: $bp-phone) {
+    flex-direction: column;
+
+    &__sep { display: none; }
+  }
+}
+
+// ── Promise cards ──────────────────────────────────────────────────────────
+// A card with an icon and one statement. The key words of the statement have a colour, and
+// the colour is the colour of the icon. The Privacy and Pricing sections use them, and so does
+// the Built In section of the Mac page.
+// The promise cards of the "Get Pockity" section of the Pockity site (`.pk-duo-get__promise`
+// in _sass/ios-2026/_duo-shared.scss), with the `mt-` prefix. Pockity has them on a dark band
+// only. Here the card, the text, and the colours are tokens, so the cards follow the appearance
+// of the section: dark cards on a dark band, and white cards on a light one.
+//
+// Markup (_includes/sections/privacy.html):
+//   <ul class="mt-promises" role="list">
+//     <li class="mt-promise mt-promise--green">
+//       <svg viewBox="0 0 32 32" aria-hidden="true">…</svg>
+//       <p><span class="mt-promise__key">The key words</span> and the rest of the statement.</p>
+//     </li>
+//     … one item for each promise
+//   </ul>
+// The icon is a line drawing in a box of 32 units. The CSS sets its stroke, so the svg has no
+// `fill` and no `stroke` of its own. The colour is a modifier:
+//   `--green`, `--blue`, `--orange`   The hues of the release notes (--mt-hue-new,
+//                                     --mt-hue-improved, and --mt-hue-fixed in _token-defs.scss).
+//   `--teal`, `--purple`, `--pink`,   More hues (--mt-hue-teal, --mt-hue-purple, --mt-hue-pink,
+//   `--yellow`                        and --mt-hue-yellow). With green and blue they are the
+//                                     colours of metro lines: purple, aqua, blue, yellow, green, pink.
+//   `--pricing`                       One blue (hue 240) for the three Pricing cards
+//                                     (--mt-hue-pricing).
+// Each hue has a light and a dark value that both have enough contrast.
+// The three cards are a row on a wide screen, and a column up to $bp-wide. A card is 10rem to
+// 13rem high at least, so the three cards have one height even when their statements differ.
+.mt-promises {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.4vw, 1.25rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: $bp-wide) { grid-template-columns: minmax(0, 1fr); }
+}
+
+.mt-promise {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mt-space-4);
+  min-height: clamp(10rem, 15vw, 13rem);
+  padding: clamp(1.5rem, 2.8vw, 2.25rem);
+  border-radius: clamp(22px, 2.4vw, 32px);
+  background: var(--mt-surface);
+  box-shadow: var(--mt-elev-card);
+
+  svg {
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    fill: none;
+    stroke: var(--mt-promise);
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  p {
+    margin: 0;
+    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: pretty;
+    color: var(--mt-text);
+  }
+
+  &__key { color: var(--mt-promise); }
+
+  &--green  { --mt-promise: var(--mt-hue-new); }
+  &--blue   { --mt-promise: var(--mt-hue-improved); }
+  &--orange { --mt-promise: var(--mt-hue-fixed); }
+  &--teal    { --mt-promise: var(--mt-hue-teal); }
+  &--purple  { --mt-promise: var(--mt-hue-purple); }
+  &--pink    { --mt-promise: var(--mt-hue-pink); }
+  &--yellow  { --mt-promise: var(--mt-hue-yellow); }
+  &--pricing { --mt-promise: var(--mt-hue-pricing); }
+
+  @media (max-width: $bp-wide) { min-height: 0; }
+}
+
+// A column of promise cards (`<ul class="mt-promises mt-promises--stack">`), as in the Make It
+// Yours section of the iPhone & iPad page, at the side of a picture. It has one column at every
+// width, and each card is a row: the icon at the left, and the statement at the right.
+.mt-promises--stack {
+  grid-template-columns: minmax(0, 1fr);
+
+  .mt-promise {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--mt-space-6);
+    min-height: 0;
+    padding: clamp(1.25rem, 2.2vw, 1.75rem) clamp(1.5rem, 2.6vw, 2rem);
+
+    p { font-size: clamp(1.125rem, 1.5vw, 1.3125rem); }
+  }
+}
+
+// ── A card with text ───────────────────────────────────────────────────────
+// A title (`.mt-card__lead`) and a paragraph, and an optional link at the bottom of
+// the card (`.mt-card__more`). The reading and help cards use it.
+// The cards of one row have the same height (the grid stretches them), and the link
+// stays at the bottom edge.
+.mt-card--text {
+  .mt-card__caption {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--mt-space-2);
+  }
+
+  .mt-card__lead { display: block; }
+
+  .mt-card__more {
+    margin-block-start: auto;
+    padding-block-start: var(--mt-space-2);
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+    }
+  }
+}
+
+// ── Reviews ────────────────────────────────────────────────────────────────
+// Reviews from the App Store, in cards (_includes/sections/reviews.html). A card is a quote, or a
+// picture of a review (`.mt-review__card--image`). The cards are
+// in a row that wraps. A last row with fewer cards is centred. The basis of 20rem gives
+// three cards in a row on a wide screen, two on a tablet, and one on a phone.
+.mt-reviews {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--mt-space-6);
+}
+
+.mt-review {
+  display: flex;
+  flex: 1 1 20rem;
+  max-width: 26rem;
+
+  &__card { flex: 1; }
+
+  // A review that is a picture (a card of the review, 900 x 1200, in light and in dark): the
+  // picture fills the card, which has the border and the shadow of a card, and cuts the picture at
+  // its rounded corners. The images are @3x: a card is 900 / 3 = 300px wide (18.75rem), and 400px
+  // high, and a screen of 2x uses the 600px file. Three cards fit in a row from 948px, so the
+  // section has three cards in two rows on a wide screen. A very narrow screen shrinks the card.
+  // Keep the `sizes` of the picture in _includes/sections/reviews.html the same as this width.
+  &--image {
+    --mt-review-w: 18.75rem;
+
+    flex: 0 1 var(--mt-review-w);
+    max-width: var(--mt-review-w);
+  }
+
+  &__card--image img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  &__quote {
+    padding: var(--mt-space-6) var(--mt-space-8) 0;
+    font-size: var(--mt-fs-card);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--mt-text);
+    text-wrap: pretty;
+  }
+
+  // The name and the source, at the bottom of the card.
+  &__by {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--mt-space-2);
+    margin-block-start: auto;
+    padding: var(--mt-space-4) var(--mt-space-8) var(--mt-space-6);
+    font-size: var(--mt-fs-small);
+    line-height: 1.5;
+    color: var(--mt-text-2);
+  }
+
+  &__name {
+    font-weight: 600;
+    color: var(--mt-text);
+  }
+}
+
+// ── Footnotes ──────────────────────────────────────────────────────────────
+// The notes at the end of a page (_includes/sections/footnotes.html). The number of a
+// note is the number in the text, which a `.mt-footnote-ref` shows. The notes are fine
+// print, but they carry information, so they have the second text colour.
+.mt-footnotes {
+  margin-block-start: var(--mt-space-12);
+  font-size: var(--mt-fs-fine);
+  line-height: 1.5;
+  color: var(--mt-text-2);
+
+  // The selector repeats the block name. It has to be more specific than `ol[class]` in
+  // _reset.scss, which removes the numbers and the padding of a list that has a class.
+  & &__list {
+    list-style: decimal;
+    padding-inline-start: 1.25em;
+  }
+
+  li:target { color: var(--mt-text); }
+}
+
+// The number of a note in the text. A small number has no line height, so that it does
+// not make its line taller. It is 0.65em of the text round it, less than the `smaller` of the
+// browser (about 0.83em), so the number stays small in a large text, for example in a card of
+// the Privacy section (1.5rem). A post has its own size for `sup` (0.75em, _prose.scss).
+.mt-footnote-ref {
+  font-size: 0.65em;
+  line-height: 0;
+
+  a { font-weight: 600; }
+}

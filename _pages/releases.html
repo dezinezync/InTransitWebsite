@@ -1,0 +1,12 @@
+---
+title: Release Notes
+layout: releases
+permalink: /releases/
+# The sitemap uses the newest release date as the <lastmod> of this page.
+listsCollection: releases
+description: Every InTransit release for iPhone — what's new, improved, and fixed.
+---
+{%- comment -%} This page shows the newest year that has a release.
+The page for each year is _pages/releases-year.html. {%- endcomment -%}
+{%- assign yearData = collections.releaseYears | first -%}
+{%- include "releases.html" -%}

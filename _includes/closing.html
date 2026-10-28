@@ -1,0 +1,48 @@
+{%- comment -%}
+  The closing surface: a "get started" band and the footer, on one background.
+  A copy of _includes/pk/get-started.html and _includes/pk/footer.html on the
+  Pockity site, with the `mt-` prefix. A page that uses _layouts/base.html has it at
+  the end.
+
+  The styles are in _sass/site/_closing.scss. The band follows the system
+  appearance (light or dark). The analytics beacon is not here. It is in
+  _layouts/base.html.
+
+  The title and the blurb come from the copy deck. The title calls back to the hero
+  ("Mind the Music, Not the Map"): the voice rules allow a wink at the top of the page
+  and one at the end. A page can set `closingBlurb` in its front matter, to show
+  that text in place of the default blurb. The text can have HTML.
+{%- endcomment -%}
+<div class="mt-closing">
+  <section class="mt-get-started" id="get-started" aria-labelledby="get-started-title">
+    <div class="mt-get-started__inner">
+      <img class="mt-get-started__icon" src="/assets/images/appicon/apple-touch-icon-180x180.png" width="92" height="92" alt="" loading="lazy">
+      <h2 class="mt-get-started__title" id="get-started-title">Your Playlist’s Ready. Are You?</h2>
+      <p class="mt-get-started__blurb">{{ closingBlurb | default: "Download InTransit, pick your station, and press play." }}</p>
+      <div class="mt-get-started__actions">
+        <a class="mt-get-started__badge" href="{{ "/store" | absolute_url }}" aria-label="Download InTransit on the App Store">
+          {%- comment -%} The black badge shows in light mode. The white badge shows in dark mode. {%- endcomment -%}
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="/assets/images/app-store-badge-white.svg"/>
+            <img src="/assets/images/app-store-badge.svg" width="150" height="50" alt="Download on the App Store" loading="lazy"/>
+          </picture>
+        </a>
+        <a class="mt-get-started__more" href="{{ "/releases" | absolute_url }}">See what’s new&nbsp;&rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="mt-footer">
+    <div class="mt-footer__inner">
+      <div>
+        <img class="mt-avatar" src="/assets/images/avatar-nikhil.png" srcset="/assets/images/avatar-nikhil@2x.png 2x, /assets/images/avatar-nikhil@3x.png 3x" width="64" height="64" alt="Avatar of Nikhil"/>
+      </div>
+      <div>
+        <p><strong>InTransit</strong> is made by <a href="https://social.dezinezync.com/@nikhil">Nikhil</a>, an indie developer in India.</p>
+        <p><a href="/terms">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/releases">Release Notes</a> · <a href="/blog">Blog</a> · <a href="/feed.xml">RSS</a></p>
+        <p>Apple, the Apple logo, iPhone, and Apple Watch are trademarks of Apple Inc., registered in the U.S. and other countries and regions. App Store is a service mark of Apple Inc.</p>
+        <p>&copy; {{ site.year }} Nikhil Nigade — All Rights Reserved</p>
+      </div>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,32 @@
+---
+layout: base
+bodyClass: mt-reading-page
+---
+{%- comment -%}
+  The layout of a post (_posts/). _layouts/base.html adds the nav at the top, and the
+  closing band and the footer at the end. This layout adds the reading column of 680px
+  with the title, the date, the banner, the text, and the link back to the blog.
+
+  The title is the h1 of the page. The text goes through the `platformTags` filter
+  (.eleventy.js), which turns `macOS` and the other platform names in code elements into
+  tags. The feeds carry the text as it is.
+  The banner is _includes/post-banner.html. The styles of the page are in
+  _sass/site/_blog.scss, and the styles of the text are in _sass/site/_prose.scss.
+{%- endcomment -%}
+<section class="mt-section mt-section--page mt-section--reading">
+  <div class="mt-section__inner">
+    <div class="mt-prose mt-prose--reading">
+      <article class="mt-article">
+        <header class="mt-article__header">
+          <h1 class="mt-article__title">{{ title | escape }}</h1>
+          <time class="mt-meta" datetime="{{ date | date: '%Y-%m-%d' }}">{{ date | date: '%b %-d, %Y' }}</time>
+        </header>
+        {%- render "post-banner.html", png: bannerImage, webp: bannerImageWebP, class: "mt-post-banner", loading: "eager", priority: "high" %}
+        <div class="mt-article__body">
+          {{ content | platformTags }}
+        </div>
+      </article>
+      <p class="mt-back"><a href="{{ "/blog/" | absolute_url }}">All posts</a></p>
+    </div>
+  </div>
+</section>

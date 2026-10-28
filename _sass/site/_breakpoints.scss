@@ -1,0 +1,44 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Breakpoints — the widths where a layout changes.
+// A copy of the widths that the Pockity site writes in each rule, as names.
+//
+// Use these variables in each `@media` query. Do not write a width in a rule.
+// Each value is a `max-width` limit: the narrow layout applies up to this width.
+// _breakpoints.scss writes no CSS. A partial that uses a breakpoint loads this file
+// with `@use "breakpoints" as *;`.
+// ─────────────────────────────────────────────────────────────────────────
+
+// The nav links become a Menu button. A list of facts gets one column.
+$bp-phone: 600px;
+
+// Tiles and the release timeline use their narrow layout.
+$bp-tile: 720px;
+
+// A hero uses its phone layout. This is the width where Apple changes its hero.
+$bp-hero: 734px;
+
+// A hero is wide from this width. It is $bp-hero plus 1px.
+// The script in _layouts/base.html (`sectionChrome`) uses this value in a
+// `matchMedia` query, because a script cannot read a Sass variable. If you change
+// $bp-hero, change that script and the `narrow` query of _includes/picture.html.
+$bp-hero-up: 735px;
+
+// A card beside the text moves below it (the press page).
+$bp-aside: 760px;
+
+// A grid or a collage gets one column.
+$bp-grid: 800px;
+
+// A split block gets one column.
+$bp-split: 860px;
+
+// The closing band gets one centred column.
+$bp-wide: 900px;
+
+// The press column takes the full width, with a space at each side. It is the width
+// below which the old stylesheet gave its container a padding.
+$bp-column: 575px;
+
+// A very narrow phone, such as the first iPhone SE (320px). The tabs of the switcher
+// lose their glyphs, so that the three tabs fit in the width of the screen.
+$bp-narrow: 359px;

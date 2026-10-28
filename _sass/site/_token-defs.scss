@@ -1,0 +1,168 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Token definitions — the values of the design tokens, as mixins. This file
+// writes no CSS. _tokens.scss applies the mixins to the page.
+// A copy of _sass/site/_token-defs.scss on the Elytra site (itself a copy of
+// _sass/ios-2026/_token-defs.scss on the Pockity site), with the `mt-` prefix ("MT", the
+// code name of InTransit), the blue of InTransit, and the text colours and fonts of
+// dezinezync.com.
+//
+// Colours are in oklch, not in hex. A length in `rem` is a plain `rem`.
+//
+// Contrast. WCAG asks for 4.5:1 for normal text. The ratios are:
+//   Light page   --mt-accent on --mt-bg 5.31:1, on --mt-bg-subtle 4.88:1.
+//                --mt-text-2 on --mt-bg 5.07:1, on --mt-bg-subtle 4.66:1.
+//                --mt-text-3 on --mt-bg 3.26:1. It is the grey of dezinezync.com for
+//                dates and captions. Do not use it for text that carries
+//                information. Use --mt-text-2 for that text.
+//                --mt-text-4 on --mt-bg 2.21:1. Use it for fine print only.
+//   Dark page    --mt-accent on --mt-bg 8.38:1, on --mt-bg-subtle 7.69:1,
+//                on --mt-surface 6.80:1.
+//                --mt-text-2 on --mt-surface 6.63:1.
+//                --mt-text-3 on --mt-surface 5.22:1.
+//                --mt-text-4 on --mt-bg 3.51:1, on --mt-surface 2.85:1.
+// The platform hues (--mt-hue-ios, -ipados, -mac, and -watch) colour the text of a tag
+// (.mt-tag), which has the background --mt-bg-subtle. Each hue has 4.5:1 or more on
+// that background: from 4.83:1 (watchOS) to 5.20:1 (iOS) in the light page, and from
+// 6.98:1 (iOS) to 11.50:1 (watchOS) in the dark page.
+// The blue of the app icon (#0a66ff, oklch 0.564 0.24 261) has only 4.48:1 on
+// --mt-bg-subtle. The light accent is a little darker (lightness 0.54), so that text in
+// the accent colour has 4.5:1 on each light background.
+// ─────────────────────────────────────────────────────────────────────────
+
+// The hue of InTransit's blue. The glows of the hero (_hero.scss) and of a section
+// (`.mt-section--glow` in _layout.scss) use it. Elytra has its indigo, 278, here.
+$mt-hue: 261;
+
+@mixin mt-light-tokens {
+  // ── Colour · light ──────────────────────────────────────────────────────
+  --mt-bg:           oklch(1 0 0);                  // #ffffff
+  --mt-bg-subtle:    oklch(0.971 0.003 286.4);      // #f5f5f7, a tinted section and panels
+  --mt-surface:      oklch(1 0 0);                  // cards
+  --mt-text:         oklch(0.227 0.004 286);        // #1c1c1e, the text colour of dezinezync.com
+  --mt-text-2:       oklch(0.54 0.008 286);         // #6e6e73, intro paragraphs and secondary text
+  --mt-text-3:       oklch(0.648 0.007 286);        // #8e8e93, dates and captions
+  --mt-text-4:       oklch(0.752 0.006 286.3);      // #aeaeb2, fine print and footnotes
+  --mt-accent:       oklch(0.54 0.22 261);          // the blue of InTransit, for text
+  --mt-accent-press: oklch(0.47 0.2 261);           // the accent under the pointer
+  --mt-on-accent:    oklch(1 0 0);                  // text and icons on the accent
+  --mt-border:       oklch(0 0 0 / 0.08);
+  --mt-shadow:       0 6px 24px oklch(0 0 0 / 0.06);
+
+  // The colours of the headings in the release notes: green for new, blue for
+  // improved, orange for fixed, and red for removed.
+  --mt-hue-new:      oklch(0.6 0.16 150);
+  --mt-hue-improved: oklch(0.58 0.16 250);
+  --mt-hue-fixed:    oklch(0.65 0.16 55);
+  --mt-hue-removed:  oklch(0.57 0.2 20);
+
+  // The colour of the Pricing cards (.mt-promise--pricing): the blue of InTransit.
+  --mt-hue-pricing:  oklch(0.54 0.22 261);
+
+  // More hues for the promise cards (.mt-promise--teal, --purple, --pink, and --yellow). The
+  // cards of InTransit take the colours of metro lines: purple, aqua (teal), blue, yellow,
+  // green, and pink. The yellow is dark, an amber, because a bright yellow has no contrast on
+  // white: 4.72:1 on --mt-surface.
+  --mt-hue-teal:     oklch(0.55 0.11 195);
+  --mt-hue-purple:   oklch(0.52 0.18 305);
+  --mt-hue-pink:     oklch(0.56 0.19 350);
+  --mt-hue-yellow:   oklch(0.56 0.12 80);
+
+  // The colours of the platform tags: the text of an iOS, iPadOS, macOS, or watchOS pill.
+  // iOS has the blue of InTransit. The other three are darker than the system colours of
+  // the platforms, so that the small text has enough contrast.
+  --mt-hue-ios:      oklch(0.54 0.22 261);
+  --mt-hue-ipados:   oklch(0.54 0.19 350);
+  --mt-hue-mac:      oklch(0.52 0.11 235);
+  --mt-hue-watch:    oklch(0.52 0.09 188);
+
+  // ── Typography ──────────────────────────────────────────────────────────
+  // The font stack of dezinezync.com. The pages use no web font.
+  --mt-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mt-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --mt-fs-eyebrow: 0.85rem;
+  --mt-fs-nav:     0.9rem;                              // nav links
+  --mt-fs-display: clamp(2rem, 5vw, 3rem);              // hero title, 32px to 48px
+  --mt-fs-h2:      clamp(1.85rem, 3.4vw, 2.75rem);      // section title, 30px to 44px
+  --mt-fs-sub:     clamp(1.0625rem, 1.5vw, 1.375rem);   // intro paragraph, 17px to 22px
+  --mt-fs-card:    1.2rem;                              // card title
+  --mt-fs-lead:    1.0625rem;
+  --mt-fs-body:    1rem;
+  --mt-fs-small:   0.875rem;                            // buttons and pills
+  --mt-fs-meta:    0.85rem;                             // dates
+  --mt-fs-caption: 0.8125rem;
+  --mt-fs-fine:    0.8rem;                              // fine print and footnotes
+
+  // ── Spacing ─────────────────────────────────────────────────────────────
+  --mt-space-1: 0.25rem;
+  --mt-space-2: 0.5rem;
+  --mt-space-3: 0.75rem;
+  --mt-space-4: 1rem;
+  --mt-space-6: 1.5rem;
+  --mt-space-8: 2rem;
+  --mt-space-12: 3rem;
+  --mt-space-16: 4rem;
+
+  --mt-section-y:   clamp(4rem, 9vw, 8rem);   // vertical rhythm between sections
+  --mt-content-max: 60rem;                    // text column
+  --mt-wide-max:    80rem;                    // media bleed
+
+  // ── Radii ───────────────────────────────────────────────────────────────
+  --mt-radius-card:  24px;
+  --mt-radius-media: 18px;
+  --mt-radius-pill:  999px;
+
+  // ── Elevation ───────────────────────────────────────────────────────────
+  --mt-elev-card: var(--mt-shadow);
+
+  // The shadow under a framed capture, and the thin rim round it (`.mt-shot` in
+  // _shots.scss). The capture is a device in its frame, or a window of the Mac, with a
+  // transparent background. On a light page the rim is a dark hairline.
+  --mt-shot-shadow: oklch(0 0 0 / 0.2);
+  --mt-shot-rim:    oklch(0 0 0 / 0.12);
+
+  // ── Motion ──────────────────────────────────────────────────────────────
+  --mt-dur-fast: 150ms;
+  --mt-dur:      280ms;
+  --mt-ease:     cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+// ── Colour · dark ──────────────────────────────────────────────────────────
+// The dark palette, as a mixin. _tokens.scss applies it in two ways: for the
+// system appearance (`prefers-color-scheme`), and for a section that is always dark.
+@mixin mt-dark-tokens {
+  --mt-bg:           oklch(0 0 0);                  // true black
+  --mt-bg-subtle:    oklch(0.165 0.004 285.9);      // #0e0e10
+  --mt-surface:      oklch(0.227 0.004 286.1);      // #1c1c1e, dark cards
+  --mt-text:         oklch(0.963 0.007 286);        // #f2f2f7, the dark text colour of dezinezync.com
+  --mt-text-2:       oklch(0.711 0.007 286.2);      // #a1a1a6
+  --mt-text-3:       oklch(0.648 0.007 286);        // #8e8e93
+  --mt-text-4:       oklch(0.501 0.005 286.2);      // #636366
+  --mt-accent:       oklch(0.72 0.15 258);          // the blue, lifted for contrast on black
+  --mt-accent-press: oklch(0.79 0.11 258);
+  --mt-on-accent:    oklch(0 0 0);
+  --mt-border:       oklch(1 0 0 / 0.12);
+  --mt-shadow:       0 10px 40px oklch(0 0 0 / 0.5);
+
+  --mt-hue-new:      oklch(0.78 0.15 150);
+  --mt-hue-improved: oklch(0.74 0.14 250);
+  --mt-hue-fixed:    oklch(0.78 0.15 60);
+  --mt-hue-removed:  oklch(0.72 0.18 20);
+
+  --mt-hue-pricing:  oklch(0.72 0.15 258);
+
+  --mt-hue-teal:     oklch(0.78 0.11 195);
+  --mt-hue-purple:   oklch(0.75 0.14 305);
+  --mt-hue-pink:     oklch(0.78 0.15 350);
+  --mt-hue-yellow:   oklch(0.85 0.15 88);
+
+  --mt-hue-ios:      oklch(0.72 0.15 258);
+  --mt-hue-ipados:   oklch(0.78 0.13 350);
+  --mt-hue-mac:      oklch(0.8 0.1 235);
+  --mt-hue-watch:    oklch(0.82 0.1 188);
+
+  // On a dark page the shadow is deeper, and the rim is a light hairline. Without the rim, a
+  // dark window would have no edge on the black page.
+  --mt-shot-shadow:  oklch(0 0 0 / 0.6);
+  --mt-shot-rim:     oklch(1 0 0 / 0.22);
+}

@@ -1,0 +1,326 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Prose — the text of a post and of a legal page (privacy and terms).
+//
+// The type and the spacing come from the blog of dezinezync.com (the
+// `.article-content` rules of _sass/layouts/blog.scss on that site): paragraphs of
+// 1.05rem with a line height of 1.6, headings of weight 700, a blockquote with a bar,
+// and an aside with an "ⓘ". That site has no rules for a table, a figure, a footnote,
+// or code. The rules for them are new, in the same style: the subtle background for a
+// header cell or a block, the border colour for a rule, and the grey of the meta text
+// for a caption.
+//
+// The text is raw HTML. About 100 of the 119 posts came from WordPress, and the
+// Markdown posts have the same elements. So the rules are for elements, not for
+// classes. The classes of markdown-it-footnote are the exception.
+//
+// Every element rule starts with `:where(.mt-prose)`. That scope adds no specificity.
+// A rule for a class (for example `.mt-post-list__title`) changes an element inside
+// the column, and it needs no stronger selector.
+//
+// The type has no letter spacing, no font feature, and no `text-wrap`. The column
+// is `.mt-prose--reading` (see _layout.scss): 680px wide, in the middle.
+// ─────────────────────────────────────────────────────────────────────────
+
+.mt-prose {
+  // A long address or word breaks at the edge of the column. It does not widen
+  // the page. This is the rule that keeps a long URL in a phone from making the page
+  // scroll sideways.
+  overflow-wrap: anywhere;
+
+  // The reset gives these elements `break-word`, and that value does not make the
+  // minimum width of a box smaller. This rule is after the reset and has a class, so
+  // it wins.
+  :where(p, h1, h2, h3, h4, h5, h6) { overflow-wrap: anywhere; }
+}
+
+:where(.mt-prose) {
+  // ── Headings ─────────────────────────────────────────────────────────────
+  // An h1 is the title of a legal page. Two old posts have an h1 in the text, too.
+  // An h1 looks like an h2, so that a title in the text is not larger than the title
+  // of the post (1.5rem).
+  h1, h2, h3, h4, h5, h6 {
+    margin: 2rem 0 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: normal;
+    color: var(--mt-text);
+  }
+  h1, h2 { font-size: 1.5em; }
+  h3 { font-size: 1.17em; }
+  h4, h5, h6 { font-size: 1em; }
+
+  // ── Text ─────────────────────────────────────────────────────────────────
+  p {
+    margin: 0 0 1.25rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  // A paragraph with no content. A `</p>` with no `<p>` before it in an old post
+  // makes one, and its margin would make a gap.
+  p:empty { display: none; }
+
+  // A link has the accent colour (see _base.scss), and an underline on hover.
+  a {
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  small {
+    font-size: 0.85em;
+    color: var(--mt-text-2);
+  }
+
+  // A superscript or a subscript does not make its line taller.
+  sup,
+  sub {
+    position: relative;
+    font-size: 0.75em;
+    line-height: 0;
+    vertical-align: baseline;
+  }
+  sup { top: -0.5em; }
+  sub { bottom: -0.25em; }
+
+  hr {
+    margin: 2rem 0;
+    border: 0;
+    border-top: 1px solid var(--mt-border);
+  }
+
+  // ── Lists ────────────────────────────────────────────────────────────────
+  // The reset removes the margin and the marker of a list. A list in the text is
+  // a list with no class, so only the margin and the padding come back here.
+  ul,
+  ol {
+    margin: 0 0 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  li { margin-bottom: 0.5rem; }
+
+  // A list in a list item has no space below it. The item has its own space.
+  li > ul,
+  li > ol {
+    margin: 0.5rem 0 0;
+  }
+
+  // Many old posts wrap the text of a list item in a `p`. The text then has the
+  // size of a list item, and the item has the space.
+  li > p,
+  td > p,
+  th > p {
+    margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+  }
+  li > p + p { margin-top: 0.5rem; }
+
+  // ── Blockquote ───────────────────────────────────────────────────────────
+  // A bar in the accent colour, and the subtle background. The paragraphs have no
+  // margin. A second paragraph in the quote follows the first with a small space.
+  blockquote {
+    margin: 2rem 0;
+    padding: 0.5rem 1rem;
+    border-left: 4px solid var(--mt-accent);
+    border-radius: 0 8px 8px 0;
+    background: var(--mt-bg-subtle);
+
+    p { margin: 0; }
+    p + p { margin-top: 0.75rem; }
+  }
+
+  // ── Aside ────────────────────────────────────────────────────────────────
+  // A note in the text, with an "ⓘ" at the leading edge. No post uses it yet. It is
+  // here for the next posts.
+  aside {
+    position: relative;
+    margin: 2rem 0;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    border: 1px solid var(--mt-border);
+    border-radius: 8px;
+    background: var(--mt-bg-subtle);
+    font-size: 0.95rem;
+    line-height: 1.6;
+
+    // The second `content` gives the sign an empty text for screen readers. A browser
+    // that does not know the second value keeps the first.
+    &::before {
+      content: "ⓘ";
+      content: "ⓘ" / "";
+      position: absolute;
+      left: 1rem;
+      top: 0.7rem;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--mt-accent);
+    }
+
+    p {
+      margin: 0;
+      font-size: inherit;
+      line-height: inherit;
+    }
+    p:not(:last-child) { margin-bottom: 0.75rem; }
+  }
+
+  // ── Media ────────────────────────────────────────────────────────────────
+  // An image, a picture, or a video is at most as wide as the column, keeps its
+  // proportions, and is in the middle. Old posts set `width` and `height` on them
+  // (an image of 952px, a video of `width="980"`). `max-width` makes them smaller on
+  // a phone, and `height: auto` keeps the proportions. The `border="0"` attribute of
+  // an old image has no effect: it sets a width of 0.
+  img,
+  video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 2rem auto;
+    border-radius: 4px;
+  }
+  picture { display: block; }
+
+  figure { margin: 2rem 0; }
+  figure img,
+  figure video { margin-block: 0; }
+
+  figcaption,
+  caption {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--mt-text-3);
+  }
+  figcaption {
+    margin-top: 0.75rem;
+    text-align: center;
+  }
+
+  // ── Table ────────────────────────────────────────────────────────────────
+  // A table is a block that scrolls on its own, so a wide table does not widen the
+  // page. It is only as wide as its content, up to the width of the column. A word in
+  // a cell stays whole: the table scrolls, and it does not break a word to make the
+  // columns narrower.
+  table {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    margin: 0 0 1.5rem;
+    overflow-x: auto;
+    overflow-wrap: normal;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  th,
+  td {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--mt-border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    background: var(--mt-bg-subtle);
+    font-weight: 600;
+  }
+
+  caption {
+    caption-side: bottom;
+    padding-top: 0.5rem;
+    text-align: left;
+  }
+
+  // ── Code ─────────────────────────────────────────────────────────────────
+  // The monospace font of the system. The posts have no language for the code, so there
+  // is no highlight. A block has a subtle background, a border, and a small radius. A
+  // code element in a line has the same style, with a small padding.
+  code,
+  pre {
+    font-family: var(--mt-font-mono);
+  }
+
+  code {
+    padding: 0.1em 0.35em;
+    border: 1px solid var(--mt-border);
+    border-radius: 4px;
+    background: var(--mt-bg-subtle);
+    color: var(--mt-text);
+    font-size: 0.9em;
+  }
+
+  // A line of code does not wrap. A long line scrolls inside the block.
+  pre {
+    margin: 0 0 1.5rem;
+    padding: 0.875rem 1rem;
+    overflow-x: auto;
+    border: 1px solid var(--mt-border);
+    border-radius: 8px;
+    background: var(--mt-bg-subtle);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    tab-size: 4;
+  }
+
+  pre code {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    font-size: inherit;
+  }
+
+  // ── Footnotes ────────────────────────────────────────────────────────────
+  // A number in the text: a `sup` with a link. It is the same for the footnotes of
+  // markdown-it-footnote (`.footnote-ref`) and for the old footnotes that were
+  // written by hand (`<sup><a id="fn1">`).
+  sup a {
+    padding: 0 0.15em;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  // The list at the end of a post that markdown-it-footnote writes: a rule, and a
+  // `section` with an ordered list. The reset removes the numbers of a list with a
+  // class, so this rule brings them back. It has an element and a class, to win over
+  // the reset.
+  hr.footnotes-sep { margin-top: 3rem; }
+
+  .footnotes {
+    font-size: var(--mt-fs-fine);
+    line-height: 1.5;
+    color: var(--mt-text-2);
+  }
+
+  ol.footnotes-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    list-style: decimal;
+  }
+
+  .footnote-item {
+    margin-bottom: 0.5rem;
+
+    p {
+      margin: 0;
+      font-size: inherit;
+      line-height: inherit;
+    }
+  }
+
+  // The link from a footnote back to the text. The old footnotes that were written by
+  // hand have the same link, with the title "return to article".
+  .footnote-backref,
+  a[title="return to article"] {
+    margin-left: 0.25em;
+    text-decoration: none;
+  }
+
+  // ── Pasted text ──────────────────────────────────────────────────────────
+  // One old post has a quote that was pasted with its style. The `span` sets a dark
+  // text colour in the `style` attribute, and the text cannot be read on the dark
+  // page. The text takes the colour of the page instead. The rule needs `!important`
+  // to win over the attribute.
+  span[style*="color"] { color: inherit !important; }
+}

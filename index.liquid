@@ -1,0 +1,204 @@
+---
+layout: base
+permalink: /index.html
+metaTitle: "InTransit: Metro Rides for India, Stop by Stop"
+description: "Plan your metro ride and follow it live from your Lock Screen in Ahmedabad, Bengaluru, Chennai, Kolkata, Mumbai, New Delhi and Pune."
+bodyClass: mt-hero-page mt-hero-system mt-home-page
+sectionChrome: true
+---
+{%- comment -%}
+  The home page. _layouts/base.html adds the nav at the top, and the closing band with the
+  footer at the end. The copy is the approved copy deck (the Claude Doc "InTransit website copy
+  deck"). Change the copy there first.
+
+  The sections, from the top, with their backgrounds (see _sass/site/_page-home.scss):
+    1 Hero (follows the appearance) · 2 Cities (tint) · 3 Live Activities (dark) ·
+    4 Underground (plain) · 5 iPhone Duo (tint) · 6 Journey (plain) · 7 Travelogue (dark) ·
+    8 Privacy (tint, glow) · 9 Pricing (plain) · Reviews (hidden until there are reviews) ·
+    10 Help (the colour of the closing band).
+
+  The images
+    Each image is an artboard of the Website page in MTApp.sketch, exported to
+    assets/images/home/ with the name of the artboard (see _includes/shot.html). The size of an
+    artboard is the size of the image on the page at 1x.
+{%- endcomment -%}
+
+{%- comment -%} 1 · HERO. Five phones in a fan (`.mt-fan` in _page-home.scss). The middle phone
+     is the LCP image, so it loads at once. TODO(alt): describe each screen once the
+     artboards are designed; the side phones have empty alt text until then. {%- endcomment %}
+{%- capture heroMedia %}
+    <div class="mt-fan">
+      {% render "shot.html", name: "hero-phone-outer-left", dark: true, width: 274, height: 560, sizes: "min(17.1rem, calc((100vw - 1rem) * 0.2714))", alt: "", class: "mt-fan__phone mt-fan__phone--1" %}
+      {% render "shot.html", name: "hero-phone-inner-left", dark: true, width: 294, height: 601, sizes: "min(18.4rem, calc((100vw - 1rem) * 0.292))", alt: "", class: "mt-fan__phone mt-fan__phone--2" %}
+      {% render "shot.html", name: "hero-phone-middle", dark: true, width: 320, height: 654, sizes: "min(20rem, calc((100vw - 1rem) / 3.15))", alt: "InTransit on iPhone", class: "mt-fan__phone mt-fan__phone--3", loading: "eager", priority: "high" %}
+      {% render "shot.html", name: "hero-phone-inner-right", dark: true, width: 294, height: 601, sizes: "min(18.4rem, calc((100vw - 1rem) * 0.292))", alt: "", class: "mt-fan__phone mt-fan__phone--4" %}
+      {% render "shot.html", name: "hero-phone-outer-right", dark: true, width: 274, height: 560, sizes: "min(17.1rem, calc((100vw - 1rem) * 0.2714))", alt: "", class: "mt-fan__phone mt-fan__phone--5" %}
+    </div>
+{%- endcapture %}
+{% render "hero.html", tone: "system", eyebrow: "iPhone · iPhone Duo · 7 Cities", title: "Mind the Music, Not the Map", intro: "Play the music, read the book, or chat with a friend. InTransit follows every station of your ride, even underground, and taps you when your stop comes up.", caption: "Your first five trips are free. Then pick a weekly, monthly or annual InTransit pass.", media: heroMedia %}
+
+{%- comment -%} 2 · CITIES (tint). Seven chips over one map. The app follows your location, so
+     there is no switcher. {%- endcomment %}
+<section class="mt-section mt-section--tint" id="cities" aria-labelledby="cities-title">
+  <div class="mt-section__inner">
+    <header class="mt-header mt-header--center">
+      <p class="mt-eyebrow">Seven Cities</p>
+      <h2 class="mt-header__title" id="cities-title">Every Line. Even the Ones Still Being Built.</h2>
+      <p class="mt-header__sub">InTransit opens on the city you’re in, with every running and under-construction line, so a new line is ready the day it opens. Pan the map to look around any other city.</p>
+    </header>
+    <ul class="mt-chips" role="list">
+      <li>Ahmedabad</li>
+      <li>Bengaluru</li>
+      <li>Chennai</li>
+      <li>Kolkata</li>
+      <li>Mumbai</li>
+      <li>New Delhi</li>
+      <li>Pune</li>
+    </ul>
+    {% render "shot.html", name: "cities-map", dark: true, width: 1200, height: 675, sizes: "min(calc(100vw - 3rem), 1200px)", alt: "The metro map of InTransit", class: "mt-wide-shot" %}
+    <p class="mt-header__note mt-cities__note">Your city next? <a href="mailto:{{ site.email }}?subject=A%20city%20for%20InTransit">Tell Nikhil which one.</a></p>
+  </div>
+</section>
+
+{%- comment -%} 3 · LIVE ACTIVITIES (dark). Four Live Activity cards.
+     assets/js/home.js counts the timers down once the grid (#lva-grid) is in view. {%- endcomment %}
+<section class="mt-section mt-section--dark" id="live-activities" aria-labelledby="live-activities-title">
+  <div class="mt-section__inner">
+    <header class="mt-header mt-header--center">
+      <p class="mt-eyebrow">Live Activities</p>
+      <h2 class="mt-header__title" id="live-activities-title">Never Miss Your Stop</h2>
+      <p class="mt-header__sub">Your next station, your interchange and your arrival time stay on the Lock Screen and in the Dynamic Island. When your stop comes up, InTransit lets you know with a notification and a tap you can feel.</p>
+    </header>
+    <div class="mt-activities" id="lva-grid">
+      {%- comment -%} name, timer seconds, timer text, alt {%- endcomment -%}
+      {%- assign activities = "pune;1958;32:38;Pune|new-delhi;1452;24:12;New Delhi|bengaluru;2525;42:05;Bengaluru|chennai;442;7:22;Chennai" | split: "|" %}
+      {%- for activity in activities %}
+      {%- assign parts = activity | split: ";" %}
+      {%- assign laName = "live-activity-" | append: parts[0] %}
+      {%- assign laAlt = "A Live Activity for a ride in " | append: parts[3] %}
+      <figure class="mt-activity">
+        {% render "shot.html", name: laName, width: 395, height: 184, sizes: "(max-width: 600px) calc(100vw - 3rem), min(25.25rem, calc((100vw - 4.5rem) / 2))", alt: laAlt %}
+        <p class="mt-activity__timer" data-interval="{{ parts[1] }}" aria-hidden="true">{{ parts[2] }}</p>
+      </figure>
+      {%- endfor %}
+    </div>
+    <p class="mt-header__note mt-activities__note">The colours blend from the line you board to the line you leave on. On Apple Watch too, in the Smart Stack.</p>
+  </div>
+</section>
+
+{%- comment -%} 4 · UNDERGROUND (plain). A split with a phone. {%- endcomment %}
+<section class="mt-section" id="underground" aria-labelledby="underground-title">
+  <div class="mt-section__inner mt-split">
+    <header class="mt-header">
+      <p class="mt-eyebrow">Underground</p>
+      <h2 class="mt-header__title" id="underground-title">Still on Track When the Signal Drops</h2>
+      <p class="mt-header__sub">Deep in a tunnel, most apps lose you. InTransit keeps counting the stations, and shows its best guess on the map with a dashed ring until the signal is back.</p>
+      <p class="mt-header__note">Maps and routes live on your iPhone, so they work with no signal at all.</p>
+    </header>
+    <div class="mt-split__media mt-shot-phone">
+      {% render "shot.html", name: "underground-phone", dark: true, width: 256, height: 523, sizes: "min(16rem, calc(100vw - 3rem))", alt: "InTransit on iPhone with no signal, still showing the route and the next station" %}
+    </div>
+  </div>
+</section>
+
+{%- comment -%} 5 · IPHONE DUO (tint). No link: there is no Duo page. The intro waits on the
+     recording of InTransit on iPhone Duo. {%- endcomment %}
+<section class="mt-section mt-section--tint" id="duo" aria-labelledby="duo-title">
+  <div class="mt-section__inner">
+    <header class="mt-header mt-header--center">
+      <p class="mt-eyebrow">iPhone Duo</p>
+      <h2 class="mt-header__title" id="duo-title">Your Ride, Folded or Open</h2>
+      <p class="mt-header__sub">InTransit is ready for iPhone Duo, on the cover and opened up.</p>
+    </header>
+    {% render "shot.html", name: "duo-lineup", dark: true, width: 1200, height: 600, sizes: "min(calc(100vw - 3rem), 1200px)", alt: "InTransit on iPhone Duo", class: "mt-wide-shot" %}
+  </div>
+</section>
+
+{%- comment -%} 6 · JOURNEY (plain). A split with a phone, and three promise cards below. {%- endcomment %}
+<section class="mt-section" id="journey" aria-labelledby="journey-title">
+  <div class="mt-section__inner">
+    <div class="mt-split mt-split--media-left">
+      <header class="mt-header">
+        <p class="mt-eyebrow">Your Journey</p>
+        <h2 class="mt-header__title" id="journey-title">Everything You’d Ask at the Ticket Counter</h2>
+        <p class="mt-header__sub">Which station, which lift, where to change. InTransit has the answers before you think to ask.</p>
+      </header>
+      <div class="mt-split__media mt-shot-phone">
+        {% render "shot.html", name: "journey-phone", dark: true, width: 256, height: 523, sizes: "min(16rem, calc(100vw - 3rem))", alt: "A station in InTransit, with the lifts, ramps and platform access it has" %}
+      </div>
+    </div>
+    <ul class="mt-promises" role="list">
+      <li class="mt-promise mt-promise--purple">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="14.2" cy="14.2" r="8.7"/><path d="m20.6 20.6 6.9 6.9"/></svg>
+        <p><span class="mt-promise__key">Find Your Station.</span> Results grouped by line and sorted by distance, with Home and Work one tap away.</p>
+      </li>
+      <li class="mt-promise mt-promise--teal">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="16" cy="16" r="11.5"/><circle cx="16" cy="10.6" r="1.5"/><path d="M9.6 13.8 16 15.2l6.4-1.4M16 15.2v4.3m-3.4 5 3.4-5 3.4 5"/></svg>
+        <p><span class="mt-promise__key">Step-Free, Station by Station.</span> See which stations have lifts, ramps and level platform access before you leave.</p>
+      </li>
+      <li class="mt-promise mt-promise--blue">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="3"/><circle cx="24" cy="24" r="3"/><path d="M8 11v4a4 4 0 0 0 4 4h8a4 4 0 0 1 4 4v-2M24 21v-2"/><path d="M8 11v14"/></svg>
+        <p><span class="mt-promise__key">Every Interchange, Clear.</span> Each leg of your ride, where to change, and how long each part takes, to within a minute.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+{%- comment -%} 7 · TRAVELOGUE (dark). A split with a 3D station and the Travelogue screen, and six
+     promise cards below. {%- endcomment %}
+<section class="mt-section mt-section--dark" id="travelogue" aria-labelledby="travelogue-title">
+  <div class="mt-section__inner">
+    <div class="mt-split">
+      <header class="mt-header">
+        <p class="mt-eyebrow">Travelogue</p>
+        <h2 class="mt-header__title" id="travelogue-title">Every Ride Counts</h2>
+        <p class="mt-header__sub">Your Travelogue keeps every kilometre you ride, the CO₂ you saved by taking the metro, and the milestones you reach on the way. The further you go, the more you unlock.</p>
+        <p class="mt-header__note">Your Travelogue stays open, with or without a pass.</p>
+      </header>
+      <div class="mt-split__media mt-travelogue__media">
+        {% render "shot.html", name: "travelogue-station", width: 800, height: 800, sizes: "(max-width: 860px) min(calc(100vw - 3rem), 28rem), 28rem", alt: "A 3D model of a metro station, unlocked in the Travelogue", class: "mt-travelogue__station" %}
+        {% render "shot.html", name: "travelogue-phone", width: 176, height: 360, sizes: "11rem", alt: "The Travelogue in InTransit: your trips, your distance, your level and your recent trips", class: "mt-travelogue__phone" %}
+      </div>
+    </div>
+    <ul class="mt-promises" role="list">
+      <li class="mt-promise mt-promise--green">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M4.5 22.5h23M8 22.5v-3M13.5 22.5v-6M19 22.5v-9M24.5 22.5v-12"/></svg>
+        <p><span class="mt-promise__key">Every Kilometre.</span> The distance you’ve travelled, ride by ride and all time.</p>
+      </li>
+      <li class="mt-promise mt-promise--teal">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M26 6C14 6 7 12 7 21c0 2 .5 3.5 1 5 1.5-6 6-11 12-13-5 3-8.5 7.5-10 13 9 0 16-6 16-20z"/></svg>
+        <p><span class="mt-promise__key">The CO₂ You Saved.</span> See how much carbon you kept out of the air by leaving the car at home.</p>
+      </li>
+      <li class="mt-promise mt-promise--purple">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 4 5 9.5v13L16 28l11-5.5v-13z"/><path d="M5 9.5 16 15l11-5.5M16 15v13"/></svg>
+        <p><span class="mt-promise__key">Stations to Collect.</span> Reach a distance milestone and unlock a 3D model of a station.</p>
+      </li>
+      <li class="mt-promise mt-promise--yellow">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 4.8l3.4 7 7.6 1.1-5.5 5.4 1.3 7.6-6.8-3.6-6.8 3.6 1.3-7.6L5 12.9l7.6-1.1z"/></svg>
+        <p><span class="mt-promise__key">Level Up.</span> Ride more to reach the next level, and unlock more as you go.</p>
+      </li>
+      <li class="mt-promise mt-promise--blue">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="16" cy="16" r="11.5"/><path d="M16 9v7l4.5 3"/></svg>
+        <p><span class="mt-promise__key">Every Trip, Kept.</span> Look back at your past journeys, each with its route on the map.</p>
+      </li>
+      <li class="mt-promise mt-promise--pink">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 4.5v15M10.5 10 16 4.5l5.5 5.5"/><path d="M9 14.5H7.5v13h17v-13H23"/></svg>
+        <p><span class="mt-promise__key">Share the Ride.</span> Post a journey to social media as an image or a video.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+{%- comment -%} 8 · PRIVACY (tint, glow) {%- endcomment %}
+{% render "sections/privacy.html" %}
+
+{%- comment -%} 9 · PRICING (plain) {%- endcomment %}
+{% render "sections/pricing.html", tone: "plain" %}
+
+{%- comment -%} REVIEWS. Hidden until _data/reviews.js has an entry with `use: true`. {%- endcomment %}
+{% render "sections/reviews.html", reviews: reviews, tone: "tint" %}
+
+{%- comment -%} 10 · HELP. The last section. It has the colour of the closing band. {%- endcomment %}
+{% render "sections/help.html" %}
+
+<script src="/assets/js/home.js" defer></script>

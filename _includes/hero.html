@@ -1,0 +1,80 @@
+{%- comment -%}
+  The hero of a landing page: the dark band at the top, with the app icon, an eyebrow,
+  the title (the h1 of the page), an intro, the App Store badge with a short line under
+  it, and a slot for the devices.
+  The styles are in _sass/site/_hero.scss. That file also says how the page works with
+  the nav: the page must have `bodyClass: mt-hero-page` and `sectionChrome: true` in its
+  front matter.
+
+  Use it with `render`. Put the HTML of the title and of the devices in `capture`, and
+  pass the result:
+    {% capture heroMedia %}
+      {% render "picture.html", base: "…", widths: "…", sizes: "(max-width: 734px) 100vw, min(calc(100vw - 3rem), 77rem)",
+         width: 1280, height: 430, alt: "…", loading: "eager", priority: "high" %}
+    {% endcapture %}
+    {% render "hero.html", eyebrow: "iPhone · iPad · Mac", title: "…", intro: "…",
+       caption: "…", media: heroMedia %}
+
+  Parameters:
+    eyebrow   The small label above the title, for example "iPhone · iPad · Mac".
+    title     The title. It can have HTML. For a title with two sentences, write each
+              sentence in `<span class="mt-hero__line">…</span>`: each one is a line of
+              its own. Add the class `mt-accent` to a span for the accent colour.
+    intro     The paragraph under the title. It can have HTML.
+    caption   Optional. The short line under the badge.
+    media     Optional. The HTML of the devices, in the slot under the copy. The picture
+              of the devices is the LCP image of the page, so it has `loading: "eager"` and
+              `priority: "high"` (see _includes/picture.html).
+    actions   Optional. More HTML in the row of the badge, for example a button.
+    href      Optional. The address of the badge. The default is "/store".
+    id        Optional. The id of the section. The default is "hero". The title has the id
+              "<id>-title".
+    tone      Optional. "dark" (the default): the hero is dark in both appearances of the
+              system. "system": the hero follows the system appearance. It is white with a
+              soft glow in the light appearance, and the dark hero in the dark appearance.
+              Use "system" only when the picture of the devices has a light and a dark
+              version. The page then also needs `mt-hero-system` in its `bodyClass`, so that
+              the nav above the hero is light in the light appearance (see _hero.scss).
+
+  With the default tone, the badge is white, because the hero is dark in both appearances.
+  With `tone: "system"`, the badge follows the system appearance too. InTransit has one
+  icon for both appearances.
+{%- endcomment -%}
+{%- assign heroId = id | default: "hero" -%}
+{%- if tone == "system" -%}
+  {%- assign heroClass = "mt-section mt-hero mt-hero--system" -%}
+{%- else -%}
+  {%- assign heroClass = "mt-section mt-section--dark mt-hero" -%}
+{%- endif -%}
+<section class="{{ heroClass }}" id="{{ heroId }}" aria-labelledby="{{ heroId }}-title">
+  <header class="mt-header mt-header--center mt-hero__content">
+    {%- comment -%} The icon is the 180px touch icon until a larger export exists. {%- endcomment %}
+    <img class="mt-hero__icon" src="/assets/images/appicon/apple-touch-icon-180x180.png" width="156" height="156" alt="The InTransit app icon" loading="eager">
+    <p class="mt-eyebrow">{{ eyebrow }}</p>
+    <h1 class="mt-header__title mt-header__title--display" id="{{ heroId }}-title">{{ title }}</h1>
+    <p class="mt-header__sub">{{ intro }}</p>
+    <div class="mt-store">
+      <div class="mt-store__row">
+        <a class="mt-store__badge" href="{{ href | default: "/store" }}" aria-label="Download InTransit on the App Store">
+          {%- if tone == "system" %}
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="/assets/images/app-store-badge-white.svg"/>
+            <img src="/assets/images/app-store-badge.svg" width="150" height="50" alt="Download on the App Store"/>
+          </picture>
+          {%- else %}
+          <img src="/assets/images/app-store-badge-white.svg" width="150" height="50" alt="Download on the App Store"/>
+          {%- endif %}
+        </a>
+        {{ actions }}
+      </div>
+      {%- if caption %}
+      <p class="mt-store__caption">{{ caption }}</p>
+      {%- endif %}
+    </div>
+  </header>
+  {%- if media %}
+  <div class="mt-hero__media">
+    {{ media }}
+  </div>
+  {%- endif %}
+</section>

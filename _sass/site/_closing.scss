@@ -1,0 +1,299 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Closing surface — the "get started" band and the footer on one background.
+// Markup: _includes/closing.html. _layouts/base.html puts it at the end of each page.
+//
+// A copy of _sass/pk/_get-started.scss, _sass/pk/_avatar.scss and the `.pk-footer`
+// rules of the Pockity site, with the `mt-` prefix. The glow uses Elytra's indigo
+// (#5856D6 is oklch 0.53 0.19 278) instead of the purple of Pockity.
+// The band is a move of _sass/layouts/_closing.scss of the old stylesheet. It looks
+// the same.
+//
+// The band sets all of its own colours, fonts, and spacing. Each rule starts with
+// `.mt-get-started` or `.mt-closing`, so it takes priority over the rules of a page
+// for `section`, `footer`, `h2` and `p`.
+//
+// Font sizes: the band sets `font-size: medium`, the default text size of the
+// reader. All sizes are in `em`. Thus the band has the same size on each page,
+// whatever font size the page sets on `body`.
+//
+// Appearance: the band follows the system appearance (light or dark). The values with
+// the `--_` prefix are private defaults, one set for light and one set for dark.
+//
+// How to change the background on one page:
+// Set one or more of these properties on `body` or on a parent of the band.
+// Do not change the `--_` values.
+//   --mt-get-started-bg      The background colour.
+//   --mt-get-started-image   The background image. Use a gradient, a `url()`,
+//                            or `none`.
+//   --mt-get-started-text    The colour of the title.
+//   --mt-get-started-text-2  The colour of the paragraph.
+//   --mt-get-started-accent  The colour of the secondary link.
+//
+// The band has no line at its top edge, so the section above it runs into it with
+// no seam. For this, the page sets --mt-get-started-bg to its own background
+// colour (see body.mt-press-page in _press.scss, and body.mt-releases-page in
+// _releases.scss).
+//
+// Values of the old stylesheet. Two settings of the old stylesheet reached the
+// footer. They are still here, so that the footer does not change: a letter spacing
+// of -0.022em on its paragraphs, and an offset of 0.125em for the underline of its links.
+// ─────────────────────────────────────────────────────────────────────────
+
+@use "breakpoints" as *;
+@use "token-defs" as *;
+@use "base";
+
+// The default colour of the band. It is public, so that the last section of a
+// page can use the same colour and run into the band.
+:root {
+  --mt-closing-bg: oklch(0.99 0.004 #{$mt-hue});
+
+  @media (prefers-color-scheme: dark) {
+    --mt-closing-bg: oklch(0.13 0.012 #{$mt-hue});
+  }
+}
+
+.mt-closing {
+  // ── Private defaults · light ─────────────────────────────────────────────
+  --_bg:          var(--mt-closing-bg);
+  --_wash-strong: oklch(0.78 0.12 #{$mt-hue} / 0.5);
+  --_wash-soft:   oklch(0.86 0.08 #{$mt-hue} / 0.28);
+  --_text:        oklch(0.23 0.012 #{$mt-hue});
+  --_text-2:      oklch(0.23 0.012 #{$mt-hue} / 0.82);
+  --_text-3:      oklch(0.23 0.012 #{$mt-hue} / 0.6);
+  --_accent:      oklch(0.5 0.19 #{$mt-hue});
+  --_icon-shadow: oklch(0.45 0.17 #{$mt-hue} / 0.28);
+
+  // Width of the content column, and the space at its sides. The band and the
+  // footer use the same two values, so that their content starts on one line.
+  // These are in `px` because the band and the footer have different font sizes.
+  --_max:   1152px;
+  --_inset: max(clamp(24px, 8vw, 112px), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
+
+  // The brand colour comes in from the leading edge and fades out before the
+  // centre. The first layer covers the top of the glow with the background colour,
+  // so the glow comes in softly below the top edge, and the section above meets
+  // the band with no seam. The second layer is the main glow. Its centre is near
+  // the middle of the band, and it fades out before the end of the footer. The
+  // third layer adds a soft diagonal ray.
+  --_image:
+    linear-gradient(to bottom, var(--mt-get-started-bg, var(--_bg)) 0%, transparent 30%),
+    radial-gradient(ellipse 58% 80% at 0% 42%,
+      var(--_wash-strong) 0%,
+      var(--_wash-soft) 42%,
+      transparent 72%),
+    linear-gradient(112deg,
+      var(--_wash-soft) 0%,
+      transparent 38%);
+
+  // The colour for the browser chrome (see `.mt-section` in _layout.scss). Keep it
+  // the same as the background colour.
+  --mt-chrome: var(--mt-get-started-bg, var(--_bg));
+
+  @include base.legacy-html;
+
+  position: relative;
+  margin: 0;
+  padding: 0;
+  background-color: var(--mt-get-started-bg, var(--_bg));
+  background-image: var(--mt-get-started-image, var(--_image));
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: cover;
+
+  // ── Private defaults · dark ──────────────────────────────────────────────
+  @media (prefers-color-scheme: dark) {
+    --_wash-strong: oklch(0.52 0.2 #{$mt-hue} / 0.5);
+    --_wash-soft:   oklch(0.45 0.17 #{$mt-hue} / 0.2);
+    --_text:        oklch(0.97 0.004 #{$mt-hue});
+    --_text-2:      oklch(0.97 0.004 #{$mt-hue} / 0.78);
+    --_text-3:      oklch(0.97 0.004 #{$mt-hue} / 0.55);
+    --_accent:      oklch(0.76 0.12 #{$mt-hue});
+    --_icon-shadow: oklch(0 0 0 / 0.5);
+  }
+}
+
+// ── Band ───────────────────────────────────────────────────────────────────
+.mt-closing .mt-get-started {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--mt-get-started-text, var(--_text));
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: medium;
+  line-height: 1.5;
+  text-align: start;
+}
+
+.mt-get-started .mt-get-started__inner {
+  box-sizing: border-box;
+  max-width: var(--_max);
+  margin-inline: auto;
+  // Less space below the band, because the footer follows on the same surface.
+  padding-block: clamp(5em, 13vw, 10em) clamp(3em, 7vw, 5em);
+  padding-inline: var(--_inset);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25em;
+}
+
+.mt-get-started .mt-get-started__icon {
+  display: block;
+  margin: 0 0 0.75em;
+  filter: drop-shadow(0 12px 22px var(--_icon-shadow));
+
+  img {
+    display: block;
+    width: 92px;
+    height: 92px;
+    max-width: none;
+  }
+}
+
+.mt-get-started .mt-get-started__title {
+  margin: 0;
+  padding: 0;
+  // `system-ui` gives the variable SF Pro on Apple platforms. That font has a
+  // width axis, so `font-stretch: expanded` shows the wide style. Other
+  // platforms show the normal width.
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-stretch: expanded;
+  font-variation-settings: "wdth" 110;
+  font-size: clamp(2em, 5vw, 3em);
+  font-weight: 800;
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+  color: var(--mt-get-started-text, var(--_text));
+  text-wrap: balance;
+}
+
+.mt-get-started .mt-get-started__blurb {
+  margin: 0;
+  padding: 0;
+  max-width: 34ch;
+  font-size: clamp(1.0625em, 1.5vw, 1.375em);
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: 0;
+  color: var(--mt-get-started-text-2, var(--_text-2));
+  text-wrap: pretty;
+}
+
+.mt-get-started .mt-get-started__actions {
+  margin: 0.75em 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1em 1.75em;
+}
+
+.mt-get-started .mt-get-started__badge {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  transition: opacity 150ms ease, transform 150ms ease;
+
+  picture {
+    display: block;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  img {
+    display: block;
+    width: auto;
+    height: 50px;
+    max-width: none;
+  }
+
+  &:hover { opacity: 0.85; transform: translateY(-1px); }
+  &:focus-visible { outline: 2px solid var(--mt-get-started-accent, var(--_accent)); outline-offset: 4px; }
+}
+
+.mt-get-started .mt-get-started__more {
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--mt-get-started-accent, var(--_accent));
+  text-decoration: none;
+  background: none;
+  border: 0;
+
+  &:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+  &:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 4px; }
+}
+
+// Tablet and phone: one centred column. The glow stays on the leading edge.
+@media (max-width: $bp-wide) {
+  .mt-closing .mt-get-started { text-align: center; }
+
+  .mt-get-started .mt-get-started__inner { align-items: center; }
+
+  .mt-get-started .mt-get-started__actions {
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+// ── Footer ─────────────────────────────────────────────────────────────────
+// The footer takes its colours from the closing surface, so that it is correct
+// in dark mode.
+.mt-closing > .mt-footer {
+  position: relative;
+  margin: 0;
+  padding-block: 0 clamp(40px, 6vw, 64px);
+  background: none;
+  color: var(--mt-get-started-text-2, var(--_text-2));
+  font-size: 0.8125em;
+  line-height: 1.5;
+
+  // The content of the footer starts on the same line as the content of the band.
+  .mt-footer__inner {
+    box-sizing: border-box;
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    max-width: var(--_max);
+    margin-inline: auto;
+    padding-inline: var(--_inset);
+  }
+
+  p {
+    margin: 0;
+    color: inherit;
+    letter-spacing: -0.022em;
+  }
+  p + p { margin-block-start: 8px; }
+
+  a {
+    color: var(--mt-get-started-text, var(--_text));
+    text-decoration: underline;
+    text-underline-offset: 0.125em;
+  }
+}
+
+// The picture of the author. The image file is a square. The rounded rectangle
+// is a clip, so the radius can change without a new image.
+.mt-avatar {
+  display: block;
+  width: 64px;
+  height: 64px;
+  max-width: none;
+  border-radius: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mt-get-started .mt-get-started__badge { transition: none; }
+}
+
+@media print {
+  .mt-closing { background-image: none; }
+}

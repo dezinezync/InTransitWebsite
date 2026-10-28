@@ -1,0 +1,49 @@
+{%- comment -%}
+  The "Pricing" section: three promise cards. Each card has an icon and one statement, and the
+  key words of the statement have the colour of the icon. The three cards have one colour
+  (`mt-promise--pricing`). The cards have no prices and no trial: the App Store shows the
+  price of each pass (Weekly, Monthly, and Annual).
+  The styles are in _sass/site/_sections.scss (`.mt-promise`). They are the promise cards of the
+  Privacy section, with one colour.
+
+  Use it with `render`:
+    {% render "sections/pricing.html" %}
+    {% render "sections/pricing.html", tone: "plain" %}
+    {% capture notes %}{% render "sections/footnotes.html", photoServer: 1 %}{% endcapture %}
+    {% render "sections/pricing.html", tone: "closing", footnotes: notes %}
+
+  Parameters:
+    tone        Optional. The background of the section: "tint" (the default), "plain", or
+                "closing". Choose the one that differs from the sections above and below it.
+                "closing" is the colour of the closing band, so the section runs into the
+                band with no seam (`.mt-section--closing` in _sass/site/_layout.scss). Use it
+                when this is the last section of the page.
+    footnotes   Optional. The HTML of the footnotes of the page. They show under the cards.
+                A page that has no Help section shows them here, in its last section.
+{%- endcomment -%}
+<section class="mt-section{% if tone == "closing" %} mt-section--closing{% elsif tone != "plain" %} mt-section--tint{% endif %}" id="pricing" aria-labelledby="pricing-title">
+  <div class="mt-section__inner">
+    <header class="mt-header mt-header--center">
+      <p class="mt-eyebrow">Pricing</p>
+      <h2 class="mt-header__title" id="pricing-title">Your First Five Trips Are Free</h2>
+      <p class="mt-header__sub">Try InTransit on your real commute. After five trips, a pass keeps every ride feature going.</p>
+    </header>
+    <ul class="mt-promises" role="list">
+      <li class="mt-promise mt-promise--pricing">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M17.6 4.5H26a1.5 1.5 0 0 1 1.5 1.5v8.4a1.5 1.5 0 0 1-.44 1.06L15.3 27.2a1.5 1.5 0 0 1-2.12 0L4.8 18.82a1.5 1.5 0 0 1 0-2.12L16.54 4.94a1.5 1.5 0 0 1 1.06-.44z"/><circle cx="21.5" cy="10.5" r="2"/></svg>
+        <p><span class="mt-promise__key">Free.</span> Your first five trips, start to finish.</p>
+      </li>
+      <li class="mt-promise mt-promise--pricing">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M5 10a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2v3a3 3 0 0 0 0 6v3a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3a3 3 0 0 0 0-6z"/><path d="M19.5 8.5v2.2m0 3.6v3.4m0 3.6v2.2"/></svg>
+        <p><span class="mt-promise__key">Passes.</span> Weekly, Monthly or Annual, for every ride feature in the app. Your metro ticket is separate, and you buy it as usual.</p>
+      </li>
+      <li class="mt-promise mt-promise--pricing">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 5.5h14.5l3.5 3.5v17.5H7z"/><path d="M11 12h10M11 16.5h10M11 21h6"/></svg>
+        <p><span class="mt-promise__key">Always Yours.</span> Your Travelogue, past trips and milestones stay open without a pass.</p>
+      </li>
+    </ul>
+    {%- if footnotes %}
+    {{ footnotes }}
+    {%- endif %}
+  </div>
+</section>

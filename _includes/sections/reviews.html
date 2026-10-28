@@ -1,0 +1,58 @@
+{%- comment -%}
+  The "Loved on the App Store" section: App Store reviews, in cards. A review with an `image`
+  in _data/reviews.js is a picture, a card of the review that the user made, with a light version
+  and a dark version (900 x 1200, the files of the home/review- rows of tools/site-assets.tsv).
+  The images are @3x: a card is 300px wide (18.75rem), and the 900px file is for a screen of 3x.
+  The words of the review are in the alt text of the picture. A review without an image is a card
+  with the quote, the name of the reviewer, and "App Store".
+
+  The quotes are in _data/reviews.js. A quote shows only when its entry has `use: true`.
+  The file says how to approve a quote. When no entry has `use: true`, this file writes
+  nothing: no section, no heading, and no empty space.
+  The styles are in _sass/site/_sections.scss.
+
+  The data is global, but `render` does not see it. Pass it:
+    {% render "sections/reviews.html", reviews: reviews %}
+    {% render "sections/reviews.html", reviews: reviews, tone: "tint" %}
+
+  Parameters:
+    reviews   The list of reviews: `reviews` from _data/reviews.js.
+    tone      Optional. The background of the section: "plain" (the default) or "tint".
+              Choose the one that differs from the sections above and below it.
+{%- endcomment -%}
+{%- assign approvedReviews = reviews | where: "use", true -%}
+{%- if approvedReviews.size > 0 -%}
+<section class="mt-section{% if tone == "tint" %} mt-section--tint{% endif %}" id="reviews" aria-labelledby="reviews-title">
+  <div class="mt-section__inner">
+    <header class="mt-header mt-header--center">
+      <p class="mt-eyebrow">Loved on the App Store</p>
+      <h2 class="mt-header__title" id="reviews-title">Riders Say It Best</h2>
+      <p class="mt-header__sub">A few words from people who ride with InTransit.</p>
+    </header>
+    <ul class="mt-reviews">
+      {%- for review in approvedReviews %}
+      <li class="mt-review{% if review.image %} mt-review--image{% endif %}">
+        {%- if review.image %}
+        {%- assign reviewDark = review.image | append: "-dark" %}
+        {%- capture reviewAlt %}{{ review.stars }}-star App Store review by {{ review.name }} ({{ review.store }}, {{ review.date | date: "%-d %B %Y" }}), titled {{ review.title }}: {{ review.quote }}{% endcapture %}
+        <figure class="mt-card mt-review__card mt-review__card--image">
+          {% render "picture.html", base: review.image, dark: reviewDark, widths: "300,600,900", sizes: "min(calc(100vw - 3rem), 18.75rem)", width: 900, height: 1200, alt: reviewAlt %}
+        </figure>
+        {%- else %}
+        <figure class="mt-card mt-review__card">
+          <blockquote class="mt-review__quote">
+            <p>&ldquo;{{ review.quote | escape }}&rdquo;</p>
+          </blockquote>
+          <figcaption class="mt-review__by">
+            <span class="mt-review__name">{{ review.name | escape }}</span>
+            <span aria-hidden="true">&middot;</span>
+            <span>App Store</span>
+          </figcaption>
+        </figure>
+        {%- endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>
+{%- endif -%}

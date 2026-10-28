@@ -1,0 +1,97 @@
+{%- comment -%}
+  A responsive picture with WebP files.
+  tools/web-image.sh makes the files: <base>-<width>w.webp.
+  A copy of _includes/pk/picture.html on the Pockity site, with a dark variant and a
+  narrow variant, and with no AVIF sources.
+
+  Use it with `render`, which gives the partial its own variables:
+    {% render "picture.html", base: "/assets/images/press/ipad", widths: "400,800",
+       sizes: "16rem", width: 800, height: 613, alt: "…" %}
+
+  Parameters:
+    base       The path of the files, without the width and the extension.
+    widths     The widths of the files, in pixels, separated by commas. Smallest first.
+    sizes      The `sizes` attribute of the image.
+    width      The width of the largest file. The browser uses width and height
+    height     to keep the space for the image before it loads.
+    alt        The alternative text. Use "" for an image that only decorates.
+    srcset     Optional. The full `srcset` of the normal files, written out, for files that
+               do not follow the <base>-<width>w names (for example exports from Sketch:
+               -400w, …, @2x, @3x). Set `src` with it. `base` and `widths` are then used
+               only by `narrow` (and `dark`, if it is set).
+    src        Optional, with `srcset`. The file for a browser that does not read `srcset`,
+               for example the 1x file.
+               With `srcset`, `width` and `height` are the size of the 1x file.
+    dark       Optional. The path of the files for dark mode, with the same widths.
+    darkSrcset Optional. The full `srcset` of the dark-mode files, written out, for files
+               that do not follow the <base>-<width>w names or the `widths` list (for
+               example exports from Sketch: -400w, …, @2x, @3x). Use it in place of `dark`.
+    darkWidth  Optional. The width and the height of the 1x dark file, when the dark
+    darkHeight files have another shape than the normal files. The browser then keeps the
+               right space for the dark image. Set both, or none.
+    narrow     Optional. The path of the files for a narrow viewport. A narrow viewport
+               is up to 734px wide, the same value as $bp-hero in
+               _sass/site/_breakpoints.scss. Use it when a phone needs another crop of
+               the image, for example a Mac window. tools/site-assets.sh makes the files
+               (the "narrow crop" column of tools/site-assets.tsv).
+    narrowDark Optional. The path of the files for dark mode in a narrow viewport. Set it
+               with `dark` and `narrow`. When it is not set, a narrow viewport in dark
+               mode uses the files of `dark`.
+    narrowWidths  Optional. The widths of the narrow files, if they are not the same as
+               `widths`. A crop is narrower than the whole image, so it has no copy at the
+               largest widths. List only the widths that exist. The default is `widths`.
+    narrowWidth   Optional. The width and the height of the largest narrow file. The
+    narrowHeight  narrow pictures have another shape than the normal pictures, so the
+               browser needs their size to keep the space for the image before it loads.
+               Without them, the page can shift when a narrow picture appears. Set both,
+               or none.
+    class      Optional. The class of the picture element.
+    attrs      Optional. More attributes for the picture element, as text.
+    loading    Optional. "lazy" (the default) or "eager".
+    priority   Optional. The `fetchpriority` of the image, for example "high".
+               An image with a high priority also needs `loading: "eager"`.
+
+  The browser uses the first source that matches. Thus the order of the sources is:
+  narrow and dark, narrow, dark, and then the normal files.
+{%- endcomment -%}
+{%- assign list = widths | split: "," -%}
+{%- assign narrowList = narrowWidths | default: widths | split: "," -%}
+{%- comment -%} The size of a narrow file, for the `source` elements of the narrow files. {%- endcomment -%}
+{%- capture narrowSize -%}{%- if narrowWidth and narrowHeight %} width="{{ narrowWidth }}" height="{{ narrowHeight }}"{% endif -%}{%- endcapture -%}
+{%- comment -%} The size of a dark file, for the `source` elements of the dark files. {%- endcomment -%}
+{%- capture darkSize -%}{%- if darkWidth and darkHeight %} width="{{ darkWidth }}" height="{{ darkHeight }}"{% endif -%}{%- endcapture -%}
+{%- comment -%} The picture has dark files when `dark` or `darkSrcset` is set. {%- endcomment -%}
+{%- assign hasDark = false -%}
+{%- if dark or darkSrcset -%}{%- assign hasDark = true -%}{%- endif -%}
+{%- comment -%} Keep this query the same as $bp-hero in _sass/site/_breakpoints.scss. {%- endcomment -%}
+{%- assign narrowQuery = "(max-width: 734px)" -%}
+{%- capture webp -%}{%- for w in list -%}{{ base }}-{{ w }}w.webp {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}{%- endcapture -%}
+<picture{% if class %} class="{{ class }}"{% endif %}{% if attrs %} {{ attrs }}{% endif %}>
+  {%- if narrow and hasDark and narrowDark %}
+  {%- capture narrowDarkWebp -%}{%- for w in narrowList -%}{{ narrowDark }}-{{ w }}w.webp {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}{%- endcapture %}
+  <source media="{{ narrowQuery }} and (prefers-color-scheme: dark)" type="image/webp" srcset="{{ narrowDarkWebp }}" sizes="{{ sizes }}"{{ narrowSize }}/>
+  {%- endif %}
+  {%- if narrow %}
+  {%- capture narrowWebp -%}{%- for w in narrowList -%}{{ narrow }}-{{ w }}w.webp {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}{%- endcapture -%}
+  {%- comment -%} Without files for dark mode in a narrow viewport, the narrow files are for light mode only. {%- endcomment -%}
+  {%- if hasDark and narrowDark -%}
+    {%- assign narrowMedia = narrowQuery -%}
+  {%- elsif hasDark -%}
+    {%- assign narrowMedia = narrowQuery | append: " and (prefers-color-scheme: light)" -%}
+  {%- else -%}
+    {%- assign narrowMedia = narrowQuery -%}
+  {%- endif %}
+  <source media="{{ narrowMedia }}" type="image/webp" srcset="{{ narrowWebp }}" sizes="{{ sizes }}"{{ narrowSize }}/>
+  {%- endif %}
+  {%- if darkSrcset %}
+  <source media="(prefers-color-scheme: dark)" type="image/webp" srcset="{{ darkSrcset }}" sizes="{{ sizes }}"{{ darkSize }}/>
+  {%- elsif dark %}
+  {%- capture darkWebp -%}{%- for w in list -%}{{ dark }}-{{ w }}w.webp {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}{%- endcapture %}
+  <source media="(prefers-color-scheme: dark)" type="image/webp" srcset="{{ darkWebp }}" sizes="{{ sizes }}"{{ darkSize }}/>
+  {%- endif %}
+  {%- if srcset %}
+  <img src="{{ src }}" srcset="{{ srcset }}" sizes="{{ sizes }}"
+  {%- else %}
+  <img src="{{ base }}-{{ list[1] | default: list[0] }}w.webp" srcset="{{ webp }}" sizes="{{ sizes }}"
+  {%- endif %} width="{{ width }}" height="{{ height }}" alt="{{ alt }}" loading="{{ loading | default: 'lazy' }}" decoding="async"{% if priority %} fetchpriority="{{ priority }}"{% endif %}/>
+</picture>

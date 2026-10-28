@@ -1,0 +1,150 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Blog — the parts of a reading page around the text: the list of posts, the title and
+// date of a post, the banner, the link back, the pagination, the RSS pill, and the 404
+// page. The text itself is in _prose.scss.
+//
+// Markup: _layouts/blog.html, post.html, page.html, and category.html, and
+// _includes/post-summary.html and post-banner.html.
+//
+// The type and the spacing come from the blog of dezinezync.com (_sass/layouts/blog.scss
+// on that site). Titles have weight 700 and a line height of 1.2. Dates use the "meta"
+// role (.mt-meta). Links have the accent colour and no underline.
+// ─────────────────────────────────────────────────────────────────────────
+
+// The last section of a reading page has the colour of the page, so the closing band
+// takes the same colour and the page runs into it with no seam (see _closing.scss).
+// The layouts give the body this class.
+body.mt-reading-page { --mt-get-started-bg: var(--mt-bg); }
+
+// ── List of posts ──────────────────────────────────────────────────────────
+// The blog index and the pages of the categories.
+.mt-post-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  > li + li { margin-block-start: 2.5rem; }
+
+  &__title {
+    margin: 0 0 var(--mt-space-1);
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.2;
+
+    a {
+      color: var(--mt-text);
+
+      &:hover {
+        color: var(--mt-accent);
+        text-decoration: none;
+      }
+    }
+  }
+
+  // The date is a block under the title.
+  .mt-meta {
+    display: block;
+    margin-block-end: var(--mt-space-4);
+  }
+
+  &__excerpt {
+    margin: 0;
+    font-size: var(--mt-fs-body);
+    line-height: 1.5;
+  }
+}
+
+// The title of a page that is a list of posts (a category).
+.mt-list-title {
+  margin: 0 0 var(--mt-space-8);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--mt-text);
+}
+
+// ── Post ───────────────────────────────────────────────────────────────────
+.mt-article {
+  &__title {
+    margin: 0 0 var(--mt-space-2);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--mt-text);
+  }
+
+  &__header .mt-meta {
+    display: block;
+    margin-block-end: var(--mt-space-4);
+  }
+
+  // The first block of the text has no space above it. The title (or the section) has
+  // the space.
+  &__body > :first-child { margin-block-start: 0; }
+}
+
+// The banner of a post, from _includes/post-banner.html. On the page of a post it is
+// a block between the date and the text. In a list it is above the title.
+.mt-post-banner {
+  display: block;
+  margin-block: var(--mt-space-8);
+
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 8px;
+  }
+
+  &--list { margin-block: 0 var(--mt-space-4); }
+}
+
+// The link from a post back to the list. It is a link, not a "back" button, so that it
+// works when the reader opened the post from a search result.
+.mt-back {
+  margin: var(--mt-space-16) 0 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+
+  a { font-weight: 600; }
+}
+
+// ── Pagination ─────────────────────────────────────────────────────────────
+.mt-pagination {
+  display: flex;
+  gap: var(--mt-space-4);
+  margin-block-start: var(--mt-space-16);
+  font-size: 0.9rem;
+  line-height: 1.5;
+
+  a { font-weight: 500; }
+}
+
+// ── RSS pill ───────────────────────────────────────────────────────────────
+.mt-rss {
+  display: inline-block;
+  margin: var(--mt-space-8) 0 0;
+  padding: var(--mt-space-2) var(--mt-space-4);
+  border: 1px solid var(--mt-border);
+  border-radius: 6px;
+  background: var(--mt-bg-subtle);
+  color: var(--mt-text);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+// ── 404 ────────────────────────────────────────────────────────────────────
+// The page is in the middle of the column.
+.mt-notfound {
+  padding-block-start: var(--mt-space-12);
+  text-align: center;
+
+  &__code {
+    margin: 0 0 var(--mt-space-4);
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--mt-text);
+  }
+}

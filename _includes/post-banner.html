@@ -1,0 +1,55 @@
+{%- comment -%}
+  The banner of a post: a picture with files of several sizes. The post page
+  (_layouts/post.html) and the blog index (_includes/post-summary.html) use it.
+
+  Use it with `render`, which gives the partial its own variables:
+    {% render "post-banner.html", png: bannerImage, webp: bannerImageWebP,
+       class: "mt-post-banner", loading: "eager", priority: "high" %}
+
+  Parameters:
+    png       The `bannerImage` key of a post: the path of the PNG files, without the
+              size and the extension.
+    webp      The `bannerImageWebP` key of a post: the same for WebP files.
+    class     The class of the picture element.
+    loading   Optional. "lazy" (the default) or "eager". Use "eager" for a banner at
+              the top of the page.
+    priority  Optional. The `fetchpriority` of the image, for example "high". An image
+              with a high priority also needs `loading: "eager"`.
+
+  A post sets one of `png` and `webp`, not both. A post with no banner sets neither, and
+  then this include writes nothing. _includes/head.html reads the same two keys for the
+  share image (`og:image`). If you change the files or the keys here, change that file
+  too. The share image is the 1200w file: <path>-1200w.png for a PNG banner, and
+  <path>-1200w.jpg for a WebP banner. A WebP banner needs the JPEG file as well. Make it
+  from <path>-1200w.webp (see "Share images" in CLAUDE.md).
+
+  The files of a banner are <path>.<type> (the 1x file), <path>@2x.<type>,
+  <path>@3x.<type>, and <path>-400w.<type> up to <path>-1600w.<type>. The browser uses
+  the first <source> that matches. A phone gets the 400w, 800w, and 1600w files, a
+  tablet gets the 800w and 1600w files, and the other screens get the 1x, 2x, and 3x
+  files.
+
+  The image has no `alt` text: the title of the post is next to it.
+
+  The image has `width` and `height`: the size of the 1x file, read from the file when the
+  site is built (the `imageSize` filter in .eleventy.js). The browser uses the two numbers
+  to keep the space of the banner before the file loads, so the page does not move when the
+  banner appears. The CSS (`.mt-post-banner img` in _sass/site/_blog.scss) sets
+  `max-width: 100%` and `height: auto`, so the numbers set only the aspect ratio. The build
+  stops with an error if a banner file does not exist.
+{%- endcomment -%}
+{%- if webp -%}
+  {%- assign bannerBase = webp -%}
+  {%- assign bannerType = "webp" -%}
+{%- elsif png -%}
+  {%- assign bannerBase = png -%}
+  {%- assign bannerType = "png" -%}
+{%- endif -%}
+{%- if bannerBase -%}
+{%- assign bannerSize = bannerBase | append: "." | append: bannerType | imageSize -%}
+<picture{% if class %} class="{{ class }}"{% endif %}>
+  <source media="(max-width: 600px)" srcset="{{ bannerBase }}-400w.{{ bannerType }} 1x, {{ bannerBase }}-800w.{{ bannerType }} 2x, {{ bannerBase }}-1600w.{{ bannerType }} 3x">
+  <source media="(min-width: 601px) and (max-width: 800px)" srcset="{{ bannerBase }}-800w.{{ bannerType }} 1x, {{ bannerBase }}-1600w.{{ bannerType }} 2x, {{ bannerBase }}@3x.{{ bannerType }} 3x">
+  <img src="{{ bannerBase }}.{{ bannerType }}" srcset="{{ bannerBase }}@2x.{{ bannerType }} 2x, {{ bannerBase }}@3x.{{ bannerType }} 3x" width="{{ bannerSize.width }}" height="{{ bannerSize.height }}" alt="" loading="{{ loading | default: 'lazy' }}" decoding="async"{% if priority %} fetchpriority="{{ priority }}"{% endif %}>
+</picture>
+{%- endif -%}

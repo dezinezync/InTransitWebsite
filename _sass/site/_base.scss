@@ -1,0 +1,78 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Base element styles — html and body defaults, links, focus, and motion.
+// A copy of _sass/ios-2026/_base.scss on the Pockity site, with the `mt-` prefix.
+// The tokens set the colours, so the page follows the system appearance.
+// ─────────────────────────────────────────────────────────────────────────
+
+html {
+  font-family: var(--mt-font);
+  font-size: 100%;            // the text size that the reader chose; `rem` is that size
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  quotes: "\201C" "\201D";
+
+  // The page follows the system appearance. The form controls and the scrollbars
+  // follow it too.
+  color-scheme: light dark;
+
+  // Safari uses the root background colour for its toolbar and status bar. At scroll
+  // 0 on iPhone, Safari fills the status bar with this colour. On wide viewports,
+  // Safari applies it as a tint to its toolbar, unless the page has a fixed strip at
+  // the top edge (see `.mt-chrome-strip` in _layout.scss). The area of an
+  // overscroll shows this colour too.
+  //
+  // `--mt-chrome-active` is the colour of the section at the top edge of the
+  // viewport. The script in _layouts/base.html sets it on a page with
+  // `sectionChrome: true`. On any other page it is not set, and the root takes the
+  // background colour of the page.
+  background-color: var(--mt-chrome-active, var(--mt-bg));
+}
+
+body {
+  background-color: var(--mt-chrome-active, var(--mt-bg));
+  color: var(--mt-text);
+  font-size: var(--mt-fs-body);
+}
+
+a {
+  color: var(--mt-accent);
+  transition: color var(--mt-dur-fast) var(--mt-ease);
+
+  &:hover { color: var(--mt-accent-press); }
+}
+
+// Visible keyboard focus — never removed.
+:focus-visible {
+  outline: 2px solid var(--mt-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--mt-accent) 26%, transparent);
+}
+
+// Respect reduced-motion globally.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// ── Settings of the old stylesheet ─────────────────────────────────────────
+// The old stylesheet (Pico) put these settings on `html`, and every element took
+// them. The press page and the closing band keep them, so that they look the same
+// on this stylesheet. Do not use this mixin for a new component.
+@mixin legacy-html {
+  font-synthesis: none;
+  overflow-wrap: break-word;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+}

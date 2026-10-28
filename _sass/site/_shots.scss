@@ -1,0 +1,117 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Framed captures — a device in its frame, or a window of the Mac, as a picture with a
+// transparent background. The iPhone & iPad page and the Mac page show them. Each page
+// arranges them with its own rules (_page-ios.scss, _page-mac.scss).
+//
+// A framed capture is always whole. The picture has a width, and its height follows its
+// shape. Nothing crops it: do not use `object-fit: cover` on a device or on a window. A
+// device is as wide as a `max-width`, or as a share of its container in `cqi` (see
+// _lineup.scss and _page-ios.scss).
+//
+// Markup: the picture has the class `mt-shot` (`class: "mt-shot"` in
+// _includes/picture.html). A window of the Mac has `mt-shot mt-shot--window`.
+// The shadow and the rim are tokens (--mt-shot-shadow and --mt-shot-rim in
+// _token-defs.scss), so a capture follows the appearance of the section it is in.
+// ─────────────────────────────────────────────────────────────────────────
+
+// The shadow follows the alpha channel of the picture, so it has the shape of the device.
+.mt-shot {
+  filter: drop-shadow(0 1.25rem 2rem var(--mt-shot-shadow));
+
+  // A window has no frame of its own, so a thin rim gives it an edge. On a dark page, a dark
+  // window needs the rim. Without it, the window has no edge on the black page.
+  &--window {
+    filter: drop-shadow(0 0 1px var(--mt-shot-rim)) drop-shadow(0 1.25rem 2rem var(--mt-shot-shadow));
+  }
+}
+
+// A stage: the picture under the header of a section. The stage is centred, and it has the
+// width of the picture. A section sets `--mt-stage-max` for the width. The `sizes` of the
+// picture follow that width: `min(calc(100vw - 3rem), <the width>)`.
+.mt-stage {
+  max-width: var(--mt-stage-max, 64rem);
+  margin-block-start: clamp(2.5rem, 5vw, 4rem);
+  margin-inline: auto;
+
+  img { width: 100%; }
+}
+
+// ── A device with a cast shadow ────────────────────────────────────────────
+// A picture of a device that lies flat, with its own shadow in the file (the shadow falls to the
+// bottom right). The file is a canvas that is much wider and higher than the device, because it
+// has room for the shadow. Do not use `mt-shot` on it: that class adds a shadow of CSS.
+//
+// The device must have the size and the place that the layout wants, so the picture is not in
+// the flow. The box (`.mt-cast`) has the height of the device, and the picture
+// (`.mt-cast__picture`) stands in the box. It is as large as the canvas needs, with the device in
+// the middle of the box. The box has no width of its own: it fills its container, for example the
+// media column of a split. The canvas is wider than the container, so the shadow runs past the
+// container to the trailing edge of the screen, and the section cuts it there (a section that has
+// a `.mt-cast` has `overflow-x: clip`). Below the device the shadow fades out, and it is gone at
+// the bottom edge of the section, so it does not run into the next section.
+//
+// Markup (`picture.html` with `class: "mt-cast__picture"`; give the picture the whole `srcset`
+// of the export, and `sizes: "calc(<size> * <canvas> / <width>)"`, with the values below):
+//   <div class="mt-split__media mt-cast">
+//     {% render "picture.html", …, class: "mt-cast__picture" %}
+//   </div>
+//
+// The rule of the page sets the numbers of the file, as custom properties on `.mt-cast`. The
+// numbers have no unit. They are pixels of the 1x file. To measure the device (the solid pixels
+// of the alpha channel), run:
+//   magick <file>.webp -alpha extract -threshold 97% -trim -format "%wx%h%O\n" info:
+// The result is <width>x<height>+<left>+<top>.
+//   --mt-cast-size     The width of the device on the page, a length: for example
+//                      `min(100vw - 3rem, 17rem)`.
+//   --mt-cast-canvas   The width of the file at 1x.
+//   --mt-cast-left     The distance from the left edge of the file to the device.
+//   --mt-cast-top      The distance from the top edge of the file to the device.
+//   --mt-cast-width    The width of the device in the file.
+//   --mt-cast-height   The height of the device in the file.
+// Optional:
+//   --mt-cast-anchor   The point of the box where the middle of the device stands. The default is
+//                      50%, the middle of the box.
+//   --mt-cast-fade     The length in which the shadow fades out below the device. The default is
+//                      the space of a section, `--mt-section-y`.
+//   --mt-cast-hold     The distance below the device, in pixels of the file, where the fade
+//                      starts. The default is 0: the fade starts at the bottom edge of the device.
+//   --mt-cast-after    The height that the box keeps below the device, in pixels of the file. The
+//                      default is 0: the shadow below the device is in the space of the section,
+//                      or it is cut where the box ends. Use it when the box is at the bottom edge
+//                      of a section, as in a hero: then the box includes the part of the file
+//                      below the device (the height of the file less `top` and `height`).
+// The shadow of the file is cut at the bottom edge of the file, so the fade must end before the
+// bottom edge of the file: the file needs `--mt-cast-fade` of room below the device (a section
+// is up to 8rem). The picture does not change a device that stands to the left of its canvas
+// (the shadow is to its right). Examples: _page-ios.scss, `#catch-up` (a split) and `#hero`.
+.mt-cast {
+  // The size of one pixel of the file on the page.
+  --mt-cast-px: calc(var(--mt-cast-size) / var(--mt-cast-width));
+  --mt-cast-anchor: 50%;
+  --mt-cast-fade: var(--mt-section-y);
+  --mt-cast-hold: 0;
+  --mt-cast-after: 0;
+
+  position: relative;
+  height: calc(var(--mt-cast-px) * (var(--mt-cast-height) + var(--mt-cast-after)));
+
+  &__picture {
+    // The distance from the top edge of the file to the place where the fade starts.
+    --mt-cast-below: calc(var(--mt-cast-px) * (var(--mt-cast-top) + var(--mt-cast-height) + var(--mt-cast-hold)));
+
+    position: absolute;
+    // The reset limits a picture to its container, and this one is wider.
+    max-width: none;
+    width: calc(var(--mt-cast-px) * var(--mt-cast-canvas));
+    inset-block-start: calc(var(--mt-cast-px) * var(--mt-cast-top) * -1);
+    inset-inline-start: calc(var(--mt-cast-anchor) - var(--mt-cast-px) * (var(--mt-cast-left) + var(--mt-cast-width) / 2));
+    -webkit-mask-image: linear-gradient(to bottom, #000 var(--mt-cast-below), transparent calc(var(--mt-cast-below) + var(--mt-cast-fade)));
+    mask-image: linear-gradient(to bottom, #000 var(--mt-cast-below), transparent calc(var(--mt-cast-below) + var(--mt-cast-fade)));
+
+    img { width: 100%; }
+  }
+}
+
+// The shadow runs to the trailing edge of the screen, and the section cuts it there. It must not
+// make the page scroll sideways.
+.mt-section:has(.mt-cast) { overflow-x: clip; }

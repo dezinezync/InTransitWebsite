@@ -1,0 +1,23 @@
+---
+layout: base
+bodyClass: mt-reading-page
+---
+{%- comment -%}
+  The layout of a page that is text: the privacy policy, the terms, and the 404 page.
+  _layouts/base.html adds the nav at the top, and the closing band and the footer at
+  the end. This layout adds the reading column of 680px.
+
+  The text starts with its own h1. The text goes through the `platformTags` filter
+  (.eleventy.js). The styles of the text are in _sass/site/_prose.scss.
+{%- endcomment -%}
+<section class="mt-section mt-section--page mt-section--reading">
+  <div class="mt-section__inner">
+    <div class="mt-prose mt-prose--reading">
+      <article class="mt-article">
+        <div class="mt-article__body">
+          {{ content | platformTags }}
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

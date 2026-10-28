@@ -1,0 +1,50 @@
+{%- comment -%}
+  The "Help" section: three cards (email, Mastodon, and the release notes). The home page
+  shows it, with the footnotes of the page at its end. It is the last section of a page,
+  so it has the colour of the closing band, and it runs into the band with no seam
+  (`.mt-section--closing` in _sass/site/_layout.scss).
+  The styles are in _sass/site/_sections.scss.
+
+  Use it with `render`. For the footnotes, `capture` the HTML of
+  _includes/sections/footnotes.html and pass it:
+    {% capture notes %}{% render "sections/footnotes.html", photoServer: 1 %}{% endcapture %}
+    {% render "sections/help.html", footnotes: notes %}
+
+  Parameters:
+    footnotes   Optional. The HTML of the footnotes of the page. They show under the cards.
+{%- endcomment -%}
+<section class="mt-section mt-section--closing" id="help" aria-labelledby="help-title">
+  <div class="mt-section__inner">
+    <header class="mt-header mt-header--center">
+      <p class="mt-eyebrow">Help</p>
+      <h2 class="mt-header__title" id="help-title">Questions? Ask Nikhil.</h2>
+      <p class="mt-header__sub">Email, say hi on Mastodon, or read what’s new. Replies usually come within two working days.</p>
+    </header>
+    <div class="mt-grid mt-grid--3">
+      <article class="mt-card mt-card--text">
+        <div class="mt-card__caption">
+          <b class="mt-card__lead">Email.</b>
+          <p>support@intransit.app</p>
+          <a class="mt-card__more" href="mailto:support@intransit.app">Write to Nikhil&nbsp;&rarr;</a>
+        </div>
+      </article>
+      <article class="mt-card mt-card--text">
+        <div class="mt-card__caption">
+          <b class="mt-card__lead">Mastodon.</b>
+          <p>News and tips at @intransit.</p>
+          <a class="mt-card__more" href="https://social.dezinezync.com/@intransit" target="_blank" rel="noopener me">Follow @intransit&nbsp;&rarr;</a>
+        </div>
+      </article>
+      <article class="mt-card mt-card--text">
+        <div class="mt-card__caption">
+          <b class="mt-card__lead">Release Notes.</b>
+          <p>Every update, and what changed.</p>
+          <a class="mt-card__more" href="/releases/">See what’s new&nbsp;&rarr;</a>
+        </div>
+      </article>
+    </div>
+    {%- if footnotes %}
+    {{ footnotes }}
+    {%- endif %}
+  </div>
+</section>

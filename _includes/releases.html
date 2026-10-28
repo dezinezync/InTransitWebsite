@@ -1,0 +1,103 @@
+{%- comment -%}
+  The body of a releases page. It shows the releases of one year.
+
+  Two pages use this include:
+    _pages/releases.html        The newest year, at /releases/.
+    _pages/releases-year.html   One page for each year, at /releases/<year>/.
+
+  The page must set `yearData` before it includes this file. `yearData` is one
+  entry of `collections.releaseYears` (see .eleventy.js).
+
+  The year switcher is a list of links, so it works without JavaScript.
+  The script below the list replaces the list with a dropdown.
+
+  The styles are in _sass/site/_releases.scss and _sass/site/_typography.scss
+  (the header and the platform tags).
+
+  Two filters of .eleventy.js change the notes of a release. `releaseNotes` colours the
+  labels (New, Fixed, ...). `platformTags` turns `macOS` and the other platform names
+  in code elements into tags. The feeds (releases.xml and releases.json) do not use
+  these filters.
+{%- endcomment -%}
+<header class="mt-header mt-header--center">
+  <p class="mt-eyebrow">Release Notes</p>
+  <h1 class="mt-header__title">Everything new in InTransit</h1>
+  <p class="mt-header__sub">Every update to InTransit, and what changed — newest first.</p>
+</header>
+
+<nav class="mt-release-years" aria-label="Release notes by year">
+  <span class="mt-release-years__label" id="release-years-label">Year</span>
+  <ul class="mt-release-years__list">
+    {%- for entry in collections.releaseYears %}
+    <li><a href="{{ entry.url }}"{% if entry.year == yearData.year %} aria-current="page"{% endif %}>{{ entry.year }}</a></li>
+    {%- endfor %}
+  </ul>
+</nav>
+<script>
+  // Replace the list of year links with a dropdown.
+  // The script is here, directly after the list, so that the list does not
+  // show before the dropdown replaces it.
+  (function () {
+    var nav = document.querySelector('.mt-release-years');
+    var list = nav && nav.querySelector('.mt-release-years__list');
+    if (!list) return;
+
+    var wrap = document.createElement('span');
+    wrap.className = 'mt-release-years__select';
+    var select = document.createElement('select');
+    select.setAttribute('aria-labelledby', 'release-years-label');
+
+    var current = '';
+    var links = list.querySelectorAll('a');
+    for (var i = 0; i < links.length; i++) {
+      var option = document.createElement('option');
+      option.value = links[i].getAttribute('href');
+      option.textContent = links[i].textContent;
+      if (links[i].getAttribute('aria-current') === 'page') {
+        option.selected = true;
+        current = option.value;
+      }
+      select.appendChild(option);
+    }
+
+    select.addEventListener('change', function () {
+      if (select.value !== current) window.location.href = select.value;
+    });
+
+    // The browser can restore this page from its cache when the reader goes
+    // back. Then the dropdown shows the year that the reader selected last.
+    // Set it to the year of this page again.
+    window.addEventListener('pageshow', function () {
+      select.value = current;
+    });
+
+    wrap.appendChild(select);
+    list.replaceWith(wrap);
+  })();
+</script>
+
+<p class="mt-releases__feeds">
+  Subscribe via <a href="{{ "/releases.xml" | absolute_url }}">RSS</a> or <a href="{{ "/releases.json" | absolute_url }}">JSON Feed</a>
+</p>
+
+<ol class="mt-releases" reversed>
+  {%- for release in yearData.releases -%}
+  <li class="mt-release">
+    <div class="mt-release__meta">
+      <time class="mt-release__date" datetime="{{ release.date | date: '%Y-%m-%d' }}">{{ release.date | date: '%b %-d, %Y' }}</time>
+      {%- if release.data.version %}<span class="mt-release__version">{{ release.data.version }}</span>{% endif -%}
+      {%- if release.data.platforms %}
+      <ul class="mt-release__platforms">
+        {%- for platform in release.data.platforms -%}
+        <li class="{{ platform | platformTagClass }}">{{ platform }}</li>
+        {%- endfor -%}
+      </ul>
+      {%- endif -%}
+    </div>
+    <div class="mt-release__body">
+      {%- if release.data.summary %}<p class="mt-release__summary">{{ release.data.summary }}</p>{% endif -%}
+      {{ release.templateContent | releaseNotes | platformTags }}
+    </div>
+  </li>
+  {%- endfor -%}
+</ol>

@@ -1,0 +1,239 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Navigation and call-to-action components — button, top nav.
+// Markup of the nav: _includes/nav.html. The store buttons are in _store.scss.
+// A copy of _sass/ios-2026/_nav.scss on the Pockity site, with the `mt-` prefix.
+// It replaces _sass/layouts/_nav.scss of the old stylesheet.
+//
+// On the Pockity site the nav floats over a dark hero. Here it is in the flow of the
+// page, at the top, on the background of the page. The colours of the links and of
+// the Menu button are custom properties (`--mt-nav-*`). A page with a dark hero can
+// set them again, and can take the nav out of the flow.
+//
+// Wide viewports show the links in a row. Below $bp-phone the links are in a menu.
+// ─────────────────────────────────────────────────────────────────────────
+
+@use "breakpoints" as *;
+
+// ── Button ─────────────────────────────────────────────────────────────────
+.mt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mt-space-2);
+  padding: var(--mt-space-3) var(--mt-space-6);
+  border-radius: var(--mt-radius-pill);
+  font-weight: 600;
+  font-size: var(--mt-fs-body);
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--mt-dur-fast) var(--mt-ease),
+              color var(--mt-dur-fast) var(--mt-ease),
+              border-color var(--mt-dur-fast) var(--mt-ease);
+
+  // The accent colour. `--mt-on-accent` is white in light mode and black in dark mode.
+  // Each has sufficient contrast on the accent of its mode.
+  &--primary {
+    background: var(--mt-accent);
+    color: var(--mt-on-accent);
+    border: 1px solid transparent;
+
+    &:hover { background: var(--mt-accent-press); color: var(--mt-on-accent); }
+  }
+
+  &--secondary {
+    background: transparent;
+    color: var(--mt-text);
+    border: 1px solid var(--mt-border);
+
+    &:hover { border-color: var(--mt-text-3); color: var(--mt-text); }
+  }
+
+  // A solid pill in the colour of the text, with the page colour on it: a dark pill
+  // with light text in light mode, and a light pill with dark text in dark mode.
+  &--invert {
+    background: var(--mt-text);
+    color: var(--mt-bg);
+    border: 1px solid transparent;
+
+    &:hover { background: var(--mt-accent); color: var(--mt-on-accent); }
+  }
+}
+
+// ── Top nav ────────────────────────────────────────────────────────────────
+// No brand block. The links and the Download pill are on the right.
+.mt-nav {
+  // Colours of the links and of the Menu button (see `&__menu` below).
+  --mt-nav-link:        var(--mt-text);
+  --mt-nav-link-hover:  var(--mt-accent);
+  --mt-nav-menu-text:   var(--mt-text);
+  --mt-nav-menu-border: var(--mt-border);
+  --mt-nav-menu-bg:     var(--mt-bg-subtle);
+
+  // The nav is in the flow of the page. It has a stacking order of its own, so that
+  // the open panel of the Menu shows over the page.
+  position: relative;
+  z-index: 100;
+
+  &__inner {
+    max-width: var(--mt-wide-max);
+    margin-inline: auto;
+    // On a page with viewport-fit=cover, the nav is under the status bar and the
+    // Dynamic Island. Then the padding at the top and at the sides grows by the safe
+    // area insets. Elsewhere the insets are 0px.
+    padding: max(var(--mt-space-4), env(safe-area-inset-top, 0px))
+             max(var(--mt-space-6), env(safe-area-inset-right, 0px))
+             var(--mt-space-4)
+             max(var(--mt-space-6), env(safe-area-inset-left, 0px));
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--mt-space-6);
+  }
+
+  &__links {
+    display: flex;
+    align-items: center;
+    gap: var(--mt-space-6);
+
+    a {
+      color: var(--mt-nav-link);
+      font-size: var(--mt-fs-nav);
+      font-weight: 500;
+
+      &:hover,
+      &[aria-current="page"] { color: var(--mt-nav-link-hover); }
+    }
+
+    @media (max-width: $bp-phone) { display: none; }
+  }
+
+  // The menu replaces the row of links below $bp-phone. It is at the leading edge,
+  // and the Download pill stays at the trailing edge.
+  &__menu {
+    display: none;
+    position: relative;
+    margin-inline-end: auto;
+
+    @media (max-width: $bp-phone) { display: block; }
+  }
+
+  // The button has the same size as the Download pill.
+  &__menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mt-space-2);
+    padding: var(--mt-space-2) var(--mt-space-4);
+    border: 1px solid var(--mt-nav-menu-border);
+    border-radius: var(--mt-radius-pill);
+    background: var(--mt-nav-menu-bg);
+    color: var(--mt-nav-menu-text);
+    font-size: var(--mt-fs-small);
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    -webkit-user-select: none;
+
+    // Remove the default triangle of `summary`.
+    &::-webkit-details-marker { display: none; }
+    &::marker { content: ""; }
+
+    &:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+  }
+
+  // The panel uses the tokens of the page.
+  &__menu-panel {
+    position: absolute;
+    inset-block-start: calc(100% + var(--mt-space-2));
+    inset-inline-start: 0;
+    min-width: 12rem;
+    padding: var(--mt-space-2);
+    border: 1px solid var(--mt-border);
+    border-radius: var(--mt-radius-media);
+    background: var(--mt-surface);
+    box-shadow: var(--mt-shadow);
+    display: flex;
+    flex-direction: column;
+
+    a {
+      display: block;
+      padding: 0.7rem 0.9rem;
+      border-radius: calc(var(--mt-radius-media) - var(--mt-space-2));
+      color: var(--mt-text);
+      font-size: var(--mt-fs-body);
+      font-weight: 600;
+      line-height: 1.2;
+
+      &:hover { background: var(--mt-bg-subtle); color: var(--mt-text); }
+
+      &[aria-current="page"] { color: var(--mt-accent); }
+    }
+  }
+
+  // A compact pill for the nav. The base `.mt-btn` size is for the buttons of a hero.
+  .mt-btn {
+    padding: var(--mt-space-2) var(--mt-space-4);
+    font-size: var(--mt-fs-small);
+  }
+}
+
+// ── Platform bar ───────────────────────────────────────────────────────────
+// The slim local nav under the top nav, on the four landing pages: Overview,
+// iPhone & iPad, Mac, and iPhone Duo. Markup: _includes/platform-nav.html. A page
+// shows it when its front matter has `platformNav: true` (see _layouts/base.html).
+//
+// The list is centred when it fits. When it does not fit, the bar scrolls inside
+// itself, and the page does not scroll sideways: the list is as wide as its content
+// (`width: max-content`), and the automatic margins that centre it become 0.
+// The scrollbar is hidden, because the bar is only a few links. A link is 44px high.
+// The `li` has a space above and below its link, so the focus outline of a link is
+// inside the bar, and the bar does not cut it.
+//
+// The page with a hero gives the bar the dark tokens (see `.mt-hero-page` in
+// _hero.scss).
+.mt-platform-nav {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  border-block-end: 1px solid var(--mt-border);
+
+  &::-webkit-scrollbar { display: none; }
+
+  // The selector repeats the block name. It has to be more specific than `ul[class]` in
+  // _reset.scss, which sets `padding: 0` on a list that has a class.
+  & &__list {
+    display: flex;
+    gap: var(--mt-space-8);
+    width: max-content;
+    margin-inline: auto;
+    padding-inline: max(var(--mt-space-6), env(safe-area-inset-left, 0px))
+                    max(var(--mt-space-6), env(safe-area-inset-right, 0px));
+  }
+
+  &__item {
+    flex: none;
+    padding-block: var(--mt-space-2);
+  }
+
+  // The current page has the first text colour and a heavier weight. The other links
+  // have the second text colour, which has a contrast of 4.5:1 or more on the page.
+  &__link {
+    display: block;
+    padding-block: var(--mt-space-1);
+    color: var(--mt-text-2);
+    font-size: var(--mt-fs-meta);
+    font-weight: 500;
+    line-height: 1.5;
+    white-space: nowrap;
+
+    &:hover,
+    &[aria-current="page"] { color: var(--mt-text); }
+
+    &[aria-current="page"] { font-weight: 600; }
+  }
+
+  @media (max-width: $bp-phone) {
+    & &__list { gap: var(--mt-space-6); }
+  }
+}

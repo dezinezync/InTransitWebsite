@@ -1,0 +1,40 @@
+---
+permalink: /releases.json
+eleventyExcludeFromCollections: true
+---
+{% assign releases = collections.releases | reverse %}
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "{{ site.title }} Releases",
+  "home_page_url": "{{ "/releases/" | absolute_url }}",
+  "feed_url": "{{ "/releases.json" | absolute_url }}",
+  "description": "Every InTransit release — a running changelog.",
+  "icon": "{{ "/assets/images/appicon/apple-touch-icon-180x180.png" | absolute_url }}",
+  "author": {
+    "name": "Nikhil Nigade",
+    "url": "https://social.dezinezync.com/@nikhil",
+    "avatar": "https://www.gravatar.com/avatar/884e476f05a20d0af1d8de59b946dbcf"
+  },
+  "language": "en-IN",
+  "items": [
+    {% for release in releases limit: 20 %}
+    {%- assign releaseTitle = site.title -%}
+    {%- if release.data.version -%}
+      {%- assign releaseTitle = site.title | append: ' ' | append: release.data.version -%}
+    {%- else -%}
+      {%- assign releaseTitle = site.title | append: ' — ' | append: release.date | date: '%B %Y' -%}
+    {%- endif -%}
+    {
+      "id": "{{ "/releases/" | absolute_url }}#{{ release.page.fileSlug }}",
+      "url": "{{ "/releases/" | absolute_url }}#{{ release.page.fileSlug }}",
+      "title": {{ releaseTitle | jsonify }},
+      "content_html": {{ release.templateContent | jsonify }},
+      "summary": {{ release.data.summary | default: "" | jsonify }},
+      "date_published": "{{ release.date | date_to_rfc822 }}"
+      {%- if release.data.platforms -%}
+      ,"tags": {{ release.data.platforms | jsonify }}
+      {%- endif -%}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+}

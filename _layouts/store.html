@@ -1,0 +1,18 @@
+{%- comment -%}
+  The /store page: it sends the visitor to InTransit on the App Store at once. Every
+  App Store badge of the site links here, so the address of the app is in one place
+  (`appStoreUrl` in _data/site.js).
+{%- endcomment -%}
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting to the App Store</title>
+  <meta name="robots" content="noindex">
+  <meta http-equiv="Refresh" content="0; url={{ site.appStoreUrl }}">
+  <link rel="canonical" href="{{ site.appStoreUrl }}">
+</head>
+<body>
+  <p>Opening InTransit on the App Store. If nothing happens, <a href="{{ site.appStoreUrl }}">open it here</a>.</p>
+</body>
+</html>

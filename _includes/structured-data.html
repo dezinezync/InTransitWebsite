@@ -1,0 +1,92 @@
+{%- comment -%}
+  The JSON-LD (structured data) of a page, for search engines. _includes/head.html includes
+  this file at the end of the head. It uses the variables of the head: `metaUrl` (the address
+  of the page), `metaImage` (the share image), `metaDescription`, `isPost`, and `updated`.
+
+  Each page gets this data:
+    /         A MobileApplication, and a WebSite.
+    A post    A BlogPosting.
+    Another page     Nothing.
+
+  Write only facts that are true. The first five trips are free, so the price is 0 (the
+  Weekly, Monthly, and Annual passes are in-app purchases). The data has no rating and no
+  review count, because the site has no verified numbers for them.
+
+  Each value goes through the `jsonld` filter (.eleventy.js). The filter writes a value as JSON.
+  A quote in a title cannot break the JSON, and a "<" in a title cannot end the script element.
+{%- endcomment -%}
+{%- assign ldAuthorName = "Nikhil Nigade" %}
+{%- assign ldAuthorUrl = "https://social.dezinezync.com/@nikhil" %}
+{%- assign ldAppStoreUrl = site.appStoreUrl %}
+{%- if page.url == "/" %}
+  {%- assign ldAppType = "MobileApplication" %}
+  {%- assign ldAppSystems = "iOS" %}
+{%- endif %}
+{%- if ldAppType %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": {{ ldAppType | jsonld }},
+    "name": {{ site.title | jsonld }},
+    "operatingSystem": {{ ldAppSystems | jsonld }},
+    "applicationCategory": "TravelApplication",
+    "url": {{ metaUrl | jsonld }},
+    "downloadUrl": {{ ldAppStoreUrl | jsonld }},
+    "installUrl": {{ ldAppStoreUrl | jsonld }},
+    "image": {{ metaImage | jsonld }},
+    "description": {{ metaDescription | jsonld }},
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR"
+    },
+    "author": {
+      "@type": "Person",
+      "name": {{ ldAuthorName | jsonld }},
+      "url": {{ ldAuthorUrl | jsonld }}
+    }
+  }
+  </script>
+{%- endif %}
+{%- if page.url == "/" %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": {{ site.title | jsonld }},
+    "url": {{ "/" | absolute_url | jsonld }}
+  }
+  </script>
+{%- endif %}
+{%- if isPost %}
+  {%- comment %} The logo of the publisher is the app icon that the head gives to iOS (apple-touch-icon).
+  The `imageSize` filter stops the build if the file is not there. {%- endcomment %}
+  {%- assign ldLogo = "/assets/images/appicon/apple-touch-icon-180x180.png" %}
+  {%- assign ldLogoSize = ldLogo | imageSize %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": {{ title | jsonld }},
+    "datePublished": {{ page.date | date_to_iso8601 | jsonld }},
+    "dateModified": {{ updated | default: page.date | date_to_iso8601 | jsonld }},
+    "author": {
+      "@type": "Person",
+      "name": {{ ldAuthorName | jsonld }},
+      "url": {{ ldAuthorUrl | jsonld }}
+    },
+    "image": {{ metaImage | jsonld }},
+    "mainEntityOfPage": {{ metaUrl | jsonld }},
+    "publisher": {
+      "@type": "Organization",
+      "name": {{ site.title | jsonld }},
+      "logo": {
+        "@type": "ImageObject",
+        "url": {{ ldLogo | absolute_url | jsonld }},
+        "width": {{ ldLogoSize.width }},
+        "height": {{ ldLogoSize.height }}
+      }
+    }
+  }
+  </script>
+{%- endif -%}

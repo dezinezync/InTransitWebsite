@@ -1,0 +1,33 @@
+{%- comment -%}
+  One item of a list of posts: the title, the date, and the first 50 words of the post.
+  The blog index (_layouts/blog.html) and the pages of the categories
+  (_layouts/category.html) use it inside a `ul.mt-post-list`.
+
+  Use it with `render`, which gives the partial its own variables:
+    {% render "post-summary.html", post: post, banner: true, first: forloop.first %}
+
+  Parameters:
+    post    An entry of a collection of posts.
+    banner  Optional. true: shows the banner of the post above the title. The blog
+            index shows the banners. The pages of the categories do not.
+    first   Optional. true: the item is the first of the list. Its banner loads at once,
+            because it is at the top of the page.
+
+  The excerpt is plain text. `strip_html` removes the tags first, and then
+  `truncatewords` cuts the text after 50 words. A cut of the HTML itself could split a
+  tag or a footnote marker.
+
+  The styles are in _sass/site/_blog.scss.
+{%- endcomment -%}
+<li>
+  {%- if banner %}
+  {%- if first %}
+  {% render "post-banner.html", png: post.data.bannerImage, webp: post.data.bannerImageWebP, class: "mt-post-banner mt-post-banner--list", loading: "eager", priority: "high" %}
+  {%- else %}
+  {% render "post-banner.html", png: post.data.bannerImage, webp: post.data.bannerImageWebP, class: "mt-post-banner mt-post-banner--list" %}
+  {%- endif %}
+  {%- endif %}
+  <h2 class="mt-post-list__title"><a href="{{ post.url | absolute_url }}">{{ post.data.title | escape }}</a></h2>
+  <time class="mt-meta" datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%b %-d, %Y' }}</time>
+  <p class="mt-post-list__excerpt">{{ post.templateContent | strip_html | truncatewords: 50 }}</p>
+</li>

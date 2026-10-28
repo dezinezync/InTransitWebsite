@@ -1,0 +1,223 @@
+// ─────────────────────────────────────────────────────────────────────────
+// The home page (index.liquid) — the rules that only this page needs. The hero and the
+// shared sections have their own files. Keep this file thin: a rule that another page can
+// use belongs in a component.
+//
+// The body of the page has the classes `mt-hero-page` (see _hero.scss) and
+// `mt-home-page`. The sections, from the top, with their backgrounds:
+//   #hero             Follows the appearance (`.mt-hero--system` in _hero.scss).
+//   #cities           Tint. The city chips and the map.
+//   #live-activities  Dark. The four Live Activity cards, with timers (assets/js/home.js).
+//   #underground      Plain. A split with a phone.
+//   #duo              Tint. The iPhone Duo line-up.
+//   #journey          Plain. A split with a phone, and three promise cards.
+//   #travelogue       Dark. A split, and six promise cards.
+//   #privacy          Tint, with a glow (_includes/sections/privacy.html).
+//   #pricing          Plain (_includes/sections/pricing.html).
+//   #reviews          Tint. Not there until there are reviews (_data/reviews.js).
+//   #help             The colour of the closing band (_includes/sections/help.html).
+// No two sections that touch have the same background.
+// ─────────────────────────────────────────────────────────────────────────
+
+@use "breakpoints" as *;
+
+// ── Wide images ────────────────────────────────────────────────────────────
+// The city map and the iPhone Duo line-up: as wide as the section, and 1200px at most, the
+// width of their artboards at 1x. Keep the `sizes` in index.liquid the same as this width.
+.mt-wide-shot {
+  display: block;
+  width: min(100%, 1200px);
+  margin-inline: auto;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--mt-radius-media);
+  }
+}
+
+// The pictures of the splits fill their boxes. Their heights follow their shapes, so a
+// device is never cropped.
+.mt-home-page {
+  .mt-split__media img { width: 100%; }
+
+  // The promise cards below a split.
+  .mt-split + .mt-promises { margin-block-start: clamp(3rem, 6vw, 5rem); }
+
+  // Six promise cards in one column are a long list on a tablet, so a tablet gets two
+  // columns. A phone keeps one column.
+  @media (min-width: $bp-phone + 1) and (max-width: $bp-wide) {
+    .mt-promises { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+}
+
+// ── A phone in a split ─────────────────────────────────────────────────────
+// A screenshot of an iPhone in its frame, at most 16rem wide: the width of its artboard
+// (256 points).
+.mt-shot-phone picture {
+  display: block;
+  width: min(100%, 16rem);
+  margin-inline: auto;
+}
+
+// ── Hero ───────────────────────────────────────────────────────────────────
+// Five phones in a fan: the middle phone is the tallest, and the others are smaller and go
+// under it. `--mt-fan-w` is the width of the middle phone. The fan is about 3.15 times that
+// width, so on a phone the width follows the screen.
+//   middle 1 × w (321 × 656 at 1x)   inner 0.92 × w (295 × 601)   outer 0.855 × w (274 × 561)
+.mt-fan {
+  --mt-fan-w: min(20rem, calc((100vw - 1rem) / 3.15));
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  picture {
+    position: relative;
+    flex: none;
+    display: block;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  &__phone--1,
+  &__phone--5 {
+    z-index: 1;
+    width: calc(var(--mt-fan-w) * 0.855);
+  }
+
+  &__phone--2,
+  &__phone--4 {
+    z-index: 2;
+    width: calc(var(--mt-fan-w) * 0.92);
+  }
+
+  &__phone--3 {
+    z-index: 3;
+    width: var(--mt-fan-w);
+  }
+
+  &__phone--1 { margin-inline-end: calc(var(--mt-fan-w) * -0.4); }
+  &__phone--2 { margin-inline-end: calc(var(--mt-fan-w) * -0.3); }
+  &__phone--4 { margin-inline-start: calc(var(--mt-fan-w) * -0.3); }
+  &__phone--5 { margin-inline-start: calc(var(--mt-fan-w) * -0.4); }
+
+  // The side phones slide out from behind the middle phone as the hero scrolls into view,
+  // as on the old home page.
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      &__phone--1,
+      &__phone--2,
+      &__phone--4,
+      &__phone--5 {
+        animation: mt-fan-out linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 40%;
+      }
+
+      &__phone--1 { --mt-fan-from: 60%; }
+      &__phone--2 { --mt-fan-from: 30%; }
+      &__phone--4 { --mt-fan-from: -30%; }
+      &__phone--5 { --mt-fan-from: -60%; }
+    }
+  }
+}
+
+@keyframes mt-fan-out {
+  from { translate: var(--mt-fan-from) 0; }
+  to   { translate: 0 0; }
+}
+
+// ── Cities ─────────────────────────────────────────────────────────────────
+// The seven cities, as chips in a row that wraps, above the map.
+.mt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--mt-space-2) var(--mt-space-3);
+  margin: clamp(2rem, 4vw, 3rem) 0 clamp(2rem, 4vw, 3rem);
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: var(--mt-space-2) var(--mt-space-4);
+    border-radius: var(--mt-radius-pill);
+    background: var(--mt-surface);
+    box-shadow: var(--mt-elev-card);
+    font-size: var(--mt-fs-lead);
+    font-weight: 600;
+  }
+}
+
+.mt-cities__note,
+.mt-activities__note {
+  max-width: none;
+  margin-block-start: var(--mt-space-8);
+  text-align: center;
+}
+
+// ── Live Activities ────────────────────────────────────────────────────────
+// Four Live Activity cards in a grid of 2 × 2, and one column on a phone. The timer sits
+// over the time of the card, at the top right, and assets/js/home.js counts it down.
+.mt-activities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--mt-space-6);
+  max-width: 52rem;
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+
+  @media (max-width: $bp-phone) { grid-template-columns: minmax(0, 1fr); }
+}
+
+.mt-activity {
+  position: relative;
+  margin: 0;
+
+  picture { display: block; }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  // The card is 395 × 184 at 1x, and its time is about 13% from the top and 8% from the
+  // right edge. The size of the timer follows the width of the card.
+  &__timer {
+    position: absolute;
+    inset-block-start: 11%;
+    inset-inline-end: 7%;
+    margin: 0;
+    font-size: clamp(0.8rem, 2vw, 1.05rem);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: oklch(1 0 0 / 0.7);
+    mix-blend-mode: plus-lighter;
+  }
+}
+
+// ── Travelogue ─────────────────────────────────────────────────────────────
+// The 3D station (28rem at most), and the Travelogue screen in front of it at the bottom
+// right (11rem at most). Keep the `sizes` in index.liquid the same as these widths.
+.mt-travelogue__media {
+  position: relative;
+  padding-block-end: var(--mt-space-8);
+}
+
+.mt-travelogue__station {
+  display: block;
+  width: min(100%, 28rem);
+  margin-inline: auto;
+}
+
+.mt-travelogue__phone {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-end: 0;
+  width: min(38%, 11rem);
+}

@@ -1,0 +1,59 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Minimal modern reset — standalone, with no global inheritance.
+// A copy of _sass/ios-2026/_reset.scss on the Pockity site.
+// It sets box-sizing, margins, and the defaults of media.
+// ─────────────────────────────────────────────────────────────────────────
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body { min-height: 100vh; }
+
+// Media are blocks and shrink to their box, so device frames and video behave.
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// Form controls take the typography of the page.
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+// A long word does not break the layout.
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 { overflow-wrap: break-word; }
+
+// A list with a class is a layout list, not a list in the text.
+ul[class],
+ol[class] {
+  list-style: none;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

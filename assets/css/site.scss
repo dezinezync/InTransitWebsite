@@ -1,0 +1,41 @@
+// ═════════════════════════════════════════════════════════════════════════
+// InTransit site stylesheet — the only stylesheet of the site.
+//
+// This file is token-driven, and its names have the `mt-` prefix ("MT", the code name of
+// InTransit): classes (`.mt-section`), custom properties (`--mt-accent`), and Sass mixins
+// (`mt-light-tokens`). The theme follows the system appearance. A section with
+// `.mt-section--dark` is always dark.
+//
+// The partials are copies of _sass/site/ on the Elytra site, which copied them from the
+// Pockity site (ios-2026). Each partial that is a copy names its source in its first
+// lines. When you port a fix from Elytra, change `yt-` to `mt-`; from Pockity, `pk-` to `mt-`.
+//
+// .eleventy.js compiles this file to /assets/css/site.css with the `sass` package, and
+// _includes/head.html links it in each page. A change to a partial in _sass/site/
+// compiles this file again (see `addExtension("scss")` in .eleventy.js).
+//
+// The partials of the landing page: hero, shots (the framed captures), and sections (the
+// shared sections) come after "media". page-home is the last partial.
+//
+// ⚠ The order of the `@use` rules below is the order of the rules in site.css. Sass writes
+//   the CSS of a partial where it first loads the partial. Do not sort the list. A partial
+//   that has only variables or mixins (breakpoints, token-defs) writes no CSS. A partial
+//   that needs one of them loads it with its own `@use`, so this file does not list them.
+// ═════════════════════════════════════════════════════════════════════════
+
+@use "../../_sass/site/reset";
+@use "../../_sass/site/tokens";
+@use "../../_sass/site/base";
+@use "../../_sass/site/layout";
+@use "../../_sass/site/typography";
+@use "../../_sass/site/prose";
+@use "../../_sass/site/blog";
+@use "../../_sass/site/media";
+@use "../../_sass/site/hero";
+@use "../../_sass/site/shots";
+@use "../../_sass/site/sections";
+@use "../../_sass/site/nav";
+@use "../../_sass/site/store";
+@use "../../_sass/site/releases";
+@use "../../_sass/site/closing";
+@use "../../_sass/site/page-home";
