@@ -1,0 +1,649 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Press — the press kit page (_pages/press.html).
+// A copy of _sass/site/_press.scss on the Elytra site (from _sass/ios-2026/_press.scss on
+// the Pockity site), with the `mt-` prefix.
+// It is a move of _sass/layouts/_press.scss of the old stylesheet. The page looks
+// the same: the same geometry, font sizes, weights, line heights, and colours.
+//
+// The old stylesheet (Pico and the "launchkit" rules) gave the page more than its own
+// rules did: the size and the colours of the text, a letter spacing on each
+// paragraph, and a few more. This file does not depend on that stylesheet. It gives
+// the page the same values, in the three places below, each marked "old stylesheet":
+//   1. `body.mt-press-page`: the colour of the page, and the column of the text.
+//   2. `.mt-press`: the colours of the old variables, as private properties.
+//   3. The `:where()` rules: the rules that the old stylesheet had for p, ul, dl, a,
+//      h2, and h3. `:where()` gives them no specificity, as the old rules had little,
+//      so each rule of the page below takes priority over them.
+// The colours of the page are the old colour variables, not the tokens of this
+// stylesheet. Only the accent follows the token --mt-accent, so that it is
+// lighter in dark mode (the old dark accent had a contrast of 4.15:1).
+//
+// Font sizes are in `em`, and spaces are in `px`, as on the Pockity page. The
+// base is the text size of `body`: 1rem, which is 16px in the default setting of a
+// browser.
+// ─────────────────────────────────────────────────────────────────────────
+
+@use "breakpoints" as *;
+@use "base";
+
+// The colour of the page, as the old stylesheet set it (`--dz-background-color`).
+// `window` and `Canvas` are the colours of the system, so the page follows the
+// system appearance. Sass does not change this value.
+$press-page-bg: color-mix(in display-p3, window 30%, Canvas);
+
+// The width of the text column of the page, as a length that `body` computes.
+// Registered, the value inherits as pixels, so the band and the footer below
+// (which have their own font sizes) get the same width as the page column.
+@property --mt-press-column {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+// ── The page ───────────────────────────────────────────────────────────────
+// The layout (_layouts/press.html) gives the body this class.
+body.mt-press-page {
+  // Old stylesheet: the page colour is the system surface.
+  background-color: $press-page-bg;
+
+  // The last section has the page colour, so the "get started" band takes the
+  // same colour and the page runs into it with no seam (see _closing.scss).
+  --mt-get-started-bg: #{$press-page-bg};
+
+  // The content of the band and the footer starts on the same line as the page.
+  --mt-press-column: 80ch;
+
+  .mt-closing {
+    --_max: calc(var(--mt-press-column) + 2 * var(--_inset));
+  }
+
+  // Old stylesheet: `body.blog main` had this space above and below the page.
+  main {
+    padding-block: clamp(1.5rem, 3vw, 2.5rem) clamp(3rem, 7vw, 6rem);
+  }
+}
+
+// The root also takes the page colour, for the area of an overscroll.
+html:has(body.mt-press-page) { background-color: $press-page-bg; }
+
+// ── The Reviews section ────────────────────────────────────────────────────
+// The section of the home page (_includes/sections/reviews.html), after the column
+// (_layouts/press.html). It is a band, and its cards are as wide as on the home page, so it is
+// outside the column. It has no colour of its own: the page colour shows, as in the closing band
+// below it, so the page runs into the band with no seam, and the colour of the browser bars is
+// the page colour.
+body.mt-press-page #reviews {
+  background: transparent;
+  --mt-chrome: #{$press-page-bg};
+}
+
+// ── The column ─────────────────────────────────────────────────────────────
+// The text column: 80 characters wide, and never wider than the screen minus 1rem
+// at each side. On a phone it takes the full width, with 1rem at each side.
+// Old stylesheet: this was `.container.readable`. It cut off what went outside the
+// column on the sides, such as the shadow of the feed card. The cut stays.
+.mt-press-column {
+  width: 100%;
+  max-width: min(80ch, 100% - 2rem);
+  margin-inline: auto;
+  overflow-x: hidden;
+
+  @media (max-width: $bp-column) {
+    max-width: 100%;
+    padding-inline: 1rem;
+  }
+}
+
+// ── The page content ───────────────────────────────────────────────────────
+.mt-press {
+  // Old stylesheet: the colours of the "dz" variables and of Pico, as the page used
+  // them. `Canvas` and `CanvasText` are the colours of the system.
+  --_title:    color-mix(in display-p3, Canvas 8%, CanvasText);
+  --_subtitle: oklch(60% 0.005 265);        // grey, near #8e8e93
+  --_subtext:  oklch(73% 0.004 265);        // light grey, near #aeaeb2
+  --_grouped:  Canvas;
+  --_brand:    var(--mt-accent);            // the accent of this stylesheet
+
+  --_border: color-mix(in srgb, var(--_title) 9%, transparent);
+  --_fill:   color-mix(in srgb, var(--_title) 4%, transparent);
+  --_pill:   color-mix(in srgb, var(--_title) 6%, transparent);
+  --_strong: color-mix(in srgb, var(--_title) 20%, transparent);
+  --_surface: var(--_grouped);
+  --_radius: 18px;
+
+  // Old stylesheet: the colour of a paragraph, a list, and a list of terms that has
+  // no colour of its own. It is the text colour of Pico: #373c44 in light mode and
+  // #c2c7d0 in dark mode.
+  --_pico-text: oklch(0.355 0.015 259.8);
+
+  @include base.legacy-html;
+
+  color: var(--_title);
+
+  a {
+    color: var(--_brand);
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+
+  p { margin: 0; }
+
+  @media (prefers-color-scheme: dark) {
+    --_pico-text: oklch(0.828 0.014 262.4);
+  }
+}
+
+// Old stylesheet: what Pico and the "launchkit" rules gave to the elements of the page.
+:where(.mt-press) {
+  :where(p) {
+    line-height: 1.47059;
+    letter-spacing: -0.022em;
+  }
+
+  :where(p, ul, dl) {
+    color: var(--_pico-text);
+    font-style: normal;
+    font-weight: 400;
+  }
+
+  // The rules for `main p` and `main li`. They hyphenate the text.
+  :where(p, li) {
+    hyphens: auto;
+    hanging-punctuation: first last;
+    text-wrap: pretty;
+  }
+
+  :where(h2, h3) { text-wrap: balance; }
+
+  // Pico: the underline of a link is 0.125em from the text, and a link changes slowly.
+  :where(a) {
+    text-underline-offset: 0.125em;
+    transition: all 0.3s cubic-bezier(0, 0, 0.5, 1);
+  }
+}
+
+// Hidden on screen, read by screen readers.
+.mt-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+// A button with the brand colour. The page background is the text colour:
+// white in light mode and dark in dark mode. Each has sufficient contrast on
+// the brand colour of its mode.
+.mt-press .mt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: var(--_brand);
+  color: var(--_grouped);
+  font-size: 0.9375em;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  transition: filter 150ms ease;
+
+  &:hover { filter: brightness(1.1); text-decoration: none; }
+  &:focus-visible { outline: 2px solid var(--_brand); outline-offset: 3px; }
+}
+
+// ── Hero ───────────────────────────────────────────────────────────────────
+// The page header on the left and the feed card on the right.
+// On narrow viewports, the card goes below the header.
+.mt-press__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem);
+  gap: 48px;
+  align-items: center;
+
+  @media (max-width: $bp-aside) {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+.mt-press__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.mt-press__icon {
+  display: block;
+
+  img {
+    display: block;
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.mt-press__eyebrow {
+  font-size: 0.75em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--_brand);
+}
+
+.mt-press .mt-press__headline {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-stretch: expanded;
+  font-variation-settings: "wdth" 110;
+  font-size: clamp(2.25em, 5vw, 3em);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--_title);
+  text-wrap: balance;
+}
+
+.mt-press__sub {
+  font-size: 1.125em;
+  line-height: 1.5;
+  color: var(--_subtitle);
+  text-wrap: pretty;
+}
+
+// Links to the sections of the page. The items start at the leading edge.
+.mt-press .mt-press__jump {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+
+  a {
+    padding: 9px 15px;
+    border: 1px solid var(--_border);
+    border-radius: 999px;
+    background: var(--_pill);
+    color: var(--_subtitle);
+    font-size: 0.8125em;
+    font-weight: 600;
+    line-height: 1.2;
+
+    &:hover { color: var(--_title); border-color: var(--_strong); text-decoration: none; }
+  }
+}
+
+// ── Feed card ──────────────────────────────────────────────────────────────
+// The contact offer, as the source of an RSS feed in an editor window. It is
+// the counterpart of the receipt on the Pockity page.
+//
+// `.mt-feed` carries the shadow. `.mt-feed__window` is the window: a title bar
+// with the three window buttons and the file name, then the code.
+.mt-feed {
+  filter: drop-shadow(0 12px 24px oklch(0 0 0 / 0.10)) drop-shadow(0 1px 2px oklch(0 0 0 / 0.08));
+
+  @media (max-width: $bp-aside) {
+    width: 100%;
+    max-width: 24rem;
+  }
+}
+
+.mt-feed__window {
+  overflow: hidden;
+  border: 1px solid var(--_border);
+  border-radius: 12px;
+  background: var(--_surface);
+  font-size: 0.8125em;
+
+  // The rules at the top of this file hyphenate the paragraphs of the page. The text
+  // of the card shows each word whole.
+  p, li { hyphens: manual; }
+}
+
+.mt-feed__bar {
+  position: relative;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--_border);
+  background: var(--_fill);
+  color: var(--_subtitle);
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.mt-feed__lights {
+  position: absolute;
+  inset-inline-start: 12px;
+  top: 50%;
+  display: flex;
+  gap: 6px;
+  transform: translateY(-50%);
+
+  i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: oklch(0.694 0.196 26.4);                   // red
+    &:nth-child(2) { background: oklch(0.835 0.161 80.9); }  // yellow
+    &:nth-child(3) { background: oklch(0.728 0.217 144.7); } // green
+  }
+}
+
+.mt-feed__code {
+  padding: 20px 20px 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.65;
+  color: var(--_title);
+
+  // A line that does not fit wraps with a hanging indent of two characters.
+  // The lines inside <channel> start two characters in.
+  > p {
+    padding-inline-start: 2ch;
+    text-indent: -2ch;
+  }
+
+  // The list items set all four sides of the padding.
+  > p:not(:first-child):not(:last-child),
+  > ul > li {
+    padding: 0 0 0 4ch;
+    text-indent: -2ch;
+  }
+}
+
+.mt-feed__tag { color: var(--_brand); }
+
+.mt-feed__title { font-weight: 700; }
+
+// The list of the free items. It has no marker and no space around it.
+ul.mt-feed__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    list-style: none;
+    margin: 0;
+  }
+}
+
+.mt-feed__total { font-weight: 700; }
+
+.mt-press .mt-feed__cta {
+  display: flex;
+  margin: 16px 20px 0;
+  font-size: 1em;
+  overflow-wrap: anywhere;
+}
+
+.mt-feed__foot {
+  padding: 16px 20px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--_subtext);
+}
+
+// ── Sections ───────────────────────────────────────────────────────────────
+// One section of the page: facts, boilerplate, assets, iPhone Duo, or coverage.
+.mt-press__block {
+  margin: 64px 0 0;
+}
+
+.mt-press .mt-press__title {
+  margin: 0 0 16px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-stretch: expanded;
+  font-variation-settings: "wdth" 110;
+  font-size: clamp(1.375em, 2.4vw, 1.75em);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--_title);
+}
+
+.mt-press .mt-press__lede {
+  margin: 0 0 24px;
+  color: var(--_subtitle);
+  text-wrap: pretty;
+}
+
+.mt-press .mt-press__note {
+  margin-top: 24px;
+  font-size: 0.8125em;
+  color: var(--_subtext);
+  text-wrap: pretty;
+}
+
+// A row of buttons, for example the link to the iCloud folder of assets.
+.mt-press .mt-press__actions {
+  margin: 0 0 24px;
+}
+
+// ── Quick facts ────────────────────────────────────────────────────────────
+// A two-column list of terms and values. One column on narrow viewports.
+.mt-facts {
+  margin: 0;
+  border-top: 1px solid var(--_border);
+
+  > div {
+    display: grid;
+    grid-template-columns: minmax(8rem, 11rem) 1fr;
+    gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--_border);
+
+    @media (max-width: $bp-phone) {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+
+  dt {
+    padding-top: 2px;
+    font-size: 0.8125em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--_subtext);
+  }
+
+  dd {
+    margin: 0;
+    line-height: 1.5;
+    color: var(--_title);
+    text-wrap: pretty;
+  }
+}
+
+// ── Boilerplate ────────────────────────────────────────────────────────────
+.mt-boilerplate {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mt-boilerplate__item {
+  position: relative;
+  padding: 24px;
+  border: 1px solid var(--_border);
+  border-radius: var(--_radius);
+  background: var(--_surface);
+
+  .mt-press & h3 {
+    margin: 0 0 12px;
+    font-size: 0.8125em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--_brand);
+  }
+
+  // Writers copy this text, so it shows each word whole. The rules at the top of this
+  // file hyphenate the other paragraphs of the page.
+  p {
+    line-height: 1.6;
+    color: var(--_title);
+    text-wrap: pretty;
+    hyphens: manual;
+  }
+}
+
+// The script in _pages/press.html adds this button. The selector repeats the
+// class names, so that it takes priority over the other rules for `button`.
+.mt-press .mt-boilerplate__item .mt-boilerplate__copy {
+  position: absolute;
+  top: 16px;
+  inset-inline-end: 16px;
+  width: auto;
+  margin: 0;
+  padding: 5px 13px;
+  border: 1px solid var(--_border);
+  border-radius: 999px;
+  background: var(--_pill);
+  box-shadow: none;
+  color: var(--_subtitle);
+  font: inherit;
+  font-size: 0.8125em;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: border-color 150ms ease, color 150ms ease;
+
+  &:hover { border-color: var(--_strong); color: var(--_title); }
+  &:focus-visible { outline: 2px solid var(--_brand); outline-offset: 2px; }
+}
+
+// ── Assets ─────────────────────────────────────────────────────────────────
+// A grid of tiles. A `--wide` tile spans two columns, for landscape images.
+// `dense` fills the gaps on narrow viewports, where a wide tile takes a row.
+ul.mt-assets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-flow: row dense;
+  gap: 16px;
+
+  @media (max-width: $bp-tile) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+// In the iPhone Duo block, the tiles come after the paragraph to copy.
+.mt-press ul.mt-press__duo-assets { margin-block-start: 24px; }
+
+.mt-assets__item {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--_border);
+  border-radius: var(--_radius);
+  background: var(--_surface);
+  list-style: none;
+
+  &--wide { grid-column: span 2; }
+
+  // On narrow viewports, a wide tile uses the full row.
+  @media (max-width: $bp-tile) {
+    &--wide { grid-column: 1 / -1; }
+  }
+}
+
+.mt-assets__preview {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 10rem;
+  padding: 16px;
+  background: var(--_fill);
+
+  img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 16rem;
+    object-fit: contain;
+  }
+
+  .mt-assets__item--icon & img { width: 6rem; }
+
+  // A `picture` element has no box of its own. Thus its image is the flex item,
+  // the same as an `img` without a `picture` element.
+  picture { display: contents; }
+}
+
+// A placeholder (_includes/shot.html) in a tile has the size that the image will have: at
+// most the width of the tile, and at most 16rem high, as `.mt-assets__preview img` above.
+.mt-assets__preview .mt-placeholder {
+  width: auto;
+  max-width: 100%;
+  max-height: 16rem;
+}
+
+// A phone placeholder is tall and narrow: its height sets its size.
+.mt-assets__preview .mt-placeholder.mt-assets__phone { height: 16rem; }
+
+.mt-assets__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  font-size: 0.8125em;
+  line-height: 1.4;
+  color: var(--_subtitle);
+
+  b { color: var(--_title); font-weight: 600; }
+}
+
+// ── Coverage ───────────────────────────────────────────────────────────────
+ul.mt-coverage {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--_border);
+}
+
+.mt-coverage__item {
+  margin: 0;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--_border);
+  list-style: none;
+}
+
+.mt-press .mt-coverage__meta {
+  margin: 0 0 8px;
+  font-size: 0.8125em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--_subtext);
+}
+
+.mt-press .mt-coverage__title {
+  font-size: 1.0625em;
+  font-weight: 600;
+  color: var(--_title);
+  text-wrap: balance;
+
+  &:hover { color: var(--_brand); text-decoration: none; }
+}
+
+.mt-press .mt-coverage__note {
+  margin: 8px 0 0;
+  line-height: 1.55;
+  color: var(--_subtitle);
+  text-wrap: pretty;
+}

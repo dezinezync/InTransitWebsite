@@ -11,6 +11,8 @@ module.exports = function () {
     appId: "6756531079",
     appStoreUrl: "https://apps.apple.com/in/app/intransit/id6756531079",
     mastodon: "https://social.dezinezync.com/@intransit",
+    // The date and time of the build. The press page uses it to find the newest release.
+    time: new Date(),
     // The year of the build, for the copyright line of the footer.
     year: new Date().getFullYear(),
     // The address of the live site.

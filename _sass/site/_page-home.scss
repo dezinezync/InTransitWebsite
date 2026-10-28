@@ -38,6 +38,13 @@
   font-family: var(--mt-font-mono);
   font-size: var(--mt-fs-caption);
 
+  // A long label wraps in a narrow box, such as a phone tile of the press page.
+  span {
+    padding: var(--mt-space-2);
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+
   .mt-section--tint & { background: var(--mt-bg); }
 }
 

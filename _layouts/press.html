@@ -1,0 +1,19 @@
+---
+layout: base
+bodyClass: mt-press-page
+---
+{%- comment -%}
+  The layout of the press page (_pages/press.html). _layouts/base.html adds the nav at
+  the top, and the closing band and the footer at the end. This layout adds the text
+  column. The column, the colour of the page, and the space around the column are in
+  _sass/site/_press.scss, under `.mt-press-page`.
+
+  After the column, the page shows the Reviews section of the home page (the App Store review
+  cards, _includes/sections/reviews.html). It is outside the narrow column, so it has the same
+  width and the same three cards in a row as on the home page, and it has the colour of the page,
+  so the page runs into the closing band with no seam (`#reviews` in _press.scss).
+{%- endcomment -%}
+<div class="mt-press-column">
+  {{ content }}
+</div>
+{% render "sections/reviews.html", reviews: reviews %}

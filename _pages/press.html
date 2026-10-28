@@ -1,0 +1,253 @@
+---
+title: Press Kit
+metaTitle: InTransit Press Kit
+layout: press
+permalink: /press/
+# The sitemap uses the newest release date as the <lastmod> of this page,
+# because the page shows the latest version.
+listsCollection: releases
+description: Facts, ready-to-use copy, the app icon, and screenshots for writers and creators who cover InTransit.
+keywords: InTransit press kit, InTransit media kit, InTransit screenshots, InTransit app icon, InTransit fact sheet, metro app India
+---
+{%- comment -%}
+  The press page. A copy of _pages/press.html on the Elytra site (from the Pockity site), with
+  the `mt-` prefix and the facts of InTransit.
+  The coverage list, the contact address, and the iCloud folder are in _data/press.js.
+  The styles are in _sass/site/_press.scss.
+
+  The hero card is a press pass, as a metro ticket: what the maker offers to the press, and
+  the fare, "One email". (Elytra has an RSS feed here, a joke about what Elytra reads.) The
+  real contact is the email button.
+
+  The screenshots are PLACEHOLDERS until the captures exist (_includes/shot.html, folder
+  "press": assets/images/press/<name>.webp). The two wide tiles are the hero and the Live
+  Activities of the home page. When a screenshot exists, make its tile a link to the full-size
+  PNG file, as on the Elytra site, and give its size in the meta line.
+
+  The "Latest version" fact shows the version on the App Store: the newest release in
+  _releases/ with a date on or before the day of the build.
+{%- endcomment -%}
+{%- assign today = site.time | date: '%Y-%m-%d' -%}
+{%- for release in collections.releases -%}
+  {%- assign releaseDay = release.date | date: '%Y-%m-%d' -%}
+  {%- if releaseDay <= today -%}
+    {%- assign latest = release -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- capture pressMail -%}mailto:{{ press.contact }}?subject=Press%20enquiry%3A%20InTransit{%- endcapture -%}
+<div class="mt-press">
+  <div class="mt-press__hero">
+    <div class="mt-press__intro">
+      <img class="mt-press__icon" src="/assets/images/appicon/apple-touch-icon-180x180.png" width="64" height="64" alt="" loading="eager">
+      <p class="mt-press__eyebrow">Press Kit</p>
+      <h1 class="mt-press__headline">Next Stop: Your Story</h1>
+      <p class="mt-press__sub">Facts, ready-to-use copy, and pictures for anyone writing about InTransit. All of it in full text, with no “Read more” link.</p>
+      <nav class="mt-press__jump" aria-label="On this page">
+        <a href="#press-facts">Facts</a>
+        <a href="#press-boilerplate">Boilerplate</a>
+        <a href="#press-assets">Assets</a>
+      </nav>
+    </div>
+
+    {%- comment -%} What the maker offers to the press, as a metro ticket. The real contact is
+    the email button. The labels of the ticket are hidden from screen readers, which read the
+    plain text. {%- endcomment %}
+    <aside class="mt-feed" aria-labelledby="feed-title">
+      <div class="mt-feed__window">
+        <p class="mt-feed__bar" aria-hidden="true"><span class="mt-feed__lights"><i></i><i></i><i></i></span>press-pass</p>
+        <div class="mt-feed__code">
+          <p class="mt-feed__title"><span class="mt-feed__tag" aria-hidden="true">PASS · </span><span id="feed-title">Press Desk</span></p>
+          <p><span class="mt-feed__tag" aria-hidden="true">FROM · </span><span class="mt-sr-only">From </span>Your desk</p>
+          <p><span class="mt-feed__tag" aria-hidden="true">TO · </span><span class="mt-sr-only">To </span>Nikhil Nigade</p>
+          {%- if latest %}
+          <p><span class="mt-feed__tag" aria-hidden="true">LINE · </span><span class="mt-sr-only">Version </span>{{ latest.data.version }}</p>
+          {%- endif %}
+          <ul class="mt-feed__items" aria-label="Free for the press">
+            <li><span class="mt-feed__tag" aria-hidden="true">✓ </span>Interviews</li>
+            <li><span class="mt-feed__tag" aria-hidden="true">✓ </span>Promo codes</li>
+            <li><span class="mt-feed__tag" aria-hidden="true">✓ </span>TestFlight builds</li>
+            <li><span class="mt-feed__tag" aria-hidden="true">✓ </span>Fact checks</li>
+            <li><span class="mt-feed__tag" aria-hidden="true">✓ </span>Extra assets</li>
+          </ul>
+          <p class="mt-feed__total"><span class="mt-feed__tag" aria-hidden="true">FARE · </span><span class="mt-sr-only">Fare: </span>One email</p>
+        </div>
+        <a class="mt-btn mt-feed__cta" href="{{ pressMail }}">Email {{ press.contact }}</a>
+        <p class="mt-feed__foot">Replies in 2 working days<br/>Thanks for riding indie</p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Quick facts -->
+  <section class="mt-press__block" aria-labelledby="press-facts">
+    <h2 class="mt-press__title" id="press-facts">Quick Facts</h2>
+    <dl class="mt-facts">
+      <div>
+        <dt>Name</dt>
+        <dd>InTransit</dd>
+      </div>
+      <div>
+        <dt>Maker</dt>
+        <dd><a href="https://social.dezinezync.com/@nikhil">Nikhil Nigade</a>, an indie developer in India</dd>
+      </div>
+      <div>
+        <dt>Platforms</dt>
+        <dd>iPhone, with Live Activities on the Lock Screen and in the Dynamic Island, and in the Smart Stack on Apple Watch. Ready for iPhone Duo.</dd>
+      </div>
+      <div>
+        <dt>Cities</dt>
+        <dd>Ahmedabad, Bengaluru, Chennai, Kolkata, Mumbai, New Delhi, and Pune, with every running and under-construction metro line.</dd>
+      </div>
+      <div>
+        <dt>Language</dt>
+        <dd>English</dd>
+      </div>
+      <div>
+        <dt>Price</dt>
+        <dd>The first five trips are free. Then a Weekly, Monthly, or Annual pass keeps every ride feature. The Travelogue stays open without a pass. A pass is for the app; riders buy their metro tickets as usual.</dd>
+      </div>
+      <div>
+        <dt>Privacy</dt>
+        <dd>InTransit works out your ride on the iPhone and never sends your location to InTransit or anyone else. No account is needed to plan and ride, and there are no ads and no tracking.</dd>
+      </div>
+      <div>
+        <dt>History</dt>
+        <dd>On the App Store since 18 March 2026. <a href="{{ "/posts/2026-03-18/release/" | absolute_url }}">The launch post</a></dd>
+      </div>
+      {%- if latest %}
+      <div>
+        <dt>Latest version</dt>
+        <dd>{{ latest.data.version }}, released {{ latest.date | date: '%b %-d, %Y' }}. <a href="{{ "/releases" | absolute_url }}">Release notes</a></dd>
+      </div>
+      {%- endif %}
+      <div>
+        <dt>App Store</dt>
+        <dd><a href="{{ site.appStoreUrl }}">apps.apple.com/in/app/intransit/id{{ site.appId }}</a></dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- Boilerplate -->
+  <section class="mt-press__block" aria-labelledby="press-boilerplate">
+    <h2 class="mt-press__title" id="press-boilerplate">Boilerplate</h2>
+    <p class="mt-press__lede">Free to use as written. Pick the length that fits.</p>
+
+    <div class="mt-boilerplate">
+      <div class="mt-boilerplate__item">
+        <h3>One Sentence</h3>
+        <p data-copy>InTransit is a metro app for iPhone that follows your ride station by station in seven Indian cities, made by an indie developer in India.</p>
+      </div>
+
+      <div class="mt-boilerplate__item">
+        <h3>Short Paragraph</h3>
+        <p data-copy>InTransit is a metro app for iPhone that covers every running and under-construction line in Ahmedabad, Bengaluru, Chennai, Kolkata, Mumbai, New Delhi, and Pune. A Live Activity keeps the next station, the interchange, and the arrival time on the Lock Screen and in the Dynamic Island, and InTransit sends a notification and a haptic tap when the rider’s stop comes up, even underground. Its Travelogue counts the distance ridden and the CO₂ saved, and unlocks 3D models of stations at distance milestones. The first five trips are free, and Weekly, Monthly, and Annual passes keep every ride feature.</p>
+      </div>
+
+      <div class="mt-boilerplate__item">
+        <h3>Long Paragraph</h3>
+        <p data-copy>InTransit is a metro app for iPhone that rides along with you. It covers every running and under-construction metro line in Ahmedabad, Bengaluru, Chennai, Kolkata, Mumbai, New Delhi, and Pune, and opens on the city you are in. Search groups stations by line and sorts them by distance, with Home and Work one tap away, and each station shows its lifts, ramps, and platform access. During a ride, a Live Activity keeps the next station, the interchange, and the arrival time on the Lock Screen, in the Dynamic Island, and in the Smart Stack on Apple Watch, and InTransit sends a notification and a haptic tap when the stop comes up. When GPS drops out in a tunnel, the motion sensors of the iPhone keep the ride on track, and maps and routes work with no signal. The Travelogue records each trip, the distance ridden, and the CO₂ saved, unlocks 3D models of stations at distance milestones, and shares a journey as an image or a video. InTransit works out the ride on the device and never sends the rider’s location away. The first five trips are free; Weekly, Monthly, and Annual passes keep every ride feature, and the Travelogue stays open without one. InTransit is made by Nikhil Nigade, an indie developer in India, and has been on the App Store since March 2026.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Assets -->
+  {%- comment -%} The order of the tiles leaves no gaps in three columns: a `--wide`
+  tile spans two. On narrow screens the grid has two columns, and `dense` fills
+  the gaps there. {%- endcomment %}
+  <section class="mt-press__block" aria-labelledby="press-assets">
+    <h2 class="mt-press__title" id="press-assets">Assets</h2>
+    <p class="mt-press__lede">The screenshots are on their way. For a specific screen, or for the files at full size, <a href="{{ pressMail }}">ask by email</a>.</p>
+    {%- if press.assetsFolder != blank %}
+    <p class="mt-press__actions">
+      <a class="mt-btn" href="{{ press.assetsFolder }}" target="_blank" rel="noopener">Open the iCloud folder</a>
+    </p>
+    {%- endif %}
+
+    <ul class="mt-assets">
+      <li class="mt-assets__item mt-assets__item--icon">
+        <div class="mt-assets__preview">
+          <img src="/assets/images/appicon/apple-touch-icon-180x180.png" width="96" height="96" alt="The InTransit app icon" loading="lazy">
+        </div>
+        <div class="mt-assets__meta">
+          <b>App icon</b>
+          <span>PNG, 180&nbsp;px: <a href="/assets/images/appicon/apple-touch-icon-180x180.png" download="intransit-icon.png">Download</a></span>
+        </div>
+      </li>
+      <li class="mt-assets__item mt-assets__item--wide">
+        <div class="mt-assets__preview">
+          {% render "shot.html", name: "hero", width: 1500, height: 580, sizes: "(max-width: 720px) 100vw, 32rem", alt: "InTransit on iPhone" %}
+        </div>
+        <div class="mt-assets__meta">
+          <b>InTransit on iPhone</b>
+          <span>WebP, 4500 × 1740</span>
+        </div>
+      </li>
+      {%- comment -%} The iPhone screenshots: name, title, and alt text. {%- endcomment %}
+      {%- assign screens = "iphone-map;Map;The metro map of a city in InTransit on iPhone|iphone-journey;Journey;A journey in InTransit, leg by leg, with each interchange|iphone-station;Station;A station in InTransit, with its lifts, ramps, and platform access|iphone-travelogue;Travelogue;The Travelogue in InTransit, with the distance ridden, the CO₂ saved, and a level|iphone-underground;Underground;A ride in InTransit with no signal, with the estimated position on the map|iphone-dark;Map, dark;The metro map of a city in InTransit on iPhone in dark mode" | split: "|" %}
+      {%- for screen in screens %}
+      {%- assign parts = screen | split: ";" %}
+      <li class="mt-assets__item">
+        <div class="mt-assets__preview">
+          {% render "shot.html", folder: "press", name: parts[0], width: 600, height: 1227, sizes: "8rem", alt: parts[2], class: "mt-assets__phone" %}
+        </div>
+        <div class="mt-assets__meta">
+          <b>iPhone, {{ parts[1] }}</b>
+          <span>Coming soon</span>
+        </div>
+      </li>
+      {%- endfor %}
+      <li class="mt-assets__item mt-assets__item--wide">
+        <div class="mt-assets__preview">
+          {% render "shot.html", name: "live-activities", width: 1200, height: 675, sizes: "(max-width: 720px) 100vw, 32rem", alt: "Live Activities of InTransit on the Lock Screen and in the Dynamic Island" %}
+        </div>
+        <div class="mt-assets__meta">
+          <b>Live Activities</b>
+          <span>WebP, 3600 × 2025</span>
+        </div>
+      </li>
+    </ul>
+    <p class="mt-press__note">Please do not change the app icon or crop the screenshots in a way that changes their meaning. iPhone and Apple Watch are trademarks of Apple&nbsp;Inc.</p>
+  </section>
+
+  {%- if press.coverage.size > 0 %}
+  <!-- Coverage -->
+  <section class="mt-press__block" aria-labelledby="press-coverage">
+    <h2 class="mt-press__title" id="press-coverage">Coverage</h2>
+    <ul class="mt-coverage">
+      {%- for item in press.coverage %}
+      <li class="mt-coverage__item">
+        <p class="mt-coverage__meta">
+          <time datetime="{{ item.date }}">{{ item.date | date: '%b %-d, %Y' }}</time> · {{ item.outlet }}{% if item.medium %} · {{ item.medium }}{% endif %}
+        </p>
+        <a class="mt-coverage__title" href="{{ item.url }}" rel="noopener">{{ item.title }}</a>
+        {%- if item.note %}
+        <p class="mt-coverage__note">{{ item.note }}</p>
+        {%- endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+</div>
+<script>
+  // Add a "Copy" button to each boilerplate paragraph.
+  // Without JavaScript or the Clipboard API, the paragraphs show without buttons.
+  (function () {
+    if (!navigator.clipboard) return;
+    var items = document.querySelectorAll('[data-copy]');
+    for (var i = 0; i < items.length; i++) {
+      (function (text) {
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'mt-boilerplate__copy';
+        button.textContent = 'Copy';
+        button.addEventListener('click', function () {
+          navigator.clipboard.writeText(text.textContent.trim()).then(function () {
+            button.textContent = 'Copied';
+            setTimeout(function () { button.textContent = 'Copy'; }, 2000);
+          });
+        });
+        text.parentNode.appendChild(button);
+      })(items[i]);
+    }
+  })();
+</script>

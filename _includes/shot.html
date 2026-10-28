@@ -21,11 +21,14 @@
     dark      Optional. true: the image has a dark artboard, <name>-dark, for the dark
               appearance of the system. The picture shows those files in dark mode, but only
               when <name>-dark.webp exists. Until then, dark mode shows the light files.
+    folder    Optional. The folder in assets/images/ with the files. The default is "home",
+              the exports of the Website page. The press page uses "press".
     class     Optional. The class of the picture element.
     loading   Optional. "lazy" (the default) or "eager".
     priority  Optional. The `fetchpriority` of the image, for example "high".
 {%- endcomment -%}
-{%- assign base = "/assets/images/home/" | append: name -%}
+{%- assign folder = folder | default: "home" -%}
+{%- assign base = "/assets/images/" | append: folder | append: "/" | append: name -%}
 {%- assign lightFile = base | append: ".webp" -%}
 {%- assign hasLightFile = lightFile | fileExists -%}
 {%- if hasLightFile == false -%}
