@@ -5,7 +5,8 @@
 //
 // The body of the page has the classes `mt-hero-page` (see _hero.scss) and
 // `mt-home-page`. The sections, from the top, with their backgrounds:
-//   #hero             Follows the appearance (`.mt-hero--system` in _hero.scss).
+//   #hero             Follows the appearance (`.mt-hero--system` in _hero.scss). One picture,
+//                     full bleed up to 1500px, on the bottom edge.
 //   #cities           Tint. The city chips and the map.
 //   #live-activities  Dark. The four Live Activity cards, with timers (assets/js/home.js).
 //   #underground      Plain. A split with a phone.
@@ -20,6 +21,25 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 @use "breakpoints" as *;
+
+// ── Placeholder ────────────────────────────────────────────────────────────
+// The box that _includes/shot.html shows for an artboard of MTApp.sketch that has no export
+// yet. It has the shape of the image, and its label names the artboard and its size at 1x.
+.mt-placeholder {
+  display: grid;
+  place-items: center;
+  width: min(100%, calc(var(--mt-ph-w) * 1px));
+  aspect-ratio: var(--mt-ph-w) / var(--mt-ph-h);
+  margin-inline: auto;
+  border: 2px dashed var(--mt-border);
+  border-radius: var(--mt-radius-media);
+  background: var(--mt-bg-subtle);
+  color: var(--mt-text-3);
+  font-family: var(--mt-font-mono);
+  font-size: var(--mt-fs-caption);
+
+  .mt-section--tint & { background: var(--mt-bg); }
+}
 
 // ── Wide images ────────────────────────────────────────────────────────────
 // The city map and the iPhone Duo line-up: as wide as the section, and 1200px at most, the
@@ -62,75 +82,33 @@
 }
 
 // ── Hero ───────────────────────────────────────────────────────────────────
-// Five phones in a fan: the middle phone is the tallest, and the others are smaller and go
-// under it. `--mt-fan-w` is the width of the middle phone. The fan is about 3.15 times that
-// width, so on a phone the width follows the screen.
-//   middle 1 × w (321 × 656 at 1x)   inner 0.92 × w (295 × 601)   outer 0.855 × w (274 × 561)
-.mt-fan {
-  --mt-fan-w: min(20rem, calc((100vw - 1rem) / 3.15));
+// A copy of the hero rules of _page-home.scss on the Elytra site. The picture stands on the
+// bottom edge of the hero, so the hero has no space below it. The picture is a block, so the
+// line box of the text does not add a space below it.
+//
+// The picture is full bleed up to its own width: the slot has the width of the screen and no
+// space at its sides, so the picture runs from edge to edge on a screen up to 1500px wide. On a
+// wider screen the picture stays 1500px wide, the width of its 1x file, and it is centred. Its
+// height follows its shape (1500 x 580 at 1x), and nothing crops it. Keep the `sizes` of the
+// picture in index.liquid the same as this width: `min(100vw, 1500px)`.
+.mt-home-page #hero {
+  padding-block-end: 0;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  picture {
-    position: relative;
-    flex: none;
-    display: block;
-  }
-
-  img {
-    display: block;
+  .mt-hero__media {
     width: 100%;
-    height: auto;
+    padding-inline: 0;
   }
 
-  &__phone--1,
-  &__phone--5 {
-    z-index: 1;
-    width: calc(var(--mt-fan-w) * 0.855);
+  .mt-hero__media img {
+    display: block;
+    max-width: 1500px;
+    margin-inline: auto;
   }
 
-  &__phone--2,
-  &__phone--4 {
-    z-index: 2;
-    width: calc(var(--mt-fan-w) * 0.92);
+  .mt-hero__media .mt-placeholder {
+    max-width: 1500px;
+    border-radius: 0;
   }
-
-  &__phone--3 {
-    z-index: 3;
-    width: var(--mt-fan-w);
-  }
-
-  &__phone--1 { margin-inline-end: calc(var(--mt-fan-w) * -0.4); }
-  &__phone--2 { margin-inline-end: calc(var(--mt-fan-w) * -0.3); }
-  &__phone--4 { margin-inline-start: calc(var(--mt-fan-w) * -0.3); }
-  &__phone--5 { margin-inline-start: calc(var(--mt-fan-w) * -0.4); }
-
-  // The side phones slide out from behind the middle phone as the hero scrolls into view,
-  // as on the old home page.
-  @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
-      &__phone--1,
-      &__phone--2,
-      &__phone--4,
-      &__phone--5 {
-        animation: mt-fan-out linear both;
-        animation-timeline: view();
-        animation-range: entry 0% cover 40%;
-      }
-
-      &__phone--1 { --mt-fan-from: 60%; }
-      &__phone--2 { --mt-fan-from: 30%; }
-      &__phone--4 { --mt-fan-from: -30%; }
-      &__phone--5 { --mt-fan-from: -60%; }
-    }
-  }
-}
-
-@keyframes mt-fan-out {
-  from { translate: var(--mt-fan-from) 0; }
-  to   { translate: 0 0; }
 }
 
 // ── Cities ─────────────────────────────────────────────────────────────────

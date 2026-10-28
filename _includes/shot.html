@@ -26,6 +26,13 @@
     priority  Optional. The `fetchpriority` of the image, for example "high".
 {%- endcomment -%}
 {%- assign base = "/assets/images/home/" | append: name -%}
+{%- assign lightFile = base | append: ".webp" -%}
+{%- assign hasLightFile = lightFile | fileExists -%}
+{%- if hasLightFile == false -%}
+<div class="mt-placeholder{% if class %} {{ class }}{% endif %}" style="--mt-ph-w: {{ width }}; --mt-ph-h: {{ height }};" role="img" aria-label="{{ alt | default: name | escape }}">
+  <span>{{ name }} · {{ width }} × {{ height }}</span>
+</div>
+{%- else -%}
 {%- assign w2 = width | times: 2 -%}
 {%- assign w3 = width | times: 3 -%}
 {%- comment -%} Each entry is "<width, 5 digits>|<file>", so that a sort of the text sorts by width. {%- endcomment -%}
@@ -58,3 +65,4 @@
   {%- endif -%}
 {%- endif -%}
 {% render "picture.html", srcset: srcset, src: src, darkSrcset: darkSrcset, sizes: sizes, width: width, height: height, alt: alt, class: class, loading: loading, priority: priority %}
+{%- endif -%}

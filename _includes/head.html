@@ -85,6 +85,12 @@
     {%- endcomment %}
     {%- assign metaImagePath = "/assets/images/home/social-card.jpg" %}
     {%- assign metaImageIsCard = true %}
+    {%- comment %} Until the card is exported and made, the share image is the app icon. {%- endcomment %}
+    {%- assign hasCard = metaImagePath | fileExists %}
+    {%- if hasCard == false %}
+      {%- assign metaImagePath = "/assets/images/appicon/apple-touch-icon-180x180.png" %}
+      {%- assign metaImageIsCard = false %}
+    {%- endif %}
   {%- endif %}
   {%- assign metaImage = metaImagePath | absolute_url %}
   {%- assign metaImageSize = metaImagePath | imageSize %}

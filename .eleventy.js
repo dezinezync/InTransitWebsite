@@ -184,11 +184,17 @@ module.exports = function (eleventyConfig) {
   // package (the Elytra site uses the eleventy-sass plugin, which does not support
   // Eleventy 3). The partials are in _sass/site/. A file whose name starts with "_" is a
   // partial: it writes no file of its own. `addDependencies` tells Eleventy which partials
-  // site.scss loads, so a change to a partial compiles site.scss again.
+  // site.scss loads, so a change to a partial compiles site.scss again (with no cache, see
+  // `compileOptions` below).
   eleventyConfig.addTemplateFormats("scss");
   eleventyConfig.addExtension("scss", {
     outputFileExtension: "css",
     useLayouts: false,
+    // Eleventy caches a compiled template by its content. site.scss itself rarely
+    // changes, so with the cache a change to a partial would not reach site.css.
+    compileOptions: {
+      cache: false,
+    },
     compile: async function (inputContent, inputPath) {
       const parsed = path.parse(inputPath);
       if (parsed.name.startsWith("_")) {

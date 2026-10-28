@@ -23,17 +23,13 @@ sectionChrome: true
     artboard is the size of the image on the page at 1x.
 {%- endcomment -%}
 
-{%- comment -%} 1 · HERO. Five phones in a fan (`.mt-fan` in _page-home.scss). The middle phone
-     is the LCP image, so it loads at once. TODO(alt): describe each screen once the
-     artboards are designed; the side phones have empty alt text until then. {%- endcomment %}
+{%- comment -%} 1 · HERO. One picture, as on the Elytra site: the `hero` artboard (1500 x 580 at 1x)
+     and `hero-dark` for the dark appearance. It is the LCP image of the page, so it loads at once
+     and with a high priority. The picture is full bleed up to 1500px and stands on the bottom
+     edge of the hero (`#hero` in _page-home.scss), so its `sizes` is `min(100vw, 1500px)`.
+     TODO(alt): describe what the picture shows once the artboard is designed. {%- endcomment %}
 {%- capture heroMedia %}
-    <div class="mt-fan">
-      {% render "shot.html", name: "hero-phone-outer-left", dark: true, width: 274, height: 560, sizes: "min(17.1rem, calc((100vw - 1rem) * 0.2714))", alt: "", class: "mt-fan__phone mt-fan__phone--1" %}
-      {% render "shot.html", name: "hero-phone-inner-left", dark: true, width: 294, height: 601, sizes: "min(18.4rem, calc((100vw - 1rem) * 0.292))", alt: "", class: "mt-fan__phone mt-fan__phone--2" %}
-      {% render "shot.html", name: "hero-phone-middle", dark: true, width: 320, height: 654, sizes: "min(20rem, calc((100vw - 1rem) / 3.15))", alt: "InTransit on iPhone", class: "mt-fan__phone mt-fan__phone--3", loading: "eager", priority: "high" %}
-      {% render "shot.html", name: "hero-phone-inner-right", dark: true, width: 294, height: 601, sizes: "min(18.4rem, calc((100vw - 1rem) * 0.292))", alt: "", class: "mt-fan__phone mt-fan__phone--4" %}
-      {% render "shot.html", name: "hero-phone-outer-right", dark: true, width: 274, height: 560, sizes: "min(17.1rem, calc((100vw - 1rem) * 0.2714))", alt: "", class: "mt-fan__phone mt-fan__phone--5" %}
-    </div>
+    {% render "shot.html", name: "hero", dark: true, width: 1500, height: 580, sizes: "min(100vw, 1500px)", alt: "InTransit on iPhone", loading: "eager", priority: "high" %}
 {%- endcapture %}
 {% render "hero.html", tone: "system", eyebrow: "iPhone · iPhone Duo · 7 Cities", title: "Mind the Music, Not the Map", intro: "Play the music, read the book, or chat with a friend. InTransit follows every station of your ride, even underground, and taps you when your stop comes up.", caption: "Your first five trips are free. Then pick a weekly, monthly or annual InTransit pass.", media: heroMedia %}
 
