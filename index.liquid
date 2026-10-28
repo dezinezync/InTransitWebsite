@@ -31,7 +31,7 @@ sectionChrome: true
 {%- capture heroMedia %}
     {% render "shot.html", name: "hero", dark: true, width: 1500, height: 580, sizes: "min(100vw, 1500px)", alt: "InTransit on iPhone", loading: "eager", priority: "high" %}
 {%- endcapture %}
-{% render "hero.html", tone: "system", eyebrow: "iPhone · iPhone Duo · 7 Cities", title: "Mind the Music, Not the Map", intro: "Play the music, read the book, or chat with a friend. InTransit follows every station of your ride, even underground, and taps you when your stop comes up.", caption: "Your first five trips are free. Then pick a weekly, monthly or annual InTransit pass.", media: heroMedia %}
+{% render "hero.html", tone: "system", eyebrow: "iPhone · iPhone Duo · 7 Cities", title: "Mind the Music, Not the Map", intro: "Play the music, read the book, or chat with a friend. <strong>InTransit</strong> follows every station of your ride, even underground, and taps you when your stop comes up.", caption: "Your first five trips are free. Then pick a weekly, monthly or annual InTransit pass.", media: heroMedia %}
 
 {%- comment -%} 2 · CITIES (tint). Seven chips over one map. The app follows your location, so
      there is no switcher. {%- endcomment %}
@@ -52,12 +52,13 @@ sectionChrome: true
       <li>Pune</li>
     </ul>
     {% render "shot.html", name: "cities-map", dark: true, width: 1200, height: 675, sizes: "min(calc(100vw - 3rem), 1200px)", alt: "The metro map of InTransit", class: "mt-wide-shot" %}
-    <p class="mt-header__note mt-cities__note">Your city next? <a href="mailto:{{ site.email }}?subject=A%20city%20for%20InTransit">Tell Nikhil which one.</a></p>
+    <p class="mt-header__note mt-centred-note">Your city next? <a href="mailto:{{ site.email }}?subject=A%20city%20for%20InTransit">Tell Nikhil which one.</a></p>
   </div>
 </section>
 
-{%- comment -%} 3 · LIVE ACTIVITIES (dark). Four Live Activity cards.
-     assets/js/home.js counts the timers down once the grid (#lva-grid) is in view. {%- endcomment %}
+{%- comment -%} 3 · LIVE ACTIVITIES (dark). One picture: the `live-activities` artboard
+     (1200 x 675 at 1x). The band is dark in both appearances, so the picture has no dark
+     version. {%- endcomment %}
 <section class="mt-section mt-section--dark" id="live-activities" aria-labelledby="live-activities-title">
   <div class="mt-section__inner">
     <header class="mt-header mt-header--center">
@@ -65,20 +66,8 @@ sectionChrome: true
       <h2 class="mt-header__title" id="live-activities-title">Never Miss Your Stop</h2>
       <p class="mt-header__sub">Your next station, your interchange and your arrival time stay on the Lock Screen and in the Dynamic Island. When your stop comes up, InTransit lets you know with a notification and a tap you can feel.</p>
     </header>
-    <div class="mt-activities" id="lva-grid">
-      {%- comment -%} name, timer seconds, timer text, alt {%- endcomment -%}
-      {%- assign activities = "pune;1958;32:38;Pune|new-delhi;1452;24:12;New Delhi|bengaluru;2525;42:05;Bengaluru|chennai;442;7:22;Chennai" | split: "|" %}
-      {%- for activity in activities %}
-      {%- assign parts = activity | split: ";" %}
-      {%- assign laName = "live-activity-" | append: parts[0] %}
-      {%- assign laAlt = "A Live Activity for a ride in " | append: parts[3] %}
-      <figure class="mt-activity">
-        {% render "shot.html", name: laName, width: 395, height: 184, sizes: "(max-width: 600px) calc(100vw - 3rem), min(25.25rem, calc((100vw - 4.5rem) / 2))", alt: laAlt %}
-        <p class="mt-activity__timer" data-interval="{{ parts[1] }}" aria-hidden="true">{{ parts[2] }}</p>
-      </figure>
-      {%- endfor %}
-    </div>
-    <p class="mt-header__note mt-activities__note">The colours blend from the line you board to the line you leave on. On Apple Watch too, in the Smart Stack.</p>
+    {% render "shot.html", name: "live-activities", width: 1200, height: 675, sizes: "min(calc(100vw - 3rem), 1200px)", alt: "Live Activities of InTransit on the Lock Screen and in the Dynamic Island", class: "mt-wide-shot" %}
+    <p class="mt-header__note mt-centred-note">The colours blend from the line you board to the line you leave on. On Apple Watch too, in the Smart Stack.</p>
   </div>
 </section>
 
@@ -197,4 +186,3 @@ sectionChrome: true
 {%- comment -%} 10 · HELP. The last section. It has the colour of the closing band. {%- endcomment %}
 {% render "sections/help.html" %}
 
-<script src="/assets/js/home.js" defer></script>

@@ -8,7 +8,7 @@
 //   #hero             Follows the appearance (`.mt-hero--system` in _hero.scss). One picture,
 //                     full bleed up to 1500px, on the bottom edge.
 //   #cities           Tint. The city chips and the map.
-//   #live-activities  Dark. The four Live Activity cards, with timers (assets/js/home.js).
+//   #live-activities  Dark. One picture.
 //   #underground      Plain. A split with a phone.
 //   #duo              Tint. The iPhone Duo line-up.
 //   #journey          Plain. A split with a phone, and three promise cards.
@@ -42,12 +42,18 @@
 }
 
 // ── Wide images ────────────────────────────────────────────────────────────
-// The city map and the iPhone Duo line-up: as wide as the section, and 1200px at most, the
-// width of their artboards at 1x. Keep the `sizes` in index.liquid the same as this width.
+// The city map, the Live Activities, and the iPhone Duo line-up: as wide as the section, and
+// 1200px at most, the width of their artboards at 1x. Keep the `sizes` in index.liquid the
+// same as this width. A placeholder (_includes/shot.html) keeps its own grid, so that its
+// label stays in the middle.
 .mt-wide-shot {
-  display: block;
   width: min(100%, 1200px);
   margin-inline: auto;
+
+  // The space under a section header, as for the cards in _sections.scss.
+  .mt-header + & { margin-block-start: clamp(2.5rem, 5vw, 4rem); }
+
+  &:not(.mt-placeholder) { display: block; }
 
   img {
     display: block;
@@ -132,51 +138,11 @@
   }
 }
 
-.mt-cities__note,
-.mt-activities__note {
+// A note under the picture of a centred section (Cities and Live Activities).
+.mt-centred-note {
   max-width: none;
   margin-block-start: var(--mt-space-8);
   text-align: center;
-}
-
-// ── Live Activities ────────────────────────────────────────────────────────
-// Four Live Activity cards in a grid of 2 × 2, and one column on a phone. The timer sits
-// over the time of the card, at the top right, and assets/js/home.js counts it down.
-.mt-activities {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--mt-space-6);
-  max-width: 52rem;
-  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
-
-  @media (max-width: $bp-phone) { grid-template-columns: minmax(0, 1fr); }
-}
-
-.mt-activity {
-  position: relative;
-  margin: 0;
-
-  picture { display: block; }
-
-  img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  // The card is 395 × 184 at 1x, and its time is about 13% from the top and 8% from the
-  // right edge. The size of the timer follows the width of the card.
-  &__timer {
-    position: absolute;
-    inset-block-start: 11%;
-    inset-inline-end: 7%;
-    margin: 0;
-    font-size: clamp(0.8rem, 2vw, 1.05rem);
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    color: oklch(1 0 0 / 0.7);
-    mix-blend-mode: plus-lighter;
-  }
 }
 
 // ── Travelogue ─────────────────────────────────────────────────────────────
