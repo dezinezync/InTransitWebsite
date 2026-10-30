@@ -26,10 +26,12 @@ sectionChrome: true
 {%- comment -%} 1 · HERO. One picture, as on the Elytra site: the `hero` artboard (1500 x 580 at 1x)
      and `hero-dark` for the dark appearance. It is the LCP image of the page, so it loads at once
      and with a high priority. The picture is full bleed up to 1500px and stands on the bottom
-     edge of the hero (`#hero` in _page-home.scss), so its `sizes` is `min(100vw, 1500px)`.
+     edge of the hero (`#hero` in _page-home.scss). On a narrow screen it is larger than the
+     screen and clipped at its sides, so its `sizes` is
+     `min(1500px, max(100vw, min(140vw, 1024px)))`.
      TODO(alt): describe what the picture shows once the artboard is designed. {%- endcomment %}
 {%- capture heroMedia %}
-    {% render "shot.html", name: "hero", dark: true, width: 1500, height: 580, sizes: "min(100vw, 1500px)", alt: "InTransit on iPhone", loading: "eager", priority: "high" %}
+    {% render "shot.html", name: "hero", dark: true, width: 1500, height: 580, sizes: "min(1500px, max(100vw, min(140vw, 1024px)))", alt: "InTransit on iPhone", loading: "eager", priority: "high" %}
 {%- endcapture %}
 {% render "hero.html", tone: "system", eyebrow: "iPhone · iPhone Duo · 9 Cities", title: "Mind the Music, Not the Map", intro: "Play the music, read the book, or chat with a friend. <strong>InTransit</strong> follows every station of your ride, even underground, and taps you when your stop comes up.", caption: "Your first five trips are free. Then pick a weekly, monthly or annual InTransit pass.", media: heroMedia %}
 
@@ -69,7 +71,7 @@ sectionChrome: true
       <h2 class="mt-header__title" id="live-activities-title">Never Miss Your Stop</h2>
       <p class="mt-header__sub">Your next station, your interchange and your arrival time stay on the Lock Screen and in the Dynamic Island. When your stop comes up, InTransit lets you know with a notification and a tap you can feel.</p>
     </header>
-    {% render "shot.html", name: "live-activities", width: 1242, height: 534, sizes: "min(calc(100vw - 3rem), 1200px)", alt: "Live Activities of InTransit on the Lock Screen and in the Dynamic Island", class: "mt-wide-shot" %}
+    {% render "shot.html", name: "live-activities", width: 1242, height: 534, sizes: "min(1200px, max(calc(100vw - 3rem), min(140vw, 1024px)))", alt: "Live Activities of InTransit on the Lock Screen and in the Dynamic Island", class: "mt-wide-shot" %}
     <p class="mt-header__note mt-centred-note">The colours blend from the line you board to the line you leave on. On Apple Watch too, in the Smart Stack.</p>
   </div>
 </section>

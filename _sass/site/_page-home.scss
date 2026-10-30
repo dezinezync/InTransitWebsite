@@ -76,6 +76,27 @@
   }
 }
 
+// ── Live Activities ────────────────────────────────────────────────────────
+// As the hero: on a narrow screen the cards would be small, so the picture is 140% of the
+// screen, but not wider than 1024px, and centred. It runs past the sides of the section into the
+// edges of the screen, and the section clips it there. When the section is wider than that, the
+// picture is as wide as the section again (1200px at most), so the size changes with no jump.
+// At 375px the picture is 525px wide: the middle column of cards is whole, and the outer columns
+// lose their outer part. Keep the `sizes` in index.liquid the same as this width.
+#live-activities {
+  overflow-x: clip;
+
+  .mt-wide-shot {
+    --mt-la-shot: min(1200px, max(100%, min(140vw, 1024px)));
+
+    img {
+      width: var(--mt-la-shot);
+      max-width: none;
+      margin-inline-start: calc((100% - var(--mt-la-shot)) / 2);
+    }
+  }
+}
+
 // ── Underground ────────────────────────────────────────────────────────────
 // On a phone the whole picture would make the iPhone in it about 131px wide. So the picture is
 // never drawn narrower than 545px (the middle 540px of the 900px artboard on a 375px screen, with
@@ -157,20 +178,30 @@
 // The picture is full bleed up to its own width: the slot has the width of the screen and no
 // space at its sides, so the picture runs from edge to edge on a screen up to 1500px wide. On a
 // wider screen the picture stays 1500px wide, the width of its 1x file, and it is centred. Its
-// height follows its shape (1500 x 580 at 1x), and nothing crops it. Keep the `sizes` of the
-// picture in index.liquid the same as this width: `min(100vw, 1500px)`.
+// height follows its shape (1500 x 580 at 1x).
+//
+// On a narrow screen (an iPad in portrait, a phone) the phones would be small, so the picture is
+// larger than the screen, centred, and the slot clips its sides: 140% of the screen, but not
+// wider than 1024px. At 1024px and wider the picture is the width of the screen again, so the
+// size changes with no jump. At 375px the picture is 525px wide, and the outer phones lose a
+// part of their outer side.
+// Keep the `sizes` of the picture in index.liquid the same as this width:
+// `min(1500px, max(100vw, min(140vw, 1024px)))`.
 .mt-home-page #hero {
   padding-block-end: 0;
 
   .mt-hero__media {
+    --mt-hero-shot: min(1500px, max(100%, min(140%, 1024px)));
     width: 100%;
     padding-inline: 0;
+    overflow: hidden;
   }
 
   .mt-hero__media img {
     display: block;
-    max-width: 1500px;
-    margin-inline: auto;
+    width: var(--mt-hero-shot);
+    max-width: none;
+    margin-inline-start: calc((100% - var(--mt-hero-shot)) / 2);
   }
 
   .mt-hero__media .mt-placeholder {
