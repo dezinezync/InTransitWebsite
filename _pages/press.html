@@ -155,7 +155,7 @@ keywords: InTransit press kit, InTransit media kit, InTransit screenshots, InTra
   the gaps there. {%- endcomment %}
   <section class="mt-press__block" aria-labelledby="press-assets">
     <h2 class="mt-press__title" id="press-assets">Assets</h2>
-    <p class="mt-press__lede">Screenshots from all nine cities. Select a screenshot for the file at full size. For a specific screen or city, <a href="{{ pressMail }}">ask by email</a>.</p>
+    <p class="mt-press__lede">Screenshots from all nine cities. Select a screenshot for the file at full size{% if press.assetsFolder != blank %}, or open the iCloud folder for every screenshot, raw and framed{% endif %}. For anything else, <a href="{{ pressMail }}">ask by email</a>.</p>
     {%- if press.assetsFolder != blank %}
     <p class="mt-press__actions">
       <a class="mt-btn" href="{{ press.assetsFolder }}" target="_blank" rel="noopener">Open the iCloud folder</a>
@@ -165,11 +165,12 @@ keywords: InTransit press kit, InTransit media kit, InTransit screenshots, InTra
     <ul class="mt-assets">
       <li class="mt-assets__item mt-assets__item--icon">
         <div class="mt-assets__preview">
-          <img src="/assets/images/appicon/apple-touch-icon-180x180.png" width="96" height="96" alt="The InTransit app icon" loading="lazy">
+          {%- comment -%} tools/app-icons.sh makes the previews and the full-size files. {%- endcomment %}
+          {% render "picture.html", base: "/assets/images/appicon/icon-light", dark: "/assets/images/appicon/icon-dark", widths: "128,256,384", sizes: "6rem", width: 384, height: 384, alt: "The InTransit app icon" %}
         </div>
         <div class="mt-assets__meta">
           <b>App icon</b>
-          <span>PNG, 180&nbsp;px: <a href="/assets/images/appicon/apple-touch-icon-180x180.png" download="intransit-icon.png">Download</a></span>
+          <span>PNG, 1024&nbsp;px: <a href="/assets/images/press/intransit-icon-light.png" download>Light</a> · <a href="/assets/images/press/intransit-icon-dark.png" download>Dark</a></span>
         </div>
       </li>
       <li class="mt-assets__item mt-assets__item--wide">

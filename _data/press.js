@@ -15,7 +15,7 @@
 module.exports = {
   contact: "support@intransit.app",
   // The shared iCloud Drive folder with every screenshot, raw and framed. The press page
-  // shows a button for it when this is set. InTransit has no shared folder yet.
-  assetsFolder: "",
+  // shows a button for it when this is set.
+  assetsFolder: "https://www.icloud.com/iclouddrive/0a33lC_yTbi6zoUAr6Gi4ZIgw",
   coverage: []
 };
