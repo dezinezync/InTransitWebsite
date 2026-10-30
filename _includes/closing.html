@@ -20,14 +20,14 @@
       <h2 class="mt-get-started__title" id="get-started-title">Your Playlist’s Ready. Are You?</h2>
       <p class="mt-get-started__blurb">{{ closingBlurb | default: "Download InTransit, pick your station, and press play." }}</p>
       <div class="mt-get-started__actions">
-        <a class="mt-get-started__badge" href="{{ "/store" | absolute_url }}" aria-label="Download InTransit on the App Store">
+        <a class="mt-get-started__badge" href="{{ "/store" | relative_url }}" aria-label="Download InTransit on the App Store">
           {%- comment -%} The black badge shows in light mode. The white badge shows in dark mode. {%- endcomment -%}
           <picture>
             <source media="(prefers-color-scheme: dark)" srcset="/assets/images/app-store-badge-white.svg"/>
             <img src="/assets/images/app-store-badge.svg" width="150" height="50" alt="Download on the App Store" loading="lazy"/>
           </picture>
         </a>
-        <a class="mt-get-started__more" href="{{ "/releases" | absolute_url }}">See what’s new&nbsp;&rarr;</a>
+        <a class="mt-get-started__more" href="{{ "/releases" | relative_url }}">See what’s new&nbsp;&rarr;</a>
       </div>
     </div>
   </section>

@@ -2,7 +2,7 @@
 layout: base
 permalink: /index.html
 metaTitle: "InTransit: Metro Rides for India, Stop by Stop"
-description: "Plan your metro ride and follow it live from your Lock Screen in Ahmedabad, Bengaluru, Chennai, Kolkata, Mumbai, New Delhi and Pune."
+description: "Plan your metro ride and follow it live from your Lock Screen in Ahmedabad, Bengaluru, Chennai, Hyderabad, Kolkata, Mumbai, Nagpur, New Delhi and Pune."
 bodyClass: mt-hero-page mt-hero-system mt-home-page
 sectionChrome: true
 ---
@@ -31,14 +31,14 @@ sectionChrome: true
 {%- capture heroMedia %}
     {% render "shot.html", name: "hero", dark: true, width: 1500, height: 580, sizes: "min(100vw, 1500px)", alt: "InTransit on iPhone", loading: "eager", priority: "high" %}
 {%- endcapture %}
-{% render "hero.html", tone: "system", eyebrow: "iPhone · iPhone Duo · 7 Cities", title: "Mind the Music, Not the Map", intro: "Play the music, read the book, or chat with a friend. <strong>InTransit</strong> follows every station of your ride, even underground, and taps you when your stop comes up.", caption: "Your first five trips are free. Then pick a weekly, monthly or annual InTransit pass.", media: heroMedia %}
+{% render "hero.html", tone: "system", eyebrow: "iPhone · iPhone Duo · 9 Cities", title: "Mind the Music, Not the Map", intro: "Play the music, read the book, or chat with a friend. <strong>InTransit</strong> follows every station of your ride, even underground, and taps you when your stop comes up.", caption: "Your first five trips are free. Then pick a weekly, monthly or annual InTransit pass.", media: heroMedia %}
 
-{%- comment -%} 2 · CITIES (tint). Seven chips over one map. The app follows your location, so
+{%- comment -%} 2 · CITIES (tint). Nine chips over one map. The app follows your location, so
      there is no switcher. {%- endcomment %}
 <section class="mt-section mt-section--tint" id="cities" aria-labelledby="cities-title">
   <div class="mt-section__inner">
     <header class="mt-header mt-header--center">
-      <p class="mt-eyebrow">Seven Cities</p>
+      <p class="mt-eyebrow">Nine Cities</p>
       <h2 class="mt-header__title" id="cities-title">Every Line. Even the Ones Still Being Built.</h2>
       <p class="mt-header__sub">InTransit opens on the city you’re in, with every running and under-construction line, so a new line is ready the day it opens. Pan the map to look around any other city.</p>
     </header>
@@ -46,18 +46,21 @@ sectionChrome: true
       <li>Ahmedabad</li>
       <li>Bengaluru</li>
       <li>Chennai</li>
+      <li>Hyderabad</li>
       <li>Kolkata</li>
       <li>Mumbai</li>
+      <li>Nagpur</li>
       <li>New Delhi</li>
       <li>Pune</li>
     </ul>
-    {% render "shot.html", name: "cities-map", dark: true, width: 1200, height: 675, sizes: "min(calc(100vw - 3rem), 1200px)", alt: "The metro map of InTransit", class: "mt-wide-shot" %}
+    {% render "shot.html", name: "cities-map", dark: true, width: 1200, height: 675, sizes: "min(calc(100vw - 3rem), 1200px)", alt: "The metro map of New Delhi in InTransit, with every running and under-construction line", class: "mt-wide-shot" %}
     <p class="mt-header__note mt-centred-note">Your city next? <a href="mailto:{{ site.email }}?subject=A%20city%20for%20InTransit">Tell Nikhil which one.</a></p>
   </div>
 </section>
 
 {%- comment -%} 3 · LIVE ACTIVITIES (dark). One picture: the `live-activities` artboard
-     (1200 x 675 at 1x). The band is dark in both appearances, so the picture has no dark
+     (1242 x 534 at 1x), nine Live Activity cards in a grid of 3 x 3, each a city and a stage of a
+     ride, with 30 pt of room around the grid. The band is dark in both appearances, so the picture has no dark
      version. {%- endcomment %}
 <section class="mt-section mt-section--dark" id="live-activities" aria-labelledby="live-activities-title">
   <div class="mt-section__inner">
@@ -66,23 +69,23 @@ sectionChrome: true
       <h2 class="mt-header__title" id="live-activities-title">Never Miss Your Stop</h2>
       <p class="mt-header__sub">Your next station, your interchange and your arrival time stay on the Lock Screen and in the Dynamic Island. When your stop comes up, InTransit lets you know with a notification and a tap you can feel.</p>
     </header>
-    {% render "shot.html", name: "live-activities", width: 1200, height: 675, sizes: "min(calc(100vw - 3rem), 1200px)", alt: "Live Activities of InTransit on the Lock Screen and in the Dynamic Island", class: "mt-wide-shot" %}
+    {% render "shot.html", name: "live-activities", width: 1242, height: 534, sizes: "min(calc(100vw - 3rem), 1200px)", alt: "Live Activities of InTransit on the Lock Screen and in the Dynamic Island", class: "mt-wide-shot" %}
     <p class="mt-header__note mt-centred-note">The colours blend from the line you board to the line you leave on. On Apple Watch too, in the Smart Stack.</p>
   </div>
 </section>
 
-{%- comment -%} 4 · UNDERGROUND (plain). A split with a phone. {%- endcomment %}
-<section class="mt-section" id="underground" aria-labelledby="underground-title">
-  <div class="mt-section__inner mt-split">
-    <header class="mt-header">
+{%- comment -%} 4 · UNDERGROUND (dark in both appearances). Centred, as Live Activities: the header,
+     then the phone in front of the map of Old Delhi. The band is always dark, so the picture is
+     always the dark export. {%- endcomment %}
+<section class="mt-section mt-section--dark" id="underground" aria-labelledby="underground-title">
+  <div class="mt-section__inner">
+    <header class="mt-header mt-header--center">
       <p class="mt-eyebrow">Underground</p>
       <h2 class="mt-header__title" id="underground-title">Still on Track When the Signal Drops</h2>
       <p class="mt-header__sub">Deep in a tunnel, most apps lose you. InTransit keeps counting the stations, and shows its best guess on the map with a dashed ring until the signal is back.</p>
-      <p class="mt-header__note">Maps and routes live on your iPhone, so they work with no signal at all.</p>
     </header>
-    <div class="mt-split__media mt-shot-phone">
-      {% render "shot.html", name: "underground-phone", dark: true, width: 256, height: 523, sizes: "min(16rem, calc(100vw - 3rem))", alt: "InTransit on iPhone with no signal, still showing the route and the next station" %}
-    </div>
+    {% render "shot.html", name: "underground-phone-dark", width: 900, height: 786, sizes: "max(min(calc(100vw - 3rem), 900px), 545px)", alt: "InTransit on iPhone during a ride on the Yellow Line at Chandni Chowk, in front of the map of Old Delhi", class: "mt-wide-shot mt-wide-shot--900" %}
+    <p class="mt-header__note mt-centred-note">Maps and routes live on your iPhone, so they work with no signal at all.</p>
   </div>
 </section>
 
@@ -99,7 +102,10 @@ sectionChrome: true
   </div>
 </section>
 
-{%- comment -%} 6 · JOURNEY (plain). A split with a phone, and three promise cards below. {%- endcomment %}
+{%- comment -%} 6 · JOURNEY (plain). A split with a phone, and three promise cards below. The phone
+     has its own cast shadow in the file, so it is a `.mt-cast` (_sass/site/_shots.scss): the
+     numbers of the file are in `#journey .mt-cast` (_page-home.scss), and the `sizes` is the
+     width of the canvas on the page, `calc(<phone width> * 356 / 210)`. {%- endcomment %}
 <section class="mt-section" id="journey" aria-labelledby="journey-title">
   <div class="mt-section__inner">
     <div class="mt-split mt-split--media-left">
@@ -108,8 +114,8 @@ sectionChrome: true
         <h2 class="mt-header__title" id="journey-title">Everything You’d Ask at the Ticket Counter</h2>
         <p class="mt-header__sub">Which station, which lift, where to change. InTransit has the answers before you think to ask.</p>
       </header>
-      <div class="mt-split__media mt-shot-phone">
-        {% render "shot.html", name: "journey-phone", dark: true, width: 256, height: 523, sizes: "min(16rem, calc(100vw - 3rem))", alt: "A station in InTransit, with the lifts, ramps and platform access it has" %}
+      <div class="mt-split__media mt-cast">
+        {% render "shot.html", name: "journey-phone", dark: true, width: 356, height: 600, sizes: "calc(min(100vw - 3rem, 16rem) * 356 / 210)", alt: "Cubbon Park station in InTransit, with its lines, facilities and accessibility", class: "mt-cast__picture" %}
       </div>
     </div>
     <ul class="mt-promises" role="list">
@@ -129,8 +135,8 @@ sectionChrome: true
   </div>
 </section>
 
-{%- comment -%} 7 · TRAVELOGUE (dark). A split with a 3D station and the Travelogue screen, and six
-     promise cards below. {%- endcomment %}
+{%- comment -%} 7 · TRAVELOGUE (dark). A split with the Travelogue screen on an iPhone at an angle, and
+     six promise cards below. {%- endcomment %}
 <section class="mt-section mt-section--dark" id="travelogue" aria-labelledby="travelogue-title">
   <div class="mt-section__inner">
     <div class="mt-split">
@@ -140,9 +146,8 @@ sectionChrome: true
         <p class="mt-header__sub">Your Travelogue keeps every kilometre you ride, the CO₂ you saved by taking the metro, and the milestones you reach on the way. The further you go, the more you unlock.</p>
         <p class="mt-header__note">Your Travelogue stays open, with or without a pass.</p>
       </header>
-      <div class="mt-split__media mt-travelogue__media">
-        {% render "shot.html", name: "travelogue-station", width: 800, height: 800, sizes: "(max-width: 860px) min(calc(100vw - 3rem), 28rem), 28rem", alt: "A 3D model of a metro station, unlocked in the Travelogue", class: "mt-travelogue__station" %}
-        {% render "shot.html", name: "travelogue-phone", width: 176, height: 360, sizes: "11rem", alt: "The Travelogue in InTransit: your trips, your distance, your level and your recent trips", class: "mt-travelogue__phone" %}
+      <div class="mt-split__media">
+        {% render "shot.html", name: "travelogue-phone", width: 274, height: 453, sizes: "min(calc(100vw - 3rem), 17.125rem)", alt: "The Travelogue in InTransit: your trips, your distance, your level and your recent trips", class: "mt-travelogue__phone" %}
       </div>
     </div>
     <ul class="mt-promises" role="list">

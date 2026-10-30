@@ -26,16 +26,16 @@ bodyClass: mt-reading-page
       {%- if pagination.pages.length > 1 %}
       <nav class="mt-pagination" aria-label="Pages of the blog">
         {%- if pagination.href.previous %}
-        <a class="previous" rel="prev" href="{{ pagination.href.previous | absolute_url }}">Previous</a>
+        <a class="previous" rel="prev" href="{{ pagination.href.previous | relative_url }}">Previous</a>
         {%- endif %}
         <span>Page {{ pagination.pageNumber | plus: 1 }} of {{ pagination.pages.length }}</span>
         {%- if pagination.href.next %}
-        <a class="next" rel="next" href="{{ pagination.href.next | absolute_url }}">Next</a>
+        <a class="next" rel="next" href="{{ pagination.href.next | relative_url }}">Next</a>
         {%- endif %}
       </nav>
       {%- endif %}
       {%- endif %}
-      <p class="mt-rss">subscribe <a href="{{ "/feed.xml" | absolute_url }}">via RSS</a></p>
+      <p class="mt-rss">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
     </div>
   </div>
 </section>

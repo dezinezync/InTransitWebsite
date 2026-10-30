@@ -12,10 +12,10 @@
   The styles are in _sass/site/_nav.scss.
 {%- endcomment -%}
 {%- capture navLinks -%}
-      <a href="{{ "/" | absolute_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Home</a>
-      <a href="{{ "/releases" | absolute_url }}"{% if page.url contains '/releases' %} aria-current="page"{% endif %}>Release Notes</a>
-      <a href="{{ "/blog" | absolute_url }}"{% if page.url contains '/blog' or page.url contains '/posts' %} aria-current="page"{% endif %}>Blog</a>
-      <a href="{{ "/press" | absolute_url }}"{% if page.url contains '/press' %} aria-current="page"{% endif %}>Press</a>
+      <a href="{{ "/" | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Home</a>
+      <a href="{{ "/releases" | relative_url }}"{% if page.url contains '/releases' %} aria-current="page"{% endif %}>Release Notes</a>
+      <a href="{{ "/blog" | relative_url }}"{% if page.url contains '/blog' or page.url contains '/posts' %} aria-current="page"{% endif %}>Blog</a>
+      <a href="{{ "/press" | relative_url }}"{% if page.url contains '/press' %} aria-current="page"{% endif %}>Press</a>
       <a href="mailto:{{ site.email }}">Support</a>
 {%- endcapture -%}
 <nav class="mt-nav" aria-label="Site">
@@ -32,7 +32,7 @@
 {{ navLinks }}
       </div>
     </details>
-    <a class="mt-btn mt-btn--invert" href="{{ "/store" | absolute_url }}">Download</a>
+    <a class="mt-btn mt-btn--invert" href="{{ "/store" | relative_url }}">Download</a>
   </div>
 </nav>
 <script>

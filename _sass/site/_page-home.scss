@@ -7,20 +7,23 @@
 // `mt-home-page`. The sections, from the top, with their backgrounds:
 //   #hero             Follows the appearance (`.mt-hero--system` in _hero.scss). One picture,
 //                     full bleed up to 1500px, on the bottom edge.
-//   #cities           Tint. The city chips and the map.
+//   #cities           The land colour of the map: #EBF2E1 in the light appearance, #224745 in the
+//                     dark one. The city chips and the map.
 //   #live-activities  Dark. One picture.
-//   #underground      Plain. A split with a phone.
-//   #duo              Tint. The iPhone Duo line-up.
+//   #underground      Dark. One picture: the phone in front of the map (always the dark export).
+//   #duo              Tint. The iPhone Duo line-up. A blue glow in the dark appearance.
 //   #journey          Plain. A split with a phone, and three promise cards.
 //   #travelogue       Dark. A split, and six promise cards.
 //   #privacy          Tint, with a glow (_includes/sections/privacy.html).
 //   #pricing          Plain (_includes/sections/pricing.html).
 //   #reviews          Tint. Not there until there are reviews (_data/reviews.js).
 //   #help             The colour of the closing band (_includes/sections/help.html).
-// No two sections that touch have the same background.
+// No two sections that touch have the same background, except #live-activities and
+// #underground: both are dark, for now (an idea for the Underground picture is on the way).
 // ─────────────────────────────────────────────────────────────────────────
 
 @use "breakpoints" as *;
+@use "token-defs" as *;
 
 // ── Placeholder ────────────────────────────────────────────────────────────
 // The box that _includes/shot.html shows for an artboard of MTApp.sketch that has no export
@@ -49,9 +52,9 @@
 }
 
 // ── Wide images ────────────────────────────────────────────────────────────
-// The city map, the Live Activities, and the iPhone Duo line-up: as wide as the section, and
-// 1200px at most, the width of their artboards at 1x. Keep the `sizes` in index.liquid the
-// same as this width. A placeholder (_includes/shot.html) keeps its own grid, so that its
+// The city map, the Live Activities, Underground and the iPhone Duo line-up: as wide as the
+// section, and 1200px at most (Underground 900px), the width of their artboards at 1x. Keep the
+// `sizes` in index.liquid the same as this width. A placeholder (_includes/shot.html) keeps its own grid, so that its
 // label stays in the middle.
 .mt-wide-shot {
   width: min(100%, 1200px);
@@ -62,11 +65,63 @@
 
   &:not(.mt-placeholder) { display: block; }
 
+  // Underground: its artboard is 900px wide at 1x.
+  &--900 { width: min(100%, 900px); }
+
   img {
     display: block;
     width: 100%;
     height: auto;
     border-radius: var(--mt-radius-media);
+  }
+}
+
+// ── Underground ────────────────────────────────────────────────────────────
+// On a phone the whole picture would make the iPhone in it about 131px wide. So the picture is
+// never drawn narrower than 545px (the middle 540px of the 900px artboard on a 375px screen, with
+// the iPhone about 220px wide), and the box cuts its sides equally where the screen is narrower.
+// The cut grows bit by bit as the screen gets narrower, so there is no jump at a breakpoint, and
+// from a box of 545px up nothing is cut. The box keeps the rounded corners. Keep the `sizes` in
+// index.liquid the same as these widths.
+#underground .mt-wide-shot {
+  --mt-underground-min: 545px;
+
+  overflow: hidden;
+  border-radius: var(--mt-radius-media);
+
+  img {
+    width: max(100%, var(--mt-underground-min));
+    max-width: none;
+    margin-inline-start: calc((100% - max(100%, var(--mt-underground-min))) / 2);
+    border-radius: 0;
+  }
+}
+
+// ── iPhone Duo ─────────────────────────────────────────────────────────────
+// In the dark appearance the band has a glow, as the closing band and the footer have
+// (`.mt-closing` in _closing.scss), and as Catch Up has on the iPhone & iPad page of the Elytra
+// site: a wash of the blue of InTransit comes in from the leading edge and fades out before the
+// middle, with a soft diagonal ray, and a layer of the band colour covers the top, so the glow
+// comes in below the top edge and the section above meets the band with no seam. The glow keeps
+// the dark frames of the devices apart from the near-black band. In the light appearance the band
+// stays plain.
+@media (prefers-color-scheme: dark) {
+  #duo {
+    --mt-duo-wash-strong: oklch(0.52 0.2 #{$mt-hue} / 0.5);
+    --mt-duo-wash-soft:   oklch(0.45 0.17 #{$mt-hue} / 0.2);
+
+    background-image:
+      linear-gradient(to bottom, var(--mt-bg-subtle) 0%, transparent 30%),
+      radial-gradient(ellipse 58% 80% at 0% 42%,
+        var(--mt-duo-wash-strong) 0%,
+        var(--mt-duo-wash-soft) 42%,
+        transparent 72%),
+      linear-gradient(112deg,
+        var(--mt-duo-wash-soft) 0%,
+        transparent 38%);
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: cover;
   }
 }
 
@@ -125,7 +180,75 @@
 }
 
 // ── Cities ─────────────────────────────────────────────────────────────────
-// The seven cities, as chips in a row that wraps, above the map.
+// The band has the colour of the land on the map, so the picture of the map runs into it with no
+// edge. Everything in the section takes the hue of the band, with its own chroma and lightness, so
+// nothing grey or blue pulls the eye away from the map. The colours are in Display P3, as in the
+// picture (the screenshots have Display P3 assigned).
+//   Light: #EBF2E1 = HSB(85, 7, 95), oklch(0.950 0.027 127.8).
+//   Dark:  #224745 = HSB(177, 52, 28), measured from the corner of `cities-map-dark`,
+//          oklch(0.366 0.056 190.2).
+// Contrast with the band (WCAG asks for 4.5:1):
+//   The headline        14.82:1 light, 9.24:1 dark (the tokens).
+//   The eyebrow, link   `--mt-accent` in the hue of the band: 4.83:1 light, 4.82:1 dark.
+//   The subtitle        A grey that blends with the band (`plus-darker` in the light appearance,
+//                       `plus-lighter` in the dark one), so it takes the colour of the band:
+//                       about 4.85:1 and 4.79:1. A browser without the blend mode (`plus-darker`
+//                       is Safari only) shows `--mt-text-2` instead: 4.80:1 and 4.79:1.
+//   The chips           Lighter than the band in both appearances (dark: 1.77:1 with the
+//                       band). Text on chip 11.58:1 light, 5.36:1 dark.
+// The note under the map keeps `--mt-text-2` with no blend, because a blend would also change
+// the colour of its link (the accent).
+@media (prefers-color-scheme: light) {
+  #cities {
+    --mt-cities-bg: oklch(0.95 0.027 127.8);  // Display P3 #EBF2E1, HSB(85, 7, 95)
+    --mt-text-2: oklch(0.52 0.008 286);
+    --mt-accent: oklch(0.51 0.11 127.8);
+    --mt-accent-press: oklch(0.44 0.11 127.8);
+    --mt-cities-chip: oklch(0.985 0.018 127.8);
+    --mt-cities-chip-text: oklch(0.33 0.05 127.8);
+    --mt-cities-chip-shadow: 0 6px 24px oklch(0.45 0.06 127.8 / 0.12);
+
+    background: var(--mt-cities-bg);
+    --mt-chrome: var(--mt-cities-bg);
+
+    @supports (mix-blend-mode: plus-darker) {
+      .mt-header__sub {
+        color: rgb(120 120 120);
+        mix-blend-mode: plus-darker;
+      }
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  #cities {
+    --mt-cities-bg: oklch(0.366 0.056 190.2);  // Display P3 #224745, HSB(177, 52, 28)
+    --mt-text-2: oklch(0.76 0.007 286.2);
+    --mt-accent: oklch(0.75 0.09 190.2);
+    --mt-accent-press: oklch(0.82 0.07 190.2);
+    --mt-cities-chip: oklch(0.5 0.06 190.2);
+    --mt-cities-chip-text: oklch(0.97 0.015 190.2);
+    --mt-cities-chip-shadow: 0 6px 24px oklch(0.15 0.04 190.2 / 0.35);
+
+    background: var(--mt-cities-bg);
+    --mt-chrome: var(--mt-cities-bg);
+
+    @supports (mix-blend-mode: plus-lighter) {
+      .mt-header__sub {
+        color: rgb(115 115 115);
+        mix-blend-mode: plus-lighter;
+      }
+    }
+  }
+}
+
+#cities .mt-chips li {
+  background: var(--mt-cities-chip);
+  color: var(--mt-cities-chip-text);
+  box-shadow: var(--mt-cities-chip-shadow);
+}
+
+// The cities, as chips in a row that wraps, above the map.
 .mt-chips {
   display: flex;
   flex-wrap: wrap;
@@ -152,23 +275,32 @@
   text-align: center;
 }
 
+// ── Journey ────────────────────────────────────────────────────────────────
+// The phone of the split has its own cast shadow: a device with a cast shadow (`.mt-cast` in
+// _shots.scss, which says how it works), as Catch Up on the Elytra site. The picture is the
+// `journey-phone` artboard, an export of 356 x 600 px at 1x. The phone is 210 x 440 px of it,
+// 18 px from the left edge and 19 px from the top. The light comes from the top left, so the
+// shadow falls to the bottom right, towards the text.
+//
+// The phone is 16rem wide, as before the shadow, and less on a very narrow screen. The picture is
+// 356 / 210 = 1.7 times as wide as the phone. Keep the `sizes` of the picture in index.liquid the
+// same as that width. Measure a new export with:
+//   magick journey-phone.webp -alpha extract -threshold 97% -trim -format "%wx%h%O\n" info:
+#journey .mt-cast {
+  --mt-cast-size: min(100vw - 3rem, 16rem);
+  --mt-cast-canvas: 356;
+  --mt-cast-left: 18;
+  --mt-cast-top: 19;
+  --mt-cast-width: 210;
+  --mt-cast-height: 440;
+}
+
 // ── Travelogue ─────────────────────────────────────────────────────────────
-// The 3D station (28rem at most), and the Travelogue screen in front of it at the bottom
-// right (11rem at most). Keep the `sizes` in index.liquid the same as these widths.
-.mt-travelogue__media {
-  position: relative;
-  padding-block-end: var(--mt-space-8);
-}
-
-.mt-travelogue__station {
-  display: block;
-  width: min(100%, 28rem);
-  margin-inline: auto;
-}
-
+// The Travelogue screen on an iPhone at an angle (the `travelogue-phone` artboard, 274 x 453 px at
+// 1x, with no cast shadow), 17.125rem wide at most: the width of the artboard. Keep the `sizes` in
+// index.liquid the same as this width.
 .mt-travelogue__phone {
-  position: absolute;
-  inset-block-end: 0;
-  inset-inline-end: 0;
-  width: min(38%, 11rem);
+  display: block;
+  width: min(100%, 17.125rem);
+  margin-inline: auto;
 }

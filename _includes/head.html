@@ -31,13 +31,13 @@
   <title>{{ fullTitle | escape }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="supported-color-schemes" content="light dark">
-  <link rel="icon" type="image/png" href="{{ "/assets/images/favicon.png" | absolute_url }}">
+  <link rel="icon" type="image/png" href="{{ "/assets/images/favicon.png" | relative_url }}">
   {%- comment -%} The site has one stylesheet: /assets/css/site.css, which
   assets/css/site.scss compiles. `stylesheet` in the front matter of a layout or a
   page selects a different file. No page sets it. {%- endcomment %}
-  <link rel="stylesheet" href="{{ stylesheet | default: "/assets/css/site.css" | absolute_url }}">
-  <link rel="alternate" title="{{ site.title }}" type="application/rss+xml" href="{{ "/feed.xml"  | absolute_url}}"/>
-  <link rel="alternate" title="{{ site.title }}" type="application/json" href="{{ "/feed.json" | absolute_url }}" />
+  <link rel="stylesheet" href="{{ stylesheet | default: "/assets/css/site.css" | relative_url }}">
+  <link rel="alternate" title="{{ site.title }}" type="application/rss+xml" href="{{ "/feed.xml"  | relative_url }}"/>
+  <link rel="alternate" title="{{ site.title }}" type="application/json" href="{{ "/feed.json" | relative_url }}" />
   <meta name="apple-itunes-app" content="app-id={{ site.appId }}, app-argument={{ site.appStoreUrl }}"/>
   {%- comment %}
     The description of the page, for search results and link previews. `description` in
@@ -77,15 +77,10 @@
   {%- elsif bannerImageWebP %}
     {%- assign metaImagePath = bannerImageWebP | append: '-1200w.jpg' %}
   {%- else %}
-    {%- comment %} The social card, 1200 x 630: the `social-card` artboard of MTApp.sketch, as a
-    JPEG file in sRGB. After a new export of the artboard, make the JPEG file again:
-      magick assets/images/home/social-card.webp -background white -alpha remove -alpha off \
-        -profile "/System/Library/ColorSync/Profiles/sRGB Profile.icc" -strip -quality 88 \
-        assets/images/home/social-card.jpg
-    {%- endcomment %}
+    {%- comment %} The social card, 1200 x 630. tools/social-card.swift draws it. {%- endcomment %}
     {%- assign metaImagePath = "/assets/images/home/social-card.jpg" %}
     {%- assign metaImageIsCard = true %}
-    {%- comment %} Until the card is exported and made, the share image is the app icon. {%- endcomment %}
+    {%- comment %} Until the card is drawn, the share image is the app icon. {%- endcomment %}
     {%- assign hasCard = metaImagePath | fileExists %}
     {%- if hasCard == false %}
       {%- assign metaImagePath = "/assets/images/appicon/apple-touch-icon-180x180.png" %}
@@ -97,14 +92,14 @@
   {%- comment %}
     The alt text of the share image, for `og:image:alt` and `twitter:image:alt`.
     `ogImageAlt` in the front matter sets it for a page. The social card has one text for
-    all pages: it says what the card shows. If the card
+    all pages: it says what the card shows (see tools/social-card.swift). If the card
     changes, change this text too. The share image of a post, its banner, gets the title
     of the post.
   {%- endcomment %}
   {%- if ogImageAlt %}
     {%- assign metaImageAlt = ogImageAlt %}
   {%- elsif metaImageIsCard %}
-    {%- assign metaImageAlt = "InTransit, the metro app for India, on iPhone." %}
+    {%- assign metaImageAlt = "The InTransit app icon, with the words: InTransit, your metro ride, stop by stop, in nine cities of India." %}
   {%- elsif title %}
     {%- assign metaImageAlt = title %}
   {%- else %}
@@ -146,12 +141,12 @@
   <meta name="twitter:image" content="{{ metaImage }}" />
   <meta name="twitter:image:alt" content="{{ metaImageAlt | escape }}" />
   <link rel="me" href="{{ site.mastodon }}"/>
-  <link rel="icon" sizes="180x180" href="{{ "/assets/images/appicon/apple-touch-icon-180x180.png" | absolute_url }}" />
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/images/appicon/apple-touch-icon-180x180.png" | absolute_url }}" />
-  <link rel="apple-touch-icon" sizes="152x152" href="{{ "/assets/images/appicon/apple-touch-icon-152x152.png" | absolute_url }}" />
-  <link rel="apple-touch-icon" sizes="76x76" href="{{ "/assets/images/appicon/apple-touch-icon-76x76.png" | absolute_url }}" />
-  <link rel="apple-touch-icon" sizes="60x60" href="{{ "/assets/images/appicon/apple-touch-icon-60x60.png" | absolute_url }}" />
-  <link rel="apple-touch-icon" href="{{ "/assets/images/appicon/apple-touch-icon.png" | absolute_url }}" />
+  <link rel="icon" sizes="180x180" href="{{ "/assets/images/appicon/apple-touch-icon-180x180.png" | relative_url }}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/images/appicon/apple-touch-icon-180x180.png" | relative_url }}" />
+  <link rel="apple-touch-icon" sizes="152x152" href="{{ "/assets/images/appicon/apple-touch-icon-152x152.png" | relative_url }}" />
+  <link rel="apple-touch-icon" sizes="76x76" href="{{ "/assets/images/appicon/apple-touch-icon-76x76.png" | relative_url }}" />
+  <link rel="apple-touch-icon" sizes="60x60" href="{{ "/assets/images/appicon/apple-touch-icon-60x60.png" | relative_url }}" />
+  <link rel="apple-touch-icon" href="{{ "/assets/images/appicon/apple-touch-icon.png" | relative_url }}" />
   {%- if keywords -%}
   <meta name="keywords" content="{{ keywords }}">
   {%- elsif categories -%}

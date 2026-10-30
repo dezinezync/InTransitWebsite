@@ -27,7 +27,7 @@
   {% render "post-banner.html", png: post.data.bannerImage, webp: post.data.bannerImageWebP, class: "mt-post-banner mt-post-banner--list" %}
   {%- endif %}
   {%- endif %}
-  <h2 class="mt-post-list__title"><a href="{{ post.url | absolute_url }}">{{ post.data.title | escape }}</a></h2>
+  <h2 class="mt-post-list__title"><a href="{{ post.url | relative_url }}">{{ post.data.title | escape }}</a></h2>
   <time class="mt-meta" datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%b %-d, %Y' }}</time>
   <p class="mt-post-list__excerpt">{{ post.templateContent | strip_html | truncatewords: 50 }}</p>
 </li>
