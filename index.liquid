@@ -33,7 +33,7 @@ sectionChrome: true
 {%- capture heroMedia %}
     {% render "shot.html", name: "hero", dark: true, width: 1500, height: 580, sizes: "min(1500px, max(100vw, min(140vw, 1024px)))", alt: "InTransit on iPhone", loading: "eager", priority: "high" %}
 {%- endcapture %}
-{% render "hero.html", tone: "system", eyebrow: "iPhone · iPhone Duo · 9 Cities", title: "Mind the Music, Not the Map", intro: "Play the music, read the book, or chat with a friend. <strong>InTransit</strong> follows every station of your ride, even underground, and taps you when your stop comes up.", caption: "Your first five trips are free. Then pick a weekly, monthly or annual InTransit pass.", media: heroMedia %}
+{% render "hero.html", tone: "system", eyebrow: "Metro · 9 Cities · iPhone · iPhone Duo", title: "Your Metro Ride, Stop by Stop", intro: "Play the music, read the book, or chat with a friend. <strong>InTransit</strong> follows every station of your ride, even underground, and taps you when your stop comes up.", caption: "Your first five trips are free. Then pick a weekly, monthly or annual InTransit pass.", media: heroMedia %}
 
 {%- comment -%} 2 · CITIES (tint). Nine chips over one map. The app follows your location, so
      there is no switcher. {%- endcomment %}

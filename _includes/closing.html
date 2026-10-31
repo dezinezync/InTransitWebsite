@@ -8,17 +8,17 @@
   appearance (light or dark). The analytics beacon is not here. It is in
   _layouts/base.html.
 
-  The title and the blurb come from the copy deck. The title calls back to the hero
-  ("Mind the Music, Not the Map"): the voice rules allow a wink at the top of the page
-  and one at the end. A page can set `closingBlurb` in its front matter, to show
-  that text in place of the default blurb. The text can have HTML.
+  The title and the blurb come from the copy deck. The voice rules allow one wink,
+  in the intro of the hero, so the band says plainly what to do next. A page can set
+  `closingBlurb` in its front matter, to show that text in place of the default
+  blurb. The text can have HTML.
 {%- endcomment -%}
 <div class="mt-closing">
   <section class="mt-get-started" id="get-started" aria-labelledby="get-started-title">
     <div class="mt-get-started__inner">
       <img class="mt-get-started__icon" src="/assets/images/appicon/apple-touch-icon-180x180.png" width="92" height="92" alt="" loading="lazy">
-      <h2 class="mt-get-started__title" id="get-started-title">Your Playlist’s Ready. Are You?</h2>
-      <p class="mt-get-started__blurb">{{ closingBlurb | default: "Download InTransit, pick your station, and press play." }}</p>
+      <h2 class="mt-get-started__title" id="get-started-title">Ready When Your Train Is</h2>
+      <p class="mt-get-started__blurb">{{ closingBlurb | default: "Download InTransit, pick your station, and ride." }}</p>
       <div class="mt-get-started__actions">
         <a class="mt-get-started__badge" href="{{ "/store" | relative_url }}" aria-label="Download InTransit on the App Store">
           {%- comment -%} The black badge shows in light mode. The white badge shows in dark mode. {%- endcomment -%}
