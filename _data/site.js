@@ -16,6 +16,11 @@ module.exports = function () {
     // The year of the build, for the copyright line of the footer.
     year: new Date().getFullYear(),
     // The address of the live site.
-    productionUrl: "https://intransit.app"
+    productionUrl: "https://intransit.app",
+    // The IndexNow key. The build writes it to /<key>.txt (see indexnow-key.txt.liquid).
+    // tools/indexnow.js sends it with the changed URLs. The key is public: anyone can
+    // read the key file. To change the key, put a new random hex string here (8 to 128
+    // characters) and deploy before you send URLs again.
+    indexNowKey: "a8619957479eda3d70dfcd78f3b566af"
   };
 };

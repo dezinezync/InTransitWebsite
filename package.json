@@ -6,6 +6,7 @@
   "scripts": {
     "build": "ELEVENTY_ENV=production eleventy",
     "start": "eleventy --serve",
+    "indexnow": "node tools/indexnow.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
