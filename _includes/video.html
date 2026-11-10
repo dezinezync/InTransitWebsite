@@ -1,0 +1,50 @@
+{%- comment -%}
+  A short, silent screen recording, for example a crop of an animation in the app.
+  tools/web-video.sh makes the files and prints the `render` tag for this partial:
+    {% render "video.html", base: "/assets/images/posts/20261110/stations-switch", width: 402, height: 150,
+       hevc: "hvc1.2.4.L93.B0", av1: "av01.0.04M.10", label: "…" %}
+
+  Parameters:
+    base    The path of the files, without -hevc.mp4, -av1.mp4 and -poster.webp.
+    width   The width and the height of the crop, in CSS pixels (the points of the screen).
+    height  The browser uses them to keep the space for the video before it loads.
+    hevc    The codec string of the HEVC file, for its `type`. tools/web-video.sh prints it.
+    av1     The codec string of the AV1 file, for its `type`. tools/web-video.sh prints it.
+    label   What the recording shows, for VoiceOver and other screen readers.
+    class   Optional. The class of the video element.
+
+  The browser plays the first source that it can decode: HEVC in Safari, AV1 in the other browsers.
+
+  The video plays on a loop by itself, with no controls, like an animated image. When the reader
+  has Reduce Motion on, it does not play by itself: it shows the poster and the controls, and the
+  reader can play it. Without JavaScript, it also shows the poster and the controls.
+{%- endcomment -%}
+{%- comment -%}
+  The div keeps Markdown from putting the video in a paragraph, because a div is a block.
+{%- endcomment -%}
+<div>
+<video{% if class %} class="{{ class }}"{% endif %} width="{{ width }}" height="{{ height }}" poster="{{ base }}-poster.webp"
+  muted loop playsinline controls preload="metadata" aria-label="{{ label }}" data-motion-video
+  style="display: block; border-radius: 8px; max-width: 100%; height: auto;">
+  <source src="{{ base }}-hevc.mp4" type='video/mp4; codecs="{{ hevc }}"'/>
+  <source src="{{ base }}-av1.mp4" type='video/mp4; codecs="{{ av1 }}"'/>
+</video>
+<script>
+  (() => {
+    // Each video of this partial has a copy of this script. The first copy that runs takes each
+    // video that is on the page; the copies after it find nothing new.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+    for (const video of document.querySelectorAll("video[data-motion-video]:not([data-motion-ready])")) {
+      video.dataset.motionReady = "";
+      video.controls = false;
+      video.autoplay = true;
+      video.play().catch(() => {
+        // The browser did not let it play by itself. The controls let the reader play it.
+        video.controls = true;
+      });
+    }
+  })();
+</script>
+</div>

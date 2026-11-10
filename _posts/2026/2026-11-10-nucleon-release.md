@@ -82,9 +82,15 @@ Once these were composed, I wanted to then do a few critical things that always 
 - **The Journey**: A lot of stations in India which are above ground are thick metal cages, leading to loss of GPS accuracy. This makes it hard for the app to determine if the user is actually at the station platform, outside of it, or somewhere else entirely. Determining this becomes harder still for underground stations. v2026.9 of InTransit employed motion detection to understand if you're walking or running towards the platform, or if you're in the metro carriages and moving towards your destination. v2026.11 now also uses the same technique to auto-start the journey for you. 
 - **Better Timings**: Metro corporations across regions will have different timings, and special timings during civic holidays and festivities. A new timings system coordinates with these dynamic timings and I'll be putting more effort towards improving this information and data. 
 
+{% render "video.html", base: "/assets/images/posts/20261110/stations-switch", width: 382, height: 140, hevc: "hvc1.2.4.L90.B0", av1: "av01.0.04M.10", label: "Switching the departure and arrival stations in InTransit" %}
+
+{% render "video.html", base: "/assets/images/posts/20261110/trip-map", width: 402, height: 874, hevc: "hvc1.2.4.L123.B0", av1: "av01.0.09M.10", label: "The map following a trip from Kalyani Nagar in InTransit, above the trip details" %}
+
+{% render "video.html", base: "/assets/images/posts/20261110/end-trip", width: 402, height: 544, hevc: "hvc1.2.4.L120.B0", av1: "av01.0.08M.10", label: "Ending a trip in InTransit, then opening the trip details" %}
+
 InTransit's new design was built on top of these foundational molecules and organisms. The new design speaks for itself, feels fresh and causes less cognitive load while interacting with it. It is also now more robust than ever at handling complex inter-line transits. 
 
-<!-- Full outlay -->
+<aside>You may have also noted some common elements from <a href="https://pockity.app/ios" target="_blank" title="Pockity for iOS, iPadOS, and watchOS">Pockity</a> used in InTransit. Helps to have a shared UI library of components.</aside>
 
 Thank you for reading this far, if you haven't already do check out the update on the [AppStore](https://apps.apple.com/us/app/intransit/id6756531079), and at the time of writing, it's the only app showing the newly active Pink Line from Pune 😉
 
