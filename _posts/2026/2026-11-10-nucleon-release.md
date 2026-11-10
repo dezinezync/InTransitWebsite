@@ -1,7 +1,7 @@
 ---
 layout: post
 title: The Nucleon Update ‒ v2026.11
-date: 2026-11-10T09:30:00+05:30
+date: 2026-11-10T21:00:00+05:30
 categories: iOS,release,notes
 bannerImageWebP: /assets/images/posts/20261110/banner
 ---
